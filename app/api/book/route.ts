@@ -1,0 +1,44 @@
+import { prisma } from "@/lib/prisma";
+import { ExpectedError } from "@/lib/expected-error";
+import { Status } from "@/types/status";
+
+import { NextResponse } from "next/server";
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    let id = searchParams.get("id");
+
+    if (!id)
+      throw new ExpectedError({
+        message: "Mal formatação da query!",
+        status: Status.InternalServerError,
+      });
+
+    const book = await prisma.book.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        category: true,
+      },
+    });
+
+    if (!book)
+      throw new ExpectedError({
+        message: "Livro não encontrado!",
+        status: Status.NotFound,
+      });
+    return NextResponse.json(book, {
+      status: Status.OK,
+    });
+  } catch (err) {
+    if (err instanceof ExpectedError) {
+      console.log("entrou aqui")
+
+      return NextResponse.json(err.json(), {
+        status: err.getStatus(),
+      });
+    }
+  }
+};
