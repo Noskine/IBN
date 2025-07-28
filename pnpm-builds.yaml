@@ -1,0 +1,9 @@
+allowedPackages:
+  - name: "@prisma/client"
+  - name: "@prisma/engines"
+  - name: "scarf"
+  - name: "@tailwindcss/oxide"
+  - name: "esbuild"
+  - name: "prisma"
+  - name: "sharp"
+  - name: "unrs-resolver"
