@@ -37,7 +37,12 @@ export default function HomePage() {
     <div className='grid min-h-svh lg:grid-cols-2'>
       <div className='flex flex-col gap-4 p-6 md:p-10'>
         <div className='w-full flex justify-between gap-2'>
-          <Image src={icon} alt='icon' className='size-5! dark:brightness-[100]' />
+          <Image
+            src={icon}
+            alt='icon'
+            className='size-5! dark:brightness-[100]'
+          />
+          Instítuto Bíblico do Norte
           <ThemeSwitch />
         </div>
         <div className='flex flex-1 items-center justify-center'>
