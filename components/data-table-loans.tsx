@@ -45,6 +45,9 @@ export type Loan = {
   book: {
     title: string;
     author: string;
+    category: {
+      name: string;
+    }
   };
   loanDate: string;
   returnDate: string | null;
@@ -83,6 +86,11 @@ const columns: ColumnDef<Loan>[] = [
     accessorKey: "book.author",
     header: "Autor",
     cell: ({ row }) => row.original.book.author,
+  },
+   {
+    accessorKey: "book.category.name",
+    header: "Autor",
+    cell: ({ row }) => row.original.book.category.name,
   },
   {
     accessorKey: "loanDate",
