@@ -73,7 +73,6 @@ function BookActions({
   const [openDialog, setOpenDialog] = React.useState(false);
   const [leitorSelecionado, setLeitorSelecionado] = React.useState("");
   const session = useUserSession();
-  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,7 +173,7 @@ function BookActions({
               Consultar Livro
             </DropdownMenuItem>
           </DialogTrigger>
-          {book.barcode ? <IsBarcode id={book.id} /> : null}
+          {book.barcode != "" ? <IsBarcode id={book.id} /> : null}
         </Dialog>
       </DropdownMenuContent>
     </DropdownMenu>
