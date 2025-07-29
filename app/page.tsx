@@ -36,7 +36,7 @@ export default function HomePage() {
   return (
     <div className='grid min-h-svh lg:grid-cols-2'>
       <div className='flex flex-col gap-4 p-6 md:p-10'>
-        <div className='w-full flex justify-between gap-2'>
+        <div className='w-full flex items-center gap-2'>
           <Image
             src={icon}
             alt='icon'
