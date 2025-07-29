@@ -80,7 +80,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href="/dashboard">
-                <Image src={icon} alt="icon ibn" className="size-5!" />
+                <Image src={icon} alt="icon ibn" className="size-5! dark:brightness-[100]" />
                 <span className="text-base font-semibold">IPB - Instituto Bíblico do Norte</span>
               </Link>
             </SidebarMenuButton>
