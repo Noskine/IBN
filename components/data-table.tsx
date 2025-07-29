@@ -61,6 +61,7 @@ import { toast } from "sonner";
 import { TypeBooks } from "@/types/books";
 import { TypeComboBoxReaders } from "@/types/combobox";
 import { Label } from "./ui/label";
+import { Separator } from "./ui/separator";
 
 function BookActions({
   book,
@@ -158,21 +159,24 @@ function BookActions({
         </Dialog>
 
         {/* Diálogo de código de barras (aparece se houver barcode) */}
-        {book.barcode !== "" && (
-          <Dialog open={openDialogTwo} onOpenChange={setOpenDialogTwo}>
-            <DialogTrigger asChild>
-              <DropdownMenuItem
-                onSelect={(e) => {
-                  e.preventDefault();
-                  setOpenDialogTwo(true);
-                }}
-                className='text-yellow-800! bg-yellow-200! font-medium cursor-pointer hover:bg-yellow-100! transition-colors'
-              >
-                Atualizar código
-              </DropdownMenuItem>
-            </DialogTrigger>
-            <IsBarcode id={book.id} />
-          </Dialog>
+        {book.barcode.length <= 0 && (
+          <>
+            <Separator className='my-q' />
+            <Dialog open={openDialogTwo} onOpenChange={setOpenDialogTwo}>
+              <DialogTrigger asChild>
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.preventDefault();
+                    setOpenDialogTwo(true);
+                  }}
+                  className='text-yellow-800! bg-yellow-200! font-medium cursor-pointer hover:bg-yellow-100! transition-colors'
+                >
+                  Atualizar código
+                </DropdownMenuItem>
+              </DialogTrigger>
+              <IsBarcode id={book.id} />
+            </Dialog>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
