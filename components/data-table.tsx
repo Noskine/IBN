@@ -173,7 +173,8 @@ function BookActions({
               Consultar Livro
             </DropdownMenuItem>
           </DialogTrigger>
-          {book.barcode != "" ? <IsBarcode id={book.id} /> : null}
+          {book.barcode}
+          {book.barcode != "" ? <IsBarcode id={book.id} /> : <span></span>}
         </Dialog>
       </DropdownMenuContent>
     </DropdownMenu>
