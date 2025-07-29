@@ -34,11 +34,63 @@ export async function GET(req: Request) {
     });
   } catch (err) {
     if (err instanceof ExpectedError) {
-      console.log("entrou aqui")
+      console.log("entrou aqui");
 
       return NextResponse.json(err.json(), {
         status: err.getStatus(),
       });
     }
   }
-};
+}
+
+export async function PUT(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const body = await req.json();
+
+    let id = searchParams.get("id");
+
+    if (!id)
+      throw new ExpectedError({
+        message: "Mal formatação da query!",
+        status: Status.InternalServerError,
+      });
+
+    const { code } = body;
+
+    // Validação básica
+    if (!code) {
+      return NextResponse.json(
+        { error: "Dados obrigatórios faltando." },
+        { status: 400 }
+      );
+    }
+
+    const book = await prisma.book.update({
+      where: {
+        id: id,
+      },
+      data: {
+        barcode: code,
+      },
+    });
+
+    if (!book)
+      throw new ExpectedError({
+        message: "Livro não encontrado!",
+        status: Status.NotFound,
+      });
+
+    return NextResponse.json({
+      status: Status.OK,
+    });
+  } catch (err) {
+    if (err instanceof ExpectedError) {
+      console.log("entrou aqui");
+
+      return NextResponse.json(err.json(), {
+        status: err.getStatus(),
+      });
+    }
+  }
+}

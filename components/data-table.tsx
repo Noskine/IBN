@@ -61,6 +61,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { TypeBooks } from "@/types/books";
 import { TypeComboBoxReaders } from "@/types/combobox";
+import { Label } from "./ui/label";
 
 function BookActions({
   book,
@@ -156,6 +157,24 @@ function BookActions({
               </DialogFooter>
             </form>
           </DialogContent>
+        </Dialog>
+      </DropdownMenuContent>
+      <DropdownMenuContent align='end'>
+        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogTrigger asChild>
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault(); // evita fechar o dropdown
+                setOpenDialog(true);
+              }}
+              className='text-teal-800! bg-teal-200! font-medium cursor-pointer hover:bg-teal-100! transition-colors'
+            >
+              Consultar Livro
+            </DropdownMenuItem>
+          </DialogTrigger>
+          {book.barcode ? <IsBarcode id={book.id} /> : null}
         </Dialog>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -384,4 +403,62 @@ export function DataTableDemo({
 function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
+}
+type IsBarcodeProps = {
+  id: string
+}
+
+export function IsBarcode({ id }: IsBarcodeProps) {
+  const [code, setCode] = React.useState("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    try {
+      const res = await fetch(`/api/book?id=${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+      })
+
+      if (res.ok) {
+        toast.success("Código de Barras registrado! 👍")
+        setTimeout(() => window.location.reload(), 1000)
+      } else {
+        toast.error("Algo de errado aconteceu! ❌")
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error("Erro de rede! ❌")
+    }
+  }
+
+  return (
+    <DialogContent>
+      <DialogHeader className="border-b">
+        <DialogTitle className="font-bold text-2xl">
+          Atualizar o código de barras
+        </DialogTitle>
+      </DialogHeader>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 pt-4">
+        <div className="space-y-1">
+          <Label htmlFor="code">Código de barras</Label>
+          <Input
+            id="code"
+            name="barcode"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            required
+          />
+        </div>
+
+        <DialogFooter>
+          <Button type="submit">Criar consulta</Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  )
 }

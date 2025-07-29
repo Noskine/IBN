@@ -1,4 +1,4 @@
-"use client" 
+"use client";
 
 import { GalleryVerticalEnd } from "lucide-react";
 import { LoginForm } from "@/components/login-form";
@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { ThemeSwitch } from "@/components/theme-switch";
+import Image from "next/image";
 
 export default function HomePage() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function HomePage() {
     const form = new FormData(e.currentTarget);
     const email = form.get("email");
     const password = form.get("password");
-    console.log(email, password)
+    console.log(email, password);
 
     const res = await signIn("credentials", {
       email,
@@ -53,7 +54,7 @@ export default function HomePage() {
         </div>
       </div>
       <div className='bg-muted relative hidden lg:block'>
-        <img
+        <Image
           src='/001.jpg'
           alt='Image'
           className='absolute inset-0 h-full w-full object-cover brightness-[] dark:brightness-[0.2] dark:grayscale'

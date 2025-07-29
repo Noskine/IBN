@@ -18,7 +18,6 @@ export const metadata: Metadata = {
 };
 
 import { ThemeProvider } from "@/providers/theme-provider";
-import { SessionProvider } from "next-auth/react";
 
 export default function RootLayout({
   children,
