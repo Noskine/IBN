@@ -89,7 +89,7 @@ const columns: ColumnDef<Loan>[] = [
   },
    {
     accessorKey: "book.category.name",
-    header: "Autor",
+    header: "Categoria",
     cell: ({ row }) => row.original.book.category.name,
   },
   {
