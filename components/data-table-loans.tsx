@@ -67,7 +67,7 @@ const columns: ColumnDef<Loan>[] = [
         Leitor <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <span className="font-medium">{row.original.people.name}</span>,
+    cell: ({ row }) => <span className="font-medium first-letter:uppercase lowercase">{row.original.people.name}</span>,
   },
   {
     accessorKey: "book.title",
