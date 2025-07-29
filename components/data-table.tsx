@@ -159,7 +159,7 @@ function BookActions({
         </Dialog>
 
         {/* Diálogo de código de barras (aparece se houver barcode) */}
-        {book.barcode.length <= 0 && (
+        {book.barcode && book.barcode.trim() !== ""&& (
           <>
             <Separator className='my-q' />
             <Dialog open={openDialogTwo} onOpenChange={setOpenDialogTwo}>
