@@ -40,7 +40,7 @@ export default function HomePage() {
           <Image
             src={icon}
             alt='icon'
-            className='size-5! dark:brightness-[1000]'
+            className='size-5! dark:brightness-200'
           />
           Instítuto Bíblico do Norte
           <ThemeSwitch />
