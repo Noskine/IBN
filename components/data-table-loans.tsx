@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUpDown, AlertOctagon, Check, Loader, ChevronDown } from "lucide-react";
 import { RowActions } from "./row-actions";
+
 import {
   HoverCard,
   HoverCardContent,
@@ -47,7 +48,7 @@ export type Loan = {
     author: string;
     category: {
       name: string;
-    }
+    };
   };
   loanDate: string;
   returnDate: string | null;
@@ -87,7 +88,7 @@ const columns: ColumnDef<Loan>[] = [
     header: "Autor",
     cell: ({ row }) => row.original.book.author,
   },
-   {
+  {
     accessorKey: "book.category.name",
     header: "Categoria",
     cell: ({ row }) => row.original.book.category.name,
@@ -181,16 +182,22 @@ const columns: ColumnDef<Loan>[] = [
 export function LoanTable({ data }: { data: Loan[] }) {
   const [sorting, setSorting] = React.useState([{ id: "loanDate", desc: true }]);
   const [globalFilter, setGlobalFilter] = React.useState("");
+  const [categoryFilter, setCategoryFilter] = React.useState("");
   const [dateFilter, setDateFilter] = React.useState<Date | undefined>(undefined);
   const [calendarOpen, setCalendarOpen] = React.useState(false);
 
-  // Filtrar os dados localmente
   const filteredData = React.useMemo(() => {
     let filtered = data;
 
     if (globalFilter) {
       filtered = filtered.filter((loan) =>
         loan.people.name.toLowerCase().includes(globalFilter.toLowerCase())
+      );
+    }
+
+    if (categoryFilter) {
+      filtered = filtered.filter((loan) =>
+        loan.book.category.name.toLowerCase().includes(categoryFilter.toLowerCase())
       );
     }
 
@@ -202,23 +209,21 @@ export function LoanTable({ data }: { data: Loan[] }) {
     }
 
     return filtered;
-  }, [data, globalFilter, dateFilter]);
+  }, [data, globalFilter, categoryFilter, dateFilter]);
 
   const table = useReactTable({
     data: filteredData,
     columns,
-    state: { sorting, globalFilter },
+    state: { sorting },
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  // Resetar página ao mudar filtro para evitar loop infinito
   React.useEffect(() => {
     table.setPageIndex(0);
-  }, [globalFilter, dateFilter]);
+  }, [globalFilter, categoryFilter, dateFilter]);
 
   return (
     <div className="w-full space-y-4">
@@ -233,6 +238,19 @@ export function LoanTable({ data }: { data: Loan[] }) {
             placeholder="Digite o nome do leitor"
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
+            className="w-full"
+          />
+        </div>
+
+        <div className="flex flex-col w-full sm:w-1/2 max-w-sm">
+          <Label htmlFor="filterCategory" className="mb-1 font-medium text-xs">
+            Filtrar Categoria
+          </Label>
+          <Input
+            id="filterCategory"
+            placeholder="Digite a categoria do livro"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
             className="w-full"
           />
         </div>
@@ -262,7 +280,6 @@ export function LoanTable({ data }: { data: Loan[] }) {
                 }}
                 captionLayout="dropdown"
               />
-              {/* Botão para limpar filtro de data */}
               {dateFilter && (
                 <Button
                   variant="ghost"
