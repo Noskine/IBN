@@ -164,7 +164,7 @@ function BookActions({
           //@ts-expect-error
           book.barcode <= 0 && (
           <>
-            <Separator className='my-q' />
+            <Separator className='my-1' />
             <Dialog open={openDialogTwo} onOpenChange={setOpenDialogTwo}>
               <DialogTrigger asChild>
                 <DropdownMenuItem
@@ -461,7 +461,7 @@ export function IsBarcode({ id }: IsBarcodeProps) {
         </div>
 
         <DialogFooter>
-          <Button type='submit'>Criar consulta</Button>
+          <Button type='submit'>Atualizar</Button>
         </DialogFooter>
       </form>
     </DialogContent>
