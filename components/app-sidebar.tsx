@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Archive, BookmarkIcon } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 const data = {
   navMain: [
     {
@@ -66,6 +67,8 @@ type AppSidebarProps = {
   };
 } & React.ComponentProps<typeof Sidebar>;
 
+import icon from "@/assets/icon.png"
+
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -77,7 +80,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href="/dashboard">
-                <BookmarkIcon className="!size-5" />
+                <Image src={icon} alt="icon ibn" className="size-5!" />
                 <span className="text-base font-semibold">IPB - Instituto Bíblico do Norte</span>
               </Link>
             </SidebarMenuButton>

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { ThemeSwitch } from "@/components/theme-switch";
 import Image from "next/image";
+import icon from "@/assets/icon.png"
 
 export default function HomePage() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function HomePage() {
         <div className='w-full flex justify-between gap-2'>
           <a href='#' className='flex items-center gap-2 font-medium'>
             <div className='bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md'>
-              <GalleryVerticalEnd className='size-4' />
+              <Image src={icon} alt="icon" className='size-4' />
             </div>
             Instítuto Bíblico do Norte
           </a>
