@@ -58,7 +58,6 @@ import {
 
 import { ComboboxReaders } from "./combo-box";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { TypeBooks } from "@/types/books";
 import { TypeComboBoxReaders } from "@/types/combobox";
 import { Label } from "./ui/label";
@@ -85,11 +84,10 @@ function BookActions({
       }
     ).then((res) => {
       if (res.ok) {
-        toast("Consultado finalizada! ✅📅");
+        toast("Consulta finalizada! ✅📅");
         const timer = setTimeout(() => {
           window.location.reload();
         }, 1000);
-
         return () => clearTimeout(timer);
       } else {
         toast("Algo de errado aconteceu! ❌");
@@ -107,13 +105,16 @@ function BookActions({
           <MoreHorizontal />
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align='end'>
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+        {/* Diálogo de consulta */}
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <DropdownMenuItem
               onSelect={(e) => {
-                e.preventDefault(); // evita fechar o dropdown
+                e.preventDefault();
                 setOpenDialog(true);
               }}
               className='text-teal-800! bg-teal-200! font-medium cursor-pointer hover:bg-teal-100! transition-colors'
@@ -121,10 +122,9 @@ function BookActions({
               Consultar Livro
             </DropdownMenuItem>
           </DialogTrigger>
-
           <DialogContent>
             <DialogHeader className='border-b'>
-              <DialogTitle className='font-bold text-2xl '>
+              <DialogTitle className='font-bold text-2xl'>
                 Criando consulta
               </DialogTitle>
             </DialogHeader>
@@ -144,7 +144,7 @@ function BookActions({
               </section>
 
               <ComboboxReaders
-                data={readers!}
+                data={readers}
                 onSelect={(leitor) => setLeitorSelecionado(leitor)}
               />
 
@@ -156,29 +156,25 @@ function BookActions({
             </form>
           </DialogContent>
         </Dialog>
-      </DropdownMenuContent>
 
-      {book.barcode != "" ? (
-        <DropdownMenuContent align='end'>
-          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+        {/* Diálogo de código de barras (aparece se houver barcode) */}
+        {book.barcode !== "" && (
           <Dialog open={openDialogTwo} onOpenChange={setOpenDialogTwo}>
             <DialogTrigger asChild>
               <DropdownMenuItem
                 onSelect={(e) => {
-                  e.preventDefault(); // evita fechar o dropdown
+                  e.preventDefault();
                   setOpenDialogTwo(true);
                 }}
                 className='text-yellow-800! bg-yellow-200! font-medium cursor-pointer hover:bg-yellow-100! transition-colors'
               >
-                Consultar Livro
+                Atualizar código
               </DropdownMenuItem>
             </DialogTrigger>
             <IsBarcode id={book.id} />
           </Dialog>
-        </DropdownMenuContent>
-      ) : (
-        <span></span>
-      )}
+        )}
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 }
