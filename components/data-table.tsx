@@ -71,6 +71,7 @@ function BookActions({
   readers: TypeComboBoxReaders[];
 }) {
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [openDialogTwo, setOpenDialogTwo] = React.useState(false);
   const [leitorSelecionado, setLeitorSelecionado] = React.useState("");
   const session = useUserSession();
 
@@ -106,10 +107,8 @@ function BookActions({
           <MoreHorizontal />
         </Button>
       </DropdownMenuTrigger>
-
       <DropdownMenuContent align='end'>
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
-
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <DropdownMenuItem
@@ -158,25 +157,28 @@ function BookActions({
           </DialogContent>
         </Dialog>
       </DropdownMenuContent>
-      <DropdownMenuContent align='end'>
-        <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogTrigger asChild>
-            <DropdownMenuItem
-              onSelect={(e) => {
-                e.preventDefault(); // evita fechar o dropdown
-                setOpenDialog(true);
-              }}
-              className='text-teal-800! bg-teal-200! font-medium cursor-pointer hover:bg-teal-100! transition-colors'
-            >
-              Consultar Livro
-            </DropdownMenuItem>
-          </DialogTrigger>
-          {book.barcode}
-          {book.barcode != "" ? <IsBarcode id={book.id} /> : <span></span>}
-        </Dialog>
-      </DropdownMenuContent>
+      {book.barcode != "" ? (
+        <DropdownMenuContent align='end'>
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+          <Dialog open={openDialogTwo} onOpenChange={setOpenDialogTwo}>
+            <DialogTrigger asChild>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault(); // evita fechar o dropdown
+                  setOpenDialogTwo(true);
+                }}
+                className='text-yellow-800! bg-yellow-200! font-medium cursor-pointer hover:bg-yellow-100! transition-colors'
+              >
+                Consultar Livro
+              </DropdownMenuItem>
+            </DialogTrigger>
+            <IsBarcode id={book.id} />
+          </Dialog>
+        </DropdownMenuContent>
+      ) : (
+        <span></span>
+      )}
     </DropdownMenu>
   );
 }
@@ -405,14 +407,14 @@ function truncate(text: string, maxLength: number): string {
   return text.slice(0, maxLength) + "...";
 }
 type IsBarcodeProps = {
-  id: string
-}
+  id: string;
+};
 
 export function IsBarcode({ id }: IsBarcodeProps) {
-  const [code, setCode] = React.useState("")
+  const [code, setCode] = React.useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       const res = await fetch(`/api/book?id=${id}`, {
@@ -421,34 +423,34 @@ export function IsBarcode({ id }: IsBarcodeProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ code }),
-      })
+      });
 
       if (res.ok) {
-        toast.success("Código de Barras registrado! 👍")
-        setTimeout(() => window.location.reload(), 1000)
+        toast.success("Código de Barras registrado! 👍");
+        setTimeout(() => window.location.reload(), 1000);
       } else {
-        toast.error("Algo de errado aconteceu! ❌")
+        toast.error("Algo de errado aconteceu! ❌");
       }
     } catch (error) {
-      console.error(error)
-      toast.error("Erro de rede! ❌")
+      console.error(error);
+      toast.error("Erro de rede! ❌");
     }
-  }
+  };
 
   return (
     <DialogContent>
-      <DialogHeader className="border-b">
-        <DialogTitle className="font-bold text-2xl">
+      <DialogHeader className='border-b'>
+        <DialogTitle className='font-bold text-2xl'>
           Atualizar o código de barras
         </DialogTitle>
       </DialogHeader>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 pt-4">
-        <div className="space-y-1">
-          <Label htmlFor="code">Código de barras</Label>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4 pt-4'>
+        <div className='space-y-1'>
+          <Label htmlFor='code'>Código de barras</Label>
           <Input
-            id="code"
-            name="barcode"
+            id='code'
+            name='barcode'
             value={code}
             onChange={(e) => setCode(e.target.value)}
             required
@@ -456,9 +458,9 @@ export function IsBarcode({ id }: IsBarcodeProps) {
         </div>
 
         <DialogFooter>
-          <Button type="submit">Criar consulta</Button>
+          <Button type='submit'>Criar consulta</Button>
         </DialogFooter>
       </form>
     </DialogContent>
-  )
+  );
 }
