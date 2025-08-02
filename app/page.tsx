@@ -58,7 +58,9 @@ export default function HomePage() {
         <Image
           src='/001.jpg'
           alt='Image'
-          className='absolute inset-0 h-full w-full object-cover brightness-[] dark:brightness-[0.2] dark:grayscale'
+          width={0}
+          height={0}
+          className='absolute inset-0 h-full! w-full! object-cover brightness-[] dark:brightness-[0.2] dark:grayscale'
         />
       </div>
     </div>

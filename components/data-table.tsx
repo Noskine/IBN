@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -16,12 +15,12 @@ import {
 } from "@tanstack/react-table";
 import {
   ArrowUpDown,
-  Barcode,
   ChevronDown,
-  MoreHorizontal,
+
 } from "lucide-react";
 
-import { useUserSession } from "@/context/UserSessionContext";
+import { BookActions } from "./book-actions";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -38,12 +37,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -56,135 +52,14 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-import { ComboboxReaders } from "./combo-box";
 import { toast } from "sonner";
 import { TypeBooks } from "@/types/books";
 import { TypeComboBoxReaders } from "@/types/combobox";
 import { Label } from "./ui/label";
-import { Separator } from "./ui/separator";
 
-function BookActions({
-  book,
-  readers,
-}: {
-  book: TypeBooks;
-  readers: TypeComboBoxReaders[];
-}) {
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [openDialogTwo, setOpenDialogTwo] = React.useState(false);
-  const [leitorSelecionado, setLeitorSelecionado] = React.useState("");
-  const session = useUserSession();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
 
-    fetch(
-      `/api/loan?email=${session?.email}&book=${book.id}&reader=${leitorSelecionado}`,
-      {
-        method: "POST",
-      }
-    ).then((res) => {
-      if (res.ok) {
-        toast("Consulta finalizada! ✅📅");
-        const timer = setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-        return () => clearTimeout(timer);
-      } else {
-        toast("Algo de errado aconteceu! ❌");
-      }
-    });
 
-    setOpenDialog(false);
-  };
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant='ghost' className='h-8 w-8 p-0'>
-          <span className='sr-only'>Abrir menu</span>
-          <MoreHorizontal />
-        </Button>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent align='end'>
-        <DropdownMenuLabel>Ações</DropdownMenuLabel>
-
-        {/* Diálogo de consulta */}
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogTrigger asChild>
-            <DropdownMenuItem
-              onSelect={(e) => {
-                e.preventDefault();
-                setOpenDialog(true);
-              }}
-              className='text-teal-800! bg-teal-200! font-medium cursor-pointer hover:bg-teal-100! transition-colors'
-            >
-              Consultar Livro
-            </DropdownMenuItem>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader className='border-b'>
-              <DialogTitle className='font-bold text-2xl'>
-                Criando consulta
-              </DialogTitle>
-            </DialogHeader>
-
-            <form onSubmit={handleSubmit} className='flex flex-col gap-1'>
-              <section className='shadow-md dark:bg-zinc-900 px-2 pb-2 pt-1 mb-2 rounded-md'>
-                <h2 className='text-md font-bold'>{book.title}</h2>
-                <p className='text-xs italic'>
-                  De autoria de{" "}
-                  <span className='font-medium'>{book.author}</span> pela{" "}
-                  {book.publisher}
-                </p>
-                <p className='text-xs italic text-end space-x-1'>
-                  <Barcode className='inline size-3' />
-                  {book.barcode || "Código não cadastrado"}
-                </p>
-              </section>
-
-              <ComboboxReaders
-                data={readers}
-                onSelect={(leitor) => setLeitorSelecionado(leitor)}
-              />
-
-              <DialogFooter>
-                <Button type='submit' disabled={!leitorSelecionado}>
-                  Criar consulta
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-
-        {/* Diálogo de código de barras (aparece se houver barcode) */}
-
-        {
-          //@ts-expect-error
-          book.barcode <= 0 && (
-          <>
-            <Separator className='my-1' />
-            <Dialog open={openDialogTwo} onOpenChange={setOpenDialogTwo}>
-              <DialogTrigger asChild>
-                <DropdownMenuItem
-                  onSelect={(e) => {
-                    e.preventDefault();
-                    setOpenDialogTwo(true);
-                  }}
-                  className='text-yellow-800! bg-yellow-200! font-medium cursor-pointer hover:bg-yellow-100! transition-colors'
-                >
-                  Atualizar código
-                </DropdownMenuItem>
-              </DialogTrigger>
-              <IsBarcode id={book.id} />
-            </Dialog>
-          </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
 
 export function DataTableDemo({
   data,
@@ -244,6 +119,13 @@ export function DataTableDemo({
       header: "Editora",
       cell: ({ row }) => (
         <div className='capitalize'>{row.getValue("publisher")}</div>
+      ),
+    },
+    {
+      accessorKey: "category.name",
+      header: "Categoria",
+      cell: ({ row }) => (
+        <div className='capitalize'>{row.original.category.name}</div>
       ),
     },
     {
@@ -409,6 +291,7 @@ function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
 }
+
 type IsBarcodeProps = {
   id: string;
 };

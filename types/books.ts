@@ -5,5 +5,9 @@ export type TypeBooks = {
   publisher: string;
   totalCopies: number;
   availableCopies: number;
+  category: {
+    name: string;
+    id: string;
+  }
   barcode: string;
 };

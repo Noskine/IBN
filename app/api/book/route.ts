@@ -43,6 +43,54 @@ export async function GET(req: Request) {
   }
 }
 
+export async function POST(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const body = await req.json();
+    
+    let book = searchParams.get("id");
+
+    if (!book)
+      throw new ExpectedError({
+        message: "Mal formatação da query!",
+        status: Status.InternalServerError,
+      });
+    
+    const { id } = body;
+
+    // Validação básica
+    if (!id) {
+      return NextResponse.json(
+        { error: "Dados obrigatórios faltando." },
+        { status: 400 }
+      );
+    }
+
+
+    await prisma.book.update({
+      where: {
+        id: book as string,
+      },
+      data: {
+        categoryId: id,
+      },
+    });
+
+
+    return NextResponse.json({
+      status: Status.OK,
+    });
+  } catch (err) {
+    if (err instanceof ExpectedError) {
+      console.log("entrou aqui");
+
+      return NextResponse.json(err.json(), {
+        status: err.getStatus(),
+      });
+    }
+  }
+}
+
 export async function PUT(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
