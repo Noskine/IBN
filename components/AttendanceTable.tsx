@@ -44,11 +44,6 @@ const columns: ColumnDef<Attendance>[] = [
     cell: ({ row }) => <span className="font-medium capitalize">{row.original.people.name}</span>,
   },
   {
-    accessorKey: "people.course.name",
-    header: "Curso",
-    cell: ({ row }) => row.original.people.course?.name ?? "Sem curso"
-  },
-  {
     accessorKey: "entryAt",
     header: "Entrada",
     cell: ({ row }) =>
