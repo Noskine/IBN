@@ -30,8 +30,9 @@ export default function RegisterEntryPage() {
       } else {
         setMessage({ type: "error", text: "Erro ao registrar entrada." });
       }
-    } catch (error) {
-      setMessage({ type: "error", text: "Erro na requisição." });
+    } catch (err) {
+      //@ts-expect-error
+      setMessage({ type: "error", text: "Erro na requisição.", err });
     }
 
     setTimeout(() => setMessage(null), 4000);

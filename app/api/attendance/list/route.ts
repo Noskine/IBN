@@ -2,7 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
   const now = new Date();
 
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());

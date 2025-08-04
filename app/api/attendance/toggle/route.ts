@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
   if (existing) {
     // registrar saída
-    const updated = await prisma.attendance.update({
+     await prisma.attendance.update({
       where: { id: existing.id },
       data: { exitAt: new Date() },
     });

@@ -8,7 +8,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpDown, Check, Clock, LogOut } from "lucide-react";
+import { ArrowUpDown,  Clock, LogOut } from "lucide-react";
 
 type Attendance = {
   id: string;
