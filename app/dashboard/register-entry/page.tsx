@@ -31,16 +31,31 @@ export default function RegisterEntryPage() {
         setMessage({ type: "error", text: "Erro ao registrar entrada." });
       }
     } catch (err) {
-      //@ts-expect-error
-      setMessage({ type: "error", text: "Erro na requisição.", err });
+      setMessage({ type: "error", text: "Erro na requisição." });
     }
 
     setTimeout(() => setMessage(null), 4000);
   };
 
   useEffect(() => {
-    inputRef.current?.focus();
+    // Foca automaticamente no input quando a página carregar
+    const focusInput = () => inputRef.current?.focus();
+    focusInput();
+
+    // Garante que o input continue focado mesmo após cliques fora
+    window.addEventListener("click", focusInput);
+    return () => window.removeEventListener("click", focusInput);
   }, []);
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const value = inputRef.current?.value.trim();
+      if (value) {
+        await handleSubmit(value);
+        if (inputRef.current) inputRef.current.value = "";
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
@@ -50,15 +65,7 @@ export default function RegisterEntryPage() {
         ref={inputRef}
         placeholder="Escaneie o código de barras"
         className="text-center text-lg max-w-sm"
-        onKeyDown={async (e) => {
-          if (e.key === "Enter") {
-            const value = e.currentTarget.value.trim();
-            if (value) {
-              await handleSubmit(value);
-              e.currentTarget.value = "";
-            }
-          }
-        }}
+        onKeyDown={handleKeyDown}
       />
 
       {message && (
