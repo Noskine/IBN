@@ -26,8 +26,7 @@ export default function DashboardPage() {
     fetch("/api/loan").then((res) => res.json().then((data) => setLoans(data)));
 
     fetch("/api/categories").then((res) => res.json().then((data) => setCategories(data)));
-    fetch("/api/attendance/list").then((res) => res.json().then((data) => setCategories(data)));
-     fetch("/api/categories").then((res) => res.json().then((data) => setCategories(data)));
+    fetch("/api/attendance/list").then((res) => res.json().then((data) => setAttendance(data)));
 
   }, []);
 
