@@ -46,7 +46,7 @@ const columns: ColumnDef<Attendance>[] = [
   {
     accessorKey: "people.course.name",
     header: "Curso",
-    cell: ({ row }) => row.original.people.course.name,
+    cell: ({ row }) => row.original.people.course?.name ?? "Sem curso"
   },
   {
     accessorKey: "entryAt",
