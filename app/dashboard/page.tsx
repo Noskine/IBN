@@ -12,7 +12,6 @@ export default function DashboardPage() {
   const [readers, setReaders] = useState([]);
   const [loans, setLoans] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [attendance, setAttendance] = useState([]);
   
   useEffect(() => {
     fetch("/api/books").then((res) =>
@@ -27,7 +26,6 @@ export default function DashboardPage() {
 
     fetch("/api/categories").then((res) => res.json().then((data) => setCategories(data)));
 
-    fetch("/api/attendance/list").then((res) => res.json().then((data) => setAttendance(data)));
 
   }, []);
 
@@ -51,7 +49,7 @@ export default function DashboardPage() {
             <LoanTable data={loans!} />
           </div>
           <div>
-             <AttendanceTable data={attendance!} />
+             {/* <AttendanceTable data={attendance!} /> */}
           </div>
         </div>
       </div>
