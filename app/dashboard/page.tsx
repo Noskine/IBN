@@ -36,15 +36,16 @@ export default function DashboardPage() {
             <SectionCards data={books!} />
           </div>
           <div>
-            <h2 className='text-2xl font-bold'>Consultas</h2>
-            <Separator className='mt-1 mb-3' />
-            <LoanTable data={loans!} />
-          </div>
-          <div>
             <h2 className='text-2xl font-bold'>Livros</h2>
             <Separator className='mt-1 mb-3' />
             <DataTableDemo data={books!} readers={readers!} categories={categories} />
           </div>
+          <div>
+            <h2 className='text-2xl font-bold'>Consultas</h2>
+            <Separator className='mt-1 mb-3' />
+            <LoanTable data={loans!} />
+          </div>
+          
         </div>
       </div>
     </div>
