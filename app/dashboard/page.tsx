@@ -26,7 +26,8 @@ export default function DashboardPage() {
     fetch("/api/loan").then((res) => res.json().then((data) => setLoans(data)));
 
     fetch("/api/categories").then((res) => res.json().then((data) => setCategories(data)));
-    fetch("/api/attendance").then((res) => res.json().then((data) => setAttendance(data)));
+
+    fetch("/api/attendance/list").then((res) => res.json().then((data) => setAttendance(data)));
 
   }, []);
 
@@ -42,7 +43,7 @@ export default function DashboardPage() {
           <div>
             <h2 className='text-2xl font-bold'>Livros</h2>
             <Separator className='mt-1 mb-3' />
-            <DataTableDemo data={books!} readers={readers!} categories={categories} />
+            <DataTableDemo data={books!} readers={readers!} categories={categories!} />
           </div>
           <div>
             <h2 className='text-2xl font-bold'>Consultas</h2>
@@ -50,7 +51,7 @@ export default function DashboardPage() {
             <LoanTable data={loans!} />
           </div>
           <div>
-             <AttendanceTable data={attendance} />
+             <AttendanceTable data={attendance!} />
           </div>
         </div>
       </div>
