@@ -1,5 +1,6 @@
 "use client";
 
+import { AttendanceTable } from "@/components/AttendanceTable";
 import { DataTableDemo } from "@/components/data-table";
 import { LoanTable } from "@/components/data-table-loans";
 import { SectionCards } from "@/components/section-cards";
@@ -11,6 +12,7 @@ export default function DashboardPage() {
   const [readers, setReaders] = useState([]);
   const [loans, setLoans] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [attendance, setAttendance] = useState([]);
   
   useEffect(() => {
     fetch("/api/books").then((res) =>
@@ -24,6 +26,9 @@ export default function DashboardPage() {
     fetch("/api/loan").then((res) => res.json().then((data) => setLoans(data)));
 
     fetch("/api/categories").then((res) => res.json().then((data) => setCategories(data)));
+    fetch("/api/attendance/list").then((res) => res.json().then((data) => setCategories(data)));
+     fetch("/api/categories").then((res) => res.json().then((data) => setCategories(data)));
+
   }, []);
 
   return (
@@ -45,7 +50,9 @@ export default function DashboardPage() {
             <Separator className='mt-1 mb-3' />
             <LoanTable data={loans!} />
           </div>
-          
+          <div>
+             <AttendanceTable data={attendance} />
+          </div>
         </div>
       </div>
     </div>
