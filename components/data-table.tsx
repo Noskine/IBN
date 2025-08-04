@@ -56,17 +56,16 @@ import { toast } from "sonner";
 import { TypeBooks } from "@/types/books";
 import { TypeComboBoxReaders } from "@/types/combobox";
 import { Label } from "./ui/label";
-
-
-
-
+import { TypeCategories } from "@/types/categories";
 
 export function DataTableDemo({
   data,
   readers,
+  categories
 }: {
   data: TypeBooks[];
-  readers: TypeComboBoxReaders[];
+    readers: TypeComboBoxReaders[];
+  categories: TypeCategories[]
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -152,7 +151,7 @@ export function DataTableDemo({
     {
       id: "actions",
       enableHiding: false,
-      cell: ({ row }) => <BookActions book={row.original} readers={readers!} />,
+      cell: ({ row }) => <BookActions book={row.original} readers={readers!} categories={categories!} />,
     },
   ];
   const table = useReactTable({

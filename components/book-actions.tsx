@@ -14,18 +14,27 @@ import {
 import * as React from "react";
 import { TypeComboBoxReaders } from "@/types/combobox";
 import { toast } from "sonner";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { Barcode, MoreHorizontal } from "lucide-react";
 import { Label } from "./ui/label";
 import { CategoryCombobox } from "./category-combox";
 import { IsBarcode } from "./data-table";
+import { TypeCategories } from "@/types/categories";
 
 export function BookActions({
   book,
   readers,
+  categories,
 }: {
   book: TypeBooks;
-  readers: TypeComboBoxReaders[];
+    readers: TypeComboBoxReaders[];
+    categories: TypeCategories[];
 }) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openDialogTwo, setOpenDialogTwo] = React.useState(false);
@@ -33,21 +42,7 @@ export function BookActions({
   const [leitorSelecionado, setLeitorSelecionado] = React.useState("");
   const [categoriaSelecionada, setCategoriaSelecionada] = React.useState("");
   const session = useUserSession();
-  const [category, setCategory] = React.useState([]);
 
-  React.useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch("/api/categories");
-        const data = await res.json();
-        setCategory(data);
-      } catch (err) {
-        console.error("Erro ao buscar categorias:", err);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +69,7 @@ export function BookActions({
     const res = await fetch(`/api/book?id=${book.id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({id : categoriaSelecionada }),
+      body: JSON.stringify({ id: categoriaSelecionada }),
     });
     if (res.ok) {
       toast.success("Categoria atualizada!");
@@ -168,7 +163,7 @@ export function BookActions({
             >
               <Label>Categoria</Label>
               <CategoryCombobox
-                categorias={category}
+                categorias={categories}
                 onSelect={(val) => setCategoriaSelecionada(val)}
               />
               <DialogFooter>

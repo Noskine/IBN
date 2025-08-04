@@ -10,7 +10,8 @@ export default function DashboardPage() {
   const [books, setBooks] = useState([]);
   const [readers, setReaders] = useState([]);
   const [loans, setLoans] = useState([]);
-
+  const [categories, setCategories] = useState([]);
+  
   useEffect(() => {
     fetch("/api/books").then((res) =>
       res.json().then((data) => setBooks(data))
@@ -21,6 +22,8 @@ export default function DashboardPage() {
     );
 
     fetch("/api/loan").then((res) => res.json().then((data) => setLoans(data)));
+
+    fetch("/api/categories").then((res) => res.json().then((data) => setCategories(data)));
   }, []);
 
   return (
@@ -40,7 +43,7 @@ export default function DashboardPage() {
           <div>
             <h2 className='text-2xl font-bold'>Livros</h2>
             <Separator className='mt-1 mb-3' />
-            <DataTableDemo data={books!} readers={readers!} />
+            <DataTableDemo data={books!} readers={readers!} categories={categories} />
           </div>
         </div>
       </div>
