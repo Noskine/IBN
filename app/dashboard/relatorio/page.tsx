@@ -1,9 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { LogIn, LogOut } from "lucide-react";
 
-// Utilitário para filtrar só terça, quarta e quinta
 function isAllowedWeekday(date: Date) {
   const day = date.getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
   return [2, 3, 4].includes(day); // terça, quarta, quinta
@@ -22,19 +29,15 @@ export default async function RelatorioPage() {
       },
     },
     include: {
-      people: {
-        include: {
-          course: true,
-        },
-      },
+      people: true,
     },
-    orderBy: {
-      entryAt: "asc",
-    },
+    orderBy: [
+      { people: { name: "asc" } },
+      { entryAt: "asc" },
+    ],
   });
 
-  // Organiza os dados por aluno
-  const dataByStudent: Record<string, Record<string, string>> = {};
+  const dataByStudent: Record<string, Record<string, { entry?: string; exit?: string }>> = {};
 
   attendances.forEach((a) => {
     const date = new Date(a.entryAt);
@@ -42,13 +45,17 @@ export default async function RelatorioPage() {
 
     const name = a.people.name;
     const key = format(date, "dd/MM", { locale: ptBR });
-    const time = format(date, "HH:mm");
 
     if (!dataByStudent[name]) dataByStudent[name] = {};
-    dataByStudent[name][key] = time;
+    if (!dataByStudent[name][key]) dataByStudent[name][key] = {};
+
+    dataByStudent[name][key].entry = format(date, "HH:mm");
+
+    if (a.exitAt) {
+      dataByStudent[name][key].exit = format(new Date(a.exitAt), "HH:mm");
+    }
   });
 
-  // Todas as datas únicas (colunas da tabela)
   const allDates = Array.from(
     new Set(
       attendances
@@ -59,30 +66,56 @@ export default async function RelatorioPage() {
         })
         .filter(Boolean) as string[]
     )
-  );
+  ).sort((a, b) => {
+    const [da, ma] = a.split("/").map(Number);
+    const [db, mb] = b.split("/").map(Number);
+    return ma !== mb ? ma - mb : da - db;
+  });
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Relatório de Presença (última semana)</h1>
+      <h1 className="text-2xl font-bold mb-6">Relatório de Presença (Última Semana)</h1>
 
       <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nome</TableHead>
+              <TableHead className="border-r">Nome</TableHead>
               {allDates.map((date) => (
-                <TableHead key={date}>{date}</TableHead>
+                <TableHead key={date} className="text-center border-x">
+                  {date}
+                </TableHead>
               ))}
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {Object.entries(dataByStudent).map(([name, dates]) => (
-              <TableRow key={name}>
-                <TableCell className="font-medium">{name}</TableCell>
-                {allDates.map((date) => (
-                  <TableCell key={date}>{dates[date] ?? "—"}</TableCell>
-                ))}
+              <TableRow key={name} className="border-t">
+                <TableCell className="font-medium border-r">{name}</TableCell>
+                {allDates.map((date) => {
+                  const value = dates[date];
+                  return (
+                    <TableCell key={date} className="text-center border-x">
+                      {value ? (
+                        <div className="flex flex-col items-center gap-1 text-sm">
+                          <span className="flex items-center gap-1 text-green-600">
+                            <LogIn className="w-4 h-4" />
+                            {value.entry}
+                          </span>
+                          {value.exit && (
+                            <span className="flex items-center gap-1 text-red-600">
+                              <LogOut className="w-4 h-4" />
+                              {value.exit}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))}
           </TableBody>
@@ -91,4 +124,3 @@ export default async function RelatorioPage() {
     </div>
   );
 }
-  
