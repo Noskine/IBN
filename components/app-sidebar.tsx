@@ -18,7 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Archive, BookmarkIcon } from "lucide-react"
+import { Archive, DoorClosedLocked } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 const data = {
@@ -45,6 +45,12 @@ const data = {
       title: "Leitores",
       url: "/dashboard/readers",
       icon: IconUsers,
+      variant: false,
+    },
+    {
+      title: "Entrada/Saída",
+      url: "/register-exit",
+      icon: DoorClosedLocked,
       variant: false,
     },
   ],
