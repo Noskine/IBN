@@ -91,7 +91,7 @@ const columns: ColumnDef<Loan>[] = [
   {
     accessorKey: "book.category.name",
     header: "Categoria",
-    cell: ({ row }) => row.original.book.category.name,
+    cell: ({ row }) =>  truncate(row.original.book.category.name, 20),
   },
   {
     accessorKey: "loanDate",
