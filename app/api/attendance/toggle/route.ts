@@ -3,30 +3,56 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { peopleId } = await req.json();
+  try {
+    const { peopleId } = await req.json();
 
-  // verifica se há presença ativa sem saída
-  const existing = await prisma.attendance.findFirst({
-    where: { peopleId, exitAt: null },
-    orderBy: { entryAt: "desc" },
-    include: { people: true },
-  });
-
-  if (existing) {
-    // registrar saída
-     await prisma.attendance.update({
-      where: { id: existing.id },
-      data: { exitAt: new Date() },
+    const person = await prisma.people.findUnique({
+      where: { id: peopleId },
     });
 
-    return NextResponse.json({ action: "exit", name: existing.people.name });
-  } else {
-    // registrar entrada
-    const attendance = await prisma.attendance.create({
-      data: { peopleId },
-      include: { people: true },
+    if (!person) {
+      return NextResponse.json({ error: "Pessoa não encontrada" }, { status: 404 });
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const existing = await prisma.attendance.findFirst({
+      where: {
+        peopleId,
+        entryAt: { gte: today },
+        exitAt: null,
+      },
     });
 
-    return NextResponse.json({ action: "entry", name: attendance.people.name });
+    if (existing) {
+      const updated = await prisma.attendance.update({
+        where: { id: existing.id },
+        data: { exitAt: new Date() },
+        include: { people: true },
+      });
+
+      return NextResponse.json({
+        message: "Saída registrada",
+        action: "exit",
+        data: updated,
+        name: updated.people.name,
+      });
+    } else {
+      const created = await prisma.attendance.create({
+        data: { peopleId },
+        include: { people: true },
+      });
+
+      return NextResponse.json({
+        message: "Entrada registrada",
+        action: "entry",
+        data: created,
+        name: created.people.name,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

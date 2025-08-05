@@ -1,3 +1,4 @@
+// components/ScannerListener.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,7 +9,6 @@ export default function ScannerListener() {
   const [buffer, setBuffer] = useState("");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  // escuta geral do teclado (scanner simula digitação)
   useEffect(() => {
     let timeout: NodeJS.Timeout;
 
@@ -22,7 +22,6 @@ export default function ScannerListener() {
         }
       } else {
         setBuffer((prev) => prev + e.key);
-        // reseta o buffer se o usuário demorar para digitar (não é scanner)
         timeout = setTimeout(() => setBuffer(""), 500);
       }
     };
@@ -31,21 +30,21 @@ export default function ScannerListener() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [buffer]);
 
-  const processScan = async (peopleId: string) => {
+  const processScan = async (rawInput: string) => {
+    let peopleId = rawInput.startsWith("F2") ? rawInput.slice(2) : rawInput;
+
     try {
       const res = await fetch("/api/attendance/toggle", {
         method: "POST",
         body: JSON.stringify({ peopleId }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        const action = data.action === "entry" ? "Entrada registrada" : "Saída registrada";
-        setMessage({ type: "success", text: `${action} para ${data.name}` });
+        const actionText = data.action === "entry" ? "Entrada registrada" : "Saída registrada";
+        setMessage({ type: "success", text: `${actionText} para ${data.name}` });
       } else {
         setMessage({ type: "error", text: data.error || "Erro no servidor" });
       }
