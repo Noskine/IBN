@@ -49,7 +49,7 @@ const data = {
     },
     {
       title: "Entrada/Saída",
-      url: "/register-exit",
+      url: "/dashboard/register-exit",
       icon: DoorClosedLocked,
       variant: false,
     },
