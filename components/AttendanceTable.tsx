@@ -7,6 +7,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  getFilteredRowModel,
 } from "@tanstack/react-table";
 import { useState } from "react";
 import {
@@ -19,7 +20,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpDown,  Clock, LogOut } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowUpDown, Clock, LogOut } from "lucide-react";
 
 type Attendance = {
   id: string;
@@ -80,19 +82,33 @@ const columns: ColumnDef<Attendance>[] = [
 
 export function AttendanceTable({ data }: { data: Attendance[] }) {
   const [sorting, setSorting] = useState([{ id: "entryAt", desc: true }]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const table = useReactTable({
     data,
     columns,
-    state: { sorting },
+    state: { sorting, globalFilter },
     onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    globalFilterFn: (row, columnId, filterValue) => {
+      const value = row.getValue(columnId);
+      return String(value).toLowerCase().includes(filterValue.toLowerCase());
+    },
   });
 
   return (
     <div className="w-full space-y-4">
+      <Input
+        placeholder="Filtrar por nome..."
+        value={globalFilter}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+        className="max-w-sm"
+      />
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -150,4 +166,3 @@ export function AttendanceTable({ data }: { data: Attendance[] }) {
     </div>
   );
 }
-
