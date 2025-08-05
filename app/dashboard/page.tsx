@@ -53,7 +53,6 @@ export default function DashboardPage() {
           </div>
           <div>
             <AttendanceTable data={attendance!} />
-            <ScannerListener />
           </div>
         </div>
       </div>
