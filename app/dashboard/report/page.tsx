@@ -96,9 +96,9 @@ export default async function RelatorioPage() {
                 {allDates.map((date) => {
                   const value = dates[date];
                   return (
-                    <TableCell key={date} className="text-center border-x flex gap-1 items-center">
+                    <TableCell key={date} className="text-center border-x">
                       {value ? (
-                        <div className="flex flex-col items-center gap-1 text-sm">
+                        <div className="flex items-center gap-1 text-sm ">
                           <span className="flex items-center gap-1 text-green-600">
                             <LogIn className="w-4 h-4" />
                             {value.entry}
