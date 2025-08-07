@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpDown, AlertOctagon, Check, Loader, ChevronDown } from "lucide-react";
+import { ArrowUpDown, AlertOctagon, Check, Loader, ChevronDown, Link } from "lucide-react";
 import { RowActions } from "./row-actions";
 
 import {
@@ -41,6 +41,7 @@ import { Label } from "@/components/ui/label";
 export type Loan = {
   id: string;
   people: {
+    id: string;
     name: string;
   };
   book: {
@@ -67,7 +68,11 @@ const columns: ColumnDef<Loan>[] = [
         Leitor <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <span className="font-medium capitalize!">{row.original.people.name}</span>,
+    cell: ({ row }) => {
+      return (
+        <Link href={`/dashboard/readers/${row.original.people.id}`} className="underline cursor-pointer">{row.original.people.name}</Link>
+      )
+    },
   },
   {
     accessorKey: "book.title",
