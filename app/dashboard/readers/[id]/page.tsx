@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function BookPage() {
   const [reader, setReader] = useState<ReaderType>();
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const params = useParams();
 
   useEffect(() => {
@@ -32,15 +32,6 @@ export default function BookPage() {
       </div>
       <Separator className='my-1' />
       {reader?.loans.map((e, k) => {
-        const color =
-          e.status === "ACTIVE"
-            ? "bg-sky-500 text-zinc-950 dark:bg-sky-600 dark:text-white"
-            : status === "RETURNED"
-            ? "bg-green-500 text-zinc-950 dark:bg-green-600 dark:text-white"
-            : status === "LATE"
-            ? "bg-yellow-500 text-zinc-950 dark:bg-yellow-600 dark:text-white"
-            : "bg-red-500 text-zinc-950 dark:bg-red-600 dark:text-white";
-
         return (
           <div
             className='w-full shadow-lg dark:bg-zinc-800 bg-zinc-50 px-2 py-3 rounded-lg mb-3'
@@ -73,20 +64,20 @@ export default function BookPage() {
               </span>
               <span className='text-xs'>
                 <span className='font-bold'>Entregado em: </span>
-                {e.returnDate ? new Date(e?.returnDate!).toLocaleDateString(): "—"}
+                {e.returnDate
+                  ? new Date(e?.returnDate!).toLocaleDateString()
+                  : "—"}
               </span>
               <span>
-                <Badge className={color + ""} variant='outline'>
-                  {e.status === "ACTIVE" ? (
-                    <Emprestado />
-                  ) : e.status === "RETURNED" ? (
-                    <Retornado />
-                  ) : e.status === "LATE" ? (
-                    <Atrasado />
-                  ) : (
-                    <Perdido />
-                  )}
-                </Badge>
+                {e.status === "ACTIVE" ? (
+                  <Emprestado />
+                ) : e.status === "RETURNED" ? (
+                  <Retornado />
+                ) : e.status === "LATE" ? (
+                  <Atrasado />
+                ) : (
+                  <Perdido />
+                )}
               </span>
             </p>
           </div>
@@ -96,35 +87,34 @@ export default function BookPage() {
   );
 }
 
-
 function Emprestado() {
   return (
-    <span className='flex gap-1 items-center'>
+    <Badge className='flex gap-1 items-center bg-blue-700 dark:bg-blue-500'>
       <Loader className='size-3' /> Emprestado{" "}
-    </span>
+    </Badge>
   );
 }
 
 function Retornado() {
   return (
-    <span className='flex gap-1 items-center'>
+    <Badge className='flex gap-1 items-center bg-green-700 dark:bg-green-500'>
       <Check className='size-3' /> Retornado{" "}
-    </span>
+    </Badge>
   );
 }
 
 function Perdido() {
   return (
-    <span className='flex gap-1 items-center'>
+    <Badge className='flex gap-1 items-center bg-yellow-700 dark:bg-yellow-500'>
       <AlertOctagon className='size-3' /> Perdido{" "}
-    </span>
+    </Badge>
   );
 }
 
 function Atrasado() {
   return (
-    <span className='flex gap-1 items-center'>
+    <Badge className='flex gap-1 items-center bg-red-600 dark:bg-red-500'>
       <AlertOctagon className='size-3' /> Atrasado{" "}
-    </span>
+    </Badge>
   );
 }
