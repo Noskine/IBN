@@ -1,5 +1,6 @@
+// app/relatorio/page.tsx
 import { prisma } from "@/lib/prisma";
-import { format } from "date-fns";
+import { format, startOfWeek, endOfWeek } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
   Table,
@@ -17,9 +18,9 @@ function isAllowedWeekday(date: Date) {
 }
 
 export default async function RelatorioPage() {
-  const start = new Date();
-  start.setDate(start.getDate() - 7); // última semana
   const end = new Date();
+  const start = new Date();
+  start.setDate(end.getDate() - 7); // últimos 7 dias
 
   const attendances = await prisma.attendance.findMany({
     where: {
@@ -31,10 +32,7 @@ export default async function RelatorioPage() {
     include: {
       people: true,
     },
-    orderBy: [
-      { people: { name: "asc" } },
-      { entryAt: "asc" },
-    ],
+    orderBy: [{ people: { name: "asc" } }, { entryAt: "asc" }],
   });
 
   const dataByStudent: Record<string, Record<string, { entry?: string; exit?: string }>> = {};
@@ -72,54 +70,94 @@ export default async function RelatorioPage() {
     return ma !== mb ? ma - mb : da - db;
   });
 
+  // Buscar observações da semana
+  const weeklyObservations = await prisma.attendance.findMany({
+    where: {
+      entryAt: {
+        gte: startOfWeek(start, { locale: ptBR, weekStartsOn: 1 }),
+        lte: endOfWeek(end, { locale: ptBR, weekStartsOn: 1 }),
+      },
+      observation: {
+        not: null,
+      },
+    },
+    select: {
+      id: true,
+      observation: true,
+      people: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Relatório de Presença (Última Semana)</h1>
+    <div className="p-6 space-y-10">
+      <div>
+        <h1 className="text-2xl font-bold mb-6">Relatório de Presença (Última Semana)</h1>
 
-      <div className="rounded-md border overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="border-r font-bold">Nome</TableHead>
-              {allDates.map((date) => (
-                <TableHead key={date} className="text-center border-x font-bold">
-                  {date}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {Object.entries(dataByStudent).map(([name, dates]) => (
-              <TableRow key={name} className="border-t">
-                <TableCell className="font-bold border-r">{name}</TableCell>
-                {allDates.map((date) => {
-                  const value = dates[date];
-                  return (
-                    <TableCell key={date} className="text-center border-x">
-                      {value ? (
-                        <div className="flex justify-around items-center gap-1 text-sm">
-                          <span className="flex items-center gap-1 text-green-600">
-                            <LogIn className="w-4 h-4" />
-                            {value.entry}
-                          </span>
-                          {value.exit && (
-                            <span className="flex items-center gap-1 text-red-600">
-                              <LogOut className="w-4 h-4" />
-                              {value.exit}
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground">—</span>
-                      )}
-                    </TableCell>
-                  );
-                })}
+        <div className="rounded-md border overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="border-r font-bold">Nome</TableHead>
+                {allDates.map((date) => (
+                  <TableHead key={date} className="text-center border-x font-bold">
+                    {date}
+                  </TableHead>
+                ))}
               </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              {Object.entries(dataByStudent).map(([name, dates]) => (
+                <TableRow key={name} className="border-t">
+                  <TableCell className="font-bold border-r">{name}</TableCell>
+                  {allDates.map((date) => {
+                    const value = dates[date];
+                    return (
+                      <TableCell key={date} className="text-center border-x">
+                        {value ? (
+                          <div className="flex justify-around items-center gap-1 text-sm">
+                            <span className="flex items-center gap-1 text-green-600">
+                              <LogIn className="w-4 h-4" />
+                              {value.entry}
+                            </span>
+                            {value.exit && (
+                              <span className="flex items-center gap-1 text-red-600">
+                                <LogOut className="w-4 h-4" />
+                                {value.exit}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      {/* Observações */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Observações da Semana</h2>
+        {weeklyObservations.length > 0 ? (
+          <ul className="space-y-2">
+            {weeklyObservations.map((obs) => (
+              <li key={obs.id} className="p-4 border rounded-md bg-muted/30">
+                <strong>{obs.people.name}:</strong> {obs.observation}
+              </li>
             ))}
-          </TableBody>
-        </Table>
+          </ul>
+        ) : (
+          <p className="text-muted-foreground">Nenhuma observação registrada nesta semana.</p>
+        )}
       </div>
     </div>
   );

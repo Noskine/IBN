@@ -28,6 +28,15 @@ model Attendance {
   people      People    @relation(fields: [peopleId], references: [id])
 }
 
+model WeeklyObservation {
+  id          String   @id @default(cuid())
+  peopleId    String
+  weekStart   DateTime // sempre uma segunda-feira
+  observation String
+
+  people People @relation(fields: [peopleId], references: [id])
+}
+
 model People {
   id       String @id @default(cuid())
   name     String
@@ -36,7 +45,8 @@ model People {
   loans    Loan[]
   courseId String
 
-  Attendance Attendance[]
+  Attendance        Attendance[]
+  WeeklyObservation WeeklyObservation[]
 }
 
 model Book {

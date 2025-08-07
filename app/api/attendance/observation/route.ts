@@ -1,16 +1,32 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { startOfWeek } from "date-fns";
 
 export async function POST(req: Request) {
   try {
-    const { attendanceId, observation } = await req.json();
+    const { peopleId, observation } = await req.json();
 
-    const updated = await prisma.attendance.update({
-      where: { id: attendanceId },
-      data: { observation },
+    // calcula o início da semana (segunda-feira)
+    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+
+    // verifica se já existe uma observação nessa semana
+    const existing = await prisma.weeklyObservation.findFirst({
+      where: { peopleId, weekStart },
     });
 
-    return NextResponse.json({ message: "Observação salva", data: updated });
+    let result;
+    if (existing) {
+      result = await prisma.weeklyObservation.update({
+        where: { id: existing.id },
+        data: { observation },
+      });
+    } else {
+      result = await prisma.weeklyObservation.create({
+        data: { peopleId, weekStart, observation },
+      });
+    }
+
+    return NextResponse.json({ message: "Observação salva", data: result });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Erro ao salvar observação" }, { status: 500 });
