@@ -55,7 +55,7 @@ const columns: ColumnDef<Read>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <Link href={`/dashboard/readers/${row.original.id}`} className="underline cursor-pointer">{row.original.name}</Link>
+        <Link href={`/dashboard/readers/${row.original.id}`} className="underline cursor-pointer font-bold">{row.original.name}</Link>
       )
     },
     enableSorting: true,

@@ -80,7 +80,7 @@ export default async function RelatorioPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="border-r">Nome</TableHead>
+              <TableHead className="border-r">Alunos</TableHead>
               {allDates.map((date) => (
                 <TableHead key={date} className="text-center border-x">
                   {date}
