@@ -61,7 +61,11 @@ export function DataTableDemo({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  // Estado para código de barras capturado
+  // Filtros para título e autor (dois inputs separados)
+  const [titleFilter, setTitleFilter] = React.useState("");
+  const [authorFilter, setAuthorFilter] = React.useState("");
+
+  // Estado para código de barras capturado automaticamente
   const [barcodeBuffer, setBarcodeBuffer] = React.useState("");
   const [timerId, setTimerId] = React.useState<NodeJS.Timeout | null>(null);
 
@@ -69,15 +73,12 @@ export function DataTableDemo({
   const [selectedBook, setSelectedBook] = React.useState<TypeBooks | null>(null);
   const [popoverOpen, setPopoverOpen] = React.useState(false);
 
+  // Definição das colunas
   const columns: ColumnDef<TypeBooks>[] = [
     {
       accessorKey: "title",
       header: () => <span className="font-bold">Título</span>,
-      cell: ({ row }) => (
-        <div className="capitalize font-medium">
-          {truncate(row.original.title, 40)}
-        </div>
-      ),
+      cell: ({ row }) => <div className="capitalize font-medium">{truncate(row.original.title, 40)}</div>,
     },
     {
       accessorKey: "author",
@@ -90,31 +91,23 @@ export function DataTableDemo({
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="capitalize text-center">
-          {truncate(row.getValue("author"), 15)}
-        </div>
+        <div className="capitalize text-center">{truncate(row.getValue("author"), 15)}</div>
       ),
     },
     {
       accessorKey: "publisher",
       header: "Editora",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("publisher")}</div>
-      ),
+      cell: ({ row }) => <div className="capitalize">{row.getValue("publisher")}</div>,
     },
     {
       accessorKey: "category.name",
       header: "Categoria",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.original.category.name}</div>
-      ),
+      cell: ({ row }) => <div className="capitalize">{row.original.category.name}</div>,
     },
     {
       accessorKey: "totalCopies",
       header: "Totais",
-      cell: ({ row }) => (
-        <div className="text-center">{row.getValue("totalCopies")}</div>
-      ),
+      cell: ({ row }) => <div className="text-center">{row.getValue("totalCopies")}</div>,
     },
     {
       accessorKey: "availableCopies",
@@ -126,9 +119,7 @@ export function DataTableDemo({
           Disponíveis <ArrowUpDown />
         </Button>
       ),
-      cell: ({ row }) => (
-        <div className="text-center">{row.getValue("availableCopies")}</div>
-      ),
+      cell: ({ row }) => <div className="text-center">{row.getValue("availableCopies")}</div>,
     },
     {
       id: "actions",
@@ -143,25 +134,20 @@ export function DataTableDemo({
     },
   ];
 
-  const table = useReactTable({
-    data,
-    columns,
-    state: { sorting, columnFilters, columnVisibility, rowSelection },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-  });
+  // Atualiza os filtros na tabela conforme inputs
+  React.useEffect(() => {
+    table.getColumn("title")?.setFilterValue(titleFilter);
+  }, [titleFilter]);
 
+  React.useEffect(() => {
+    table.getColumn("author")?.setFilterValue(authorFilter);
+  }, [authorFilter]);
+
+  // Lógica para detectar código de barras digitado rápido e abrir popover com o livro
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         if (barcodeBuffer.length > 0) {
-          // Ao pressionar Enter, busca livro e abre popover
           const found = data.find((book) => book.barcode === barcodeBuffer);
           if (found) {
             setSelectedBook(found);
@@ -179,10 +165,7 @@ export function DataTableDemo({
           }
         }
       } else {
-        // Acumula caracteres rápidos no buffer
         setBarcodeBuffer((prev) => prev + e.key);
-
-        // Reseta timer para limpar buffer se parar de digitar por 500ms
         if (timerId) clearTimeout(timerId);
         const timeout = setTimeout(() => setBarcodeBuffer(""), 500);
         setTimerId(timeout);
@@ -196,38 +179,38 @@ export function DataTableDemo({
     };
   }, [barcodeBuffer, data, timerId]);
 
+  // Cria a tabela com filtros e estado
+  const table = useReactTable({
+    data,
+    columns,
+    state: { sorting, columnFilters, columnVisibility, rowSelection },
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
   return (
     <div className="w-full">
-      {/* Popover que abre automaticamente para o livro detectado */}
+      {/* Popover automático */}
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
         <PopoverTrigger asChild>
-          {/* Botão invisível, só para controlar o popover */}
           <button style={{ display: "none" }}>open popover</button>
         </PopoverTrigger>
         <PopoverContent className="w-80 text-sm">
           {selectedBook ? (
             <>
-              <h3 className="font-semibold text-base mb-2">
-                📘 {selectedBook.title}
-              </h3>
-              <p>
-                <strong>Autor:</strong> {selectedBook.author}
-              </p>
-              <p>
-                <strong>Editora:</strong> {selectedBook.publisher}
-              </p>
-              <p>
-                <strong>Categoria:</strong> {selectedBook.category?.name}
-              </p>
-              <p>
-                <strong>Totais:</strong> {selectedBook.totalCopies}
-              </p>
-              <p>
-                <strong>Disponíveis:</strong> {selectedBook.availableCopies}
-              </p>
-              <p>
-                <strong>Código:</strong> {selectedBook.barcode}
-              </p>
+              <h3 className="font-semibold text-base mb-2">📘 {selectedBook.title}</h3>
+              <p><strong>Autor:</strong> {selectedBook.author}</p>
+              <p><strong>Editora:</strong> {selectedBook.publisher}</p>
+              <p><strong>Categoria:</strong> {selectedBook.category?.name}</p>
+              <p><strong>Totais:</strong> {selectedBook.totalCopies}</p>
+              <p><strong>Disponíveis:</strong> {selectedBook.availableCopies}</p>
+              <p><strong>Código:</strong> {selectedBook.barcode}</p>
             </>
           ) : (
             <p>Livro não encontrado.</p>
@@ -235,8 +218,23 @@ export function DataTableDemo({
         </PopoverContent>
       </Popover>
 
-      {/* Filtros e Colunas */}
+      {/* Filtros */}
       <div className="flex items-center py-4 gap-2">
+        <input
+          type="text"
+          placeholder="Pesquisar por título"
+          value={titleFilter}
+          onChange={(e) => setTitleFilter(e.target.value)}
+          className="input input-bordered max-w-sm"
+        />
+        <input
+          type="text"
+          placeholder="Pesquisar por autor"
+          value={authorFilter}
+          onChange={(e) => setAuthorFilter(e.target.value)}
+          className="input input-bordered max-w-sm"
+        />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -271,10 +269,7 @@ export function DataTableDemo({
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
