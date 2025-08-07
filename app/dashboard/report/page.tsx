@@ -1,3 +1,5 @@
+"use serve"
+
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -96,7 +98,7 @@ export default async function RelatorioPage() {
                 {allDates.map((date) => {
                   const value = dates[date];
                   return (
-                    <TableCell key={date} className="text-center border-x">
+                    <TableCell key={date} className="text-center border-x flex gap-1 items-center">
                       {value ? (
                         <div className="flex flex-col items-center gap-1 text-sm">
                           <span className="flex items-center gap-1 text-green-600">

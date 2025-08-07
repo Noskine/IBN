@@ -38,7 +38,7 @@ export function StudentObservationForm() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await fetch("/api/attendance/today");
+      const res = await fetch("/api/readers");
       const data = await res.json();
       setStudents(data);
       setLoading(false);
@@ -84,16 +84,16 @@ export function StudentObservationForm() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full justify-start">
+          <Button variant='outline' className='w-full justify-start'>
             {selectedStudent ? selectedStudent.name : "Selecione um aluno..."}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0">
+        <PopoverContent className='w-full p-0'>
           <Command>
-            <CommandInput placeholder="Buscar aluno..." />
+            <CommandInput placeholder='Buscar aluno...' />
             <CommandEmpty>Nenhum aluno presente hoje.</CommandEmpty>
             <CommandGroup>
               {students.map((student) => (
@@ -118,19 +118,19 @@ export function StudentObservationForm() {
       </Popover>
 
       {selectedStudent && (
-        <div className="space-y-2">
+        <div className='space-y-2'>
           <Textarea
             value={observation}
             onChange={(e) => setObservation(e.target.value)}
-            placeholder="Digite uma observação sobre este aluno..."
-            className="text-sm"
+            placeholder='Digite uma observação sobre este aluno...'
+            className='text-sm'
           />
           <Button onClick={handleSave} disabled={saving}>
             {saving ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className='w-4 h-4 animate-spin' />
             ) : saved ? (
               <>
-                <Check className="w-4 h-4 mr-2" /> Salvo
+                <Check className='w-4 h-4 mr-2' /> Salvo
               </>
             ) : (
               "Salvar observação"
