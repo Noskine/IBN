@@ -7,7 +7,6 @@ export async function POST(req: Request) {
 
     const updated = await prisma.attendance.update({
       where: { id: attendanceId },
-      //@ts-expect-error
       data: { observation },
     });
 
