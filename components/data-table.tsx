@@ -174,9 +174,11 @@ export function DataTableDemo({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         if (barcodeBuffer.length > 0) {
+          console.log(data.barcode)
           const foundBook = data.find((book) => book.barcode === barcodeBuffer);
           if (foundBook) {
             setSelectedBook(foundBook);
+            console.log(foundBook)
             setPopoverOpen(true);
             toast.success(`Livro encontrado: ${foundBook.title}`);
           } else {
