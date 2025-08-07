@@ -13,11 +13,10 @@ import {
   VisibilityState,
   flexRender,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown } from "lucide-react";
-
-import { BookActions } from "./book-actions";
+import { ArrowUpDown, ChevronDown, Barcode, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -31,6 +30,8 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
 import {
@@ -39,10 +40,24 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { toast } from "sonner";
 import { TypeBooks } from "@/types/books";
 import { TypeComboBoxReaders } from "@/types/combobox";
 import { TypeCategories } from "@/types/categories";
+import { Label } from "./ui/label";
+import { CategoryCombobox } from "./category-combox";
+import { useUserSession } from "@/context/UserSessionContext";
+import { ComboboxReaders } from "./combo-box";
+import { Separator } from "./ui/separator";
 
 export function DataTableDemo({
   data,
@@ -54,26 +69,23 @@ export function DataTableDemo({
   categories: TypeCategories[];
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  // Filtros para título e autor (dois inputs separados)
+  // Estados para filtros de título e autor
   const [titleFilter, setTitleFilter] = React.useState("");
   const [authorFilter, setAuthorFilter] = React.useState("");
 
-  // Estado para código de barras capturado automaticamente
+  // Código de barras buffer e timer para debounce
   const [barcodeBuffer, setBarcodeBuffer] = React.useState("");
   const [timerId, setTimerId] = React.useState<NodeJS.Timeout | null>(null);
 
-  // Livro selecionado e controle do popover aberto
+  // Estado para livro selecionado e popover aberto
   const [selectedBook, setSelectedBook] = React.useState<TypeBooks | null>(null);
   const [popoverOpen, setPopoverOpen] = React.useState(false);
 
-  // Definição das colunas
+  // Configura as colunas da tabela
   const columns: ColumnDef<TypeBooks>[] = [
     {
       accessorKey: "title",
@@ -83,16 +95,11 @@ export function DataTableDemo({
     {
       accessorKey: "author",
       header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Autor <ArrowUpDown />
         </Button>
       ),
-      cell: ({ row }) => (
-        <div className="capitalize text-center">{truncate(row.getValue("author"), 15)}</div>
-      ),
+      cell: ({ row }) => <div className="capitalize text-center">{truncate(row.getValue("author"), 15)}</div>,
     },
     {
       accessorKey: "publisher",
@@ -112,10 +119,7 @@ export function DataTableDemo({
     {
       accessorKey: "availableCopies",
       header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Disponíveis <ArrowUpDown />
         </Button>
       ),
@@ -125,61 +129,12 @@ export function DataTableDemo({
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => (
-        <BookActions
-          book={row.original}
-          readers={readers}
-          categories={categories}
-        />
+        <BookActions book={row.original} readers={readers} categories={categories} />
       ),
     },
   ];
 
-  // Atualiza os filtros na tabela conforme inputs
-  React.useEffect(() => {
-    table.getColumn("title")?.setFilterValue(titleFilter);
-  }, [titleFilter]);
-
-  React.useEffect(() => {
-    table.getColumn("author")?.setFilterValue(authorFilter);
-  }, [authorFilter]);
-
-  // Lógica para detectar código de barras digitado rápido e abrir popover com o livro
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        if (barcodeBuffer.length > 0) {
-          const found = data.find((book) => book.barcode === barcodeBuffer);
-          if (found) {
-            setSelectedBook(found);
-            setPopoverOpen(true);
-            toast.success(`Livro encontrado: ${found.title}`);
-          } else {
-            toast.error("Livro não encontrado para esse código.");
-            setSelectedBook(null);
-            setPopoverOpen(false);
-          }
-          setBarcodeBuffer("");
-          if (timerId) {
-            clearTimeout(timerId);
-            setTimerId(null);
-          }
-        }
-      } else {
-        setBarcodeBuffer((prev) => prev + e.key);
-        if (timerId) clearTimeout(timerId);
-        const timeout = setTimeout(() => setBarcodeBuffer(""), 500);
-        setTimerId(timeout);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      if (timerId) clearTimeout(timerId);
-    };
-  }, [barcodeBuffer, data, timerId]);
-
-  // Cria a tabela com filtros e estado
+  // Cria a tabela
   const table = useReactTable({
     data,
     columns,
@@ -194,11 +149,65 @@ export function DataTableDemo({
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  // Atualiza filtro título quando mudar input
+  React.useEffect(() => {
+    table.getColumn("title")?.setFilterValue(titleFilter);
+  }, [titleFilter]);
+
+  // Atualiza filtro autor quando mudar input
+  React.useEffect(() => {
+    table.getColumn("author")?.setFilterValue(authorFilter);
+  }, [authorFilter]);
+
+  // Captura teclado para detectar código de barras
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignorar se foco estiver em input para evitar conflito
+      const activeTag = document.activeElement?.tagName.toLowerCase();
+      if (activeTag === "input" || activeTag === "textarea" || e.ctrlKey || e.altKey || e.metaKey) {
+        return;
+      }
+
+      if (e.key === "Enter") {
+        if (barcodeBuffer.length > 0) {
+          const found = data.find((book) => book.barcode === barcodeBuffer);
+          if (found) {
+            setSelectedBook(found);
+            setPopoverOpen(true);
+            toast.success(`Livro encontrado: ${found.title}`);
+          } else {
+            setSelectedBook(null);
+            setPopoverOpen(false);
+            toast.error("Livro não encontrado para esse código.");
+          }
+          setBarcodeBuffer("");
+          if (timerId) {
+            clearTimeout(timerId);
+            setTimerId(null);
+          }
+        }
+      } else if (e.key.length === 1) {
+        // Só acumula caracteres normais
+        setBarcodeBuffer((prev) => prev + e.key);
+        if (timerId) clearTimeout(timerId);
+        const timeout = setTimeout(() => setBarcodeBuffer(""), 500);
+        setTimerId(timeout);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      if (timerId) clearTimeout(timerId);
+    };
+  }, [barcodeBuffer, data, timerId]);
+
   return (
     <div className="w-full">
-      {/* Popover automático */}
+      {/* Popover automático para livro encontrado */}
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
         <PopoverTrigger asChild>
+          {/* Botão oculto para controlar o popover */}
           <button style={{ display: "none" }}>open popover</button>
         </PopoverTrigger>
         <PopoverContent className="w-80 text-sm">
@@ -218,21 +227,23 @@ export function DataTableDemo({
         </PopoverContent>
       </Popover>
 
-      {/* Filtros */}
+      {/* Filtros: título e autor */}
       <div className="flex items-center py-4 gap-2">
-        <input
-          type="text"
+         <Label htmlFor="filter-title">Filtrar por título</Label>
+        <Input
           placeholder="Pesquisar por título"
+          id="filter-title"
           value={titleFilter}
           onChange={(e) => setTitleFilter(e.target.value)}
-          className="input input-bordered max-w-sm"
+          className="max-w-sm"
         />
-        <input
-          type="text"
+        <Label htmlFor="filter-author">Filtrar por autor</Label>
+        <Input
           placeholder="Pesquisar por autor"
+          id="filter-author"
           value={authorFilter}
           onChange={(e) => setAuthorFilter(e.target.value)}
-          className="input input-bordered max-w-sm"
+          className="max-w-sm"
         />
 
         <DropdownMenu>
@@ -332,6 +343,141 @@ export function DataTableDemo({
   );
 }
 
+// Componente BookActions dentro da mesma página
+function BookActions({
+  book,
+  readers,
+  categories,
+}: {
+  book: TypeBooks;
+  readers: TypeComboBoxReaders[];
+  categories: TypeCategories[];
+}) {
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openCategoryDialog, setOpenCategoryDialog] = React.useState(false);
+  const [leitorSelecionado, setLeitorSelecionado] = React.useState("");
+  const [categoriaSelecionada, setCategoriaSelecionada] = React.useState("");
+  const session = useUserSession();
+
+  // Enviar consulta (ex: empréstimo)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    fetch(
+      `/api/loan?email=${session?.email}&book=${book.id}&reader=${leitorSelecionado}`,
+      {
+        method: "POST",
+      }
+    ).then((res) => {
+      if (res.ok) {
+        toast.success("Consulta finalizada! ✅📅");
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        toast.error("Algo de errado aconteceu! ❌");
+      }
+    });
+
+    setOpenDialog(false);
+  };
+
+  // Atualizar categoria
+  const handleCategoryUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await fetch(`/api/book?id=${book.id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: categoriaSelecionada }),
+    });
+    if (res.ok) {
+      toast.success("Categoria atualizada!");
+      setTimeout(() => window.location.reload(), 1000);
+    } else {
+      toast.error("Erro ao atualizar categoria.");
+    }
+    setOpenCategoryDialog(false);
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Abrir menu</span>
+          <MoreHorizontal />
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+
+        {/* Consultar Livro */}
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogTrigger asChild>
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault();
+                setOpenDialog(true);
+              }}
+              className="text-teal-800! bg-teal-200! font-medium cursor-pointer hover:bg-teal-100!"
+            >
+              Consultar Livro
+            </DropdownMenuItem>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader className="border-b">
+              <DialogTitle>Escolha o leitor</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit}>
+              <ComboboxReaders
+                readers={readers}
+                value={leitorSelecionado}
+                onChange={setLeitorSelecionado}
+              />
+              <DialogFooter>
+                <Button type="submit" disabled={!leitorSelecionado}>
+                  Confirmar
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Atualizar Categoria */}
+        <Dialog open={openCategoryDialog} onOpenChange={setOpenCategoryDialog}>
+          <DialogTrigger asChild>
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault();
+                setOpenCategoryDialog(true);
+              }}
+              className="text-purple-700! bg-purple-100! font-medium cursor-pointer hover:bg-purple-200!"
+            >
+              Atualizar Categoria
+            </DropdownMenuItem>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader className="border-b">
+              <DialogTitle>Escolha a categoria</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleCategoryUpdate}>
+              <CategoryCombobox
+                categories={categories}
+                value={categoriaSelecionada}
+                onChange={setCategoriaSelecionada}
+              />
+              <DialogFooter>
+                <Button type="submit" disabled={!categoriaSelecionada}>
+                  Atualizar
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+// Função para truncar textos longos na tabela
 function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
