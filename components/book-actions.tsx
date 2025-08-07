@@ -24,7 +24,6 @@ import {
 import { Barcode, MoreHorizontal } from "lucide-react";
 import { Label } from "./ui/label";
 import { CategoryCombobox } from "./category-combox";
-import { IsBarcode } from "./data-table";
 import { TypeCategories } from "@/types/categories";
 
 export function BookActions({
