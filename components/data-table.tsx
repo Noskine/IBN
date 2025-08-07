@@ -13,10 +13,13 @@ import {
   VisibilityState,
   flexRender,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, Barcode, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
+
+import { BookActions } from "./book-actions";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -30,34 +33,22 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-
 import {
   Popover,
-  PopoverContent,
   PopoverTrigger,
+  PopoverContent,
 } from "@/components/ui/popover";
-
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 import { toast } from "sonner";
 import { TypeBooks } from "@/types/books";
 import { TypeComboBoxReaders } from "@/types/combobox";
 import { TypeCategories } from "@/types/categories";
-import { Label } from "./ui/label";
-import { CategoryCombobox } from "./category-combox";
-import { useUserSession } from "@/context/UserSessionContext";
-import { ComboboxReaders } from "./combo-box";
-import { Separator } from "./ui/separator";
 
 export function DataTableDemo({
   data,
@@ -73,33 +64,53 @@ export function DataTableDemo({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  // Estados para filtros de título e autor
-  const [titleFilter, setTitleFilter] = React.useState("");
-  const [authorFilter, setAuthorFilter] = React.useState("");
+  // Filtros controlados (inputs visíveis)
+  const [filterTitle, setFilterTitle] = React.useState("");
+  const [filterAuthor, setFilterAuthor] = React.useState("");
 
-  // Código de barras buffer e timer para debounce
+  // Código de barras
   const [barcodeBuffer, setBarcodeBuffer] = React.useState("");
-  const [timerId, setTimerId] = React.useState<NodeJS.Timeout | null>(null);
+  const [barcodeTimer, setBarcodeTimer] = React.useState<NodeJS.Timeout | null>(null);
 
-  // Estado para livro selecionado e popover aberto
+  // Livro encontrado via código de barras
   const [selectedBook, setSelectedBook] = React.useState<TypeBooks | null>(null);
   const [popoverOpen, setPopoverOpen] = React.useState(false);
 
-  // Configura as colunas da tabela
   const columns: ColumnDef<TypeBooks>[] = [
     {
       accessorKey: "title",
       header: () => <span className="font-bold">Título</span>,
-      cell: ({ row }) => <div className="capitalize font-medium">{truncate(row.original.title, 40)}</div>,
+      cell: ({ row }) => (
+        <HoverCard>
+          <HoverCardTrigger className="cursor-default capitalize font-medium">
+            {truncate(row.original.title, 40)}
+          </HoverCardTrigger>
+          <HoverCardContent className="text-xs p-1 text-center w-fit">
+            {row.original.title}
+          </HoverCardContent>
+        </HoverCard>
+      ),
     },
     {
       accessorKey: "author",
       header: ({ column }) => (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
           Autor <ArrowUpDown />
         </Button>
       ),
-      cell: ({ row }) => <div className="capitalize text-center">{truncate(row.getValue("author"), 15)}</div>,
+      cell: ({ row }) => (
+        <HoverCard>
+          <HoverCardTrigger className="cursor-default text-center capitalize">
+            {truncate(row.getValue("author"), 15)}
+          </HoverCardTrigger>
+          <HoverCardContent className="text-xs p-1 text-center w-fit">
+            {row.getValue("author")}
+          </HoverCardContent>
+        </HoverCard>
+      ),
     },
     {
       accessorKey: "publisher",
@@ -119,7 +130,10 @@ export function DataTableDemo({
     {
       accessorKey: "availableCopies",
       header: ({ column }) => (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
           Disponíveis <ArrowUpDown />
         </Button>
       ),
@@ -128,13 +142,10 @@ export function DataTableDemo({
     {
       id: "actions",
       enableHiding: false,
-      cell: ({ row }) => (
-        <BookActions book={row.original} readers={readers} categories={categories} />
-      ),
+      cell: ({ row }) => <BookActions book={row.original} readers={readers} categories={categories} />,
     },
   ];
 
-  // Cria a tabela
   const table = useReactTable({
     data,
     columns,
@@ -149,106 +160,83 @@ export function DataTableDemo({
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  // Atualiza filtro título quando mudar input
+  // Sincronizar filtros da tabela com inputs controlados
   React.useEffect(() => {
-    table.getColumn("title")?.setFilterValue(titleFilter);
-  }, [titleFilter]);
+    table.getColumn("title")?.setFilterValue(filterTitle);
+  }, [filterTitle, table]);
 
-  // Atualiza filtro autor quando mudar input
   React.useEffect(() => {
-    table.getColumn("author")?.setFilterValue(authorFilter);
-  }, [authorFilter]);
+    table.getColumn("author")?.setFilterValue(filterAuthor);
+  }, [filterAuthor, table]);
 
-  // Captura teclado para detectar código de barras
+  // Captura código de barras via teclado
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignorar se foco estiver em input para evitar conflito
-      const activeTag = document.activeElement?.tagName.toLowerCase();
-      if (activeTag === "input" || activeTag === "textarea" || e.ctrlKey || e.altKey || e.metaKey) {
-        return;
-      }
-
       if (e.key === "Enter") {
         if (barcodeBuffer.length > 0) {
-          const found = data.find((book) => book.barcode === barcodeBuffer);
-          if (found) {
-            setSelectedBook(found);
+          const foundBook = data.find((book) => book.barcode === barcodeBuffer);
+          if (foundBook) {
+            setSelectedBook(foundBook);
             setPopoverOpen(true);
-            toast.success(`Livro encontrado: ${found.title}`);
+            toast.success(`Livro encontrado: ${foundBook.title}`);
           } else {
+            toast.error("Livro não encontrado para esse código.");
             setSelectedBook(null);
             setPopoverOpen(false);
-            toast.error("Livro não encontrado para esse código.");
           }
           setBarcodeBuffer("");
-          if (timerId) {
-            clearTimeout(timerId);
-            setTimerId(null);
+          if (barcodeTimer) {
+            clearTimeout(barcodeTimer);
+            setBarcodeTimer(null);
           }
         }
-      } else if (e.key.length === 1) {
-        // Só acumula caracteres normais
+      } else {
+        // Acumula caracteres
         setBarcodeBuffer((prev) => prev + e.key);
-        if (timerId) clearTimeout(timerId);
+        // Limpa buffer após 500ms sem digitar
+        if (barcodeTimer) clearTimeout(barcodeTimer);
         const timeout = setTimeout(() => setBarcodeBuffer(""), 500);
-        setTimerId(timeout);
+        setBarcodeTimer(timeout);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if (timerId) clearTimeout(timerId);
+      if (barcodeTimer) clearTimeout(barcodeTimer);
     };
-  }, [barcodeBuffer, data, timerId]);
+  }, [barcodeBuffer, data, barcodeTimer]);
 
   return (
     <div className="w-full">
-      {/* Popover automático para livro encontrado */}
-      <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-        <PopoverTrigger asChild>
-          {/* Botão oculto para controlar o popover */}
-          <button style={{ display: "none" }}>open popover</button>
-        </PopoverTrigger>
-        <PopoverContent className="w-80 text-sm">
-          {selectedBook ? (
-            <>
-              <h3 className="font-semibold text-base mb-2">📘 {selectedBook.title}</h3>
-              <p><strong>Autor:</strong> {selectedBook.author}</p>
-              <p><strong>Editora:</strong> {selectedBook.publisher}</p>
-              <p><strong>Categoria:</strong> {selectedBook.category?.name}</p>
-              <p><strong>Totais:</strong> {selectedBook.totalCopies}</p>
-              <p><strong>Disponíveis:</strong> {selectedBook.availableCopies}</p>
-              <p><strong>Código:</strong> {selectedBook.barcode}</p>
-            </>
-          ) : (
-            <p>Livro não encontrado.</p>
-          )}
-        </PopoverContent>
-      </Popover>
+      {/* Inputs de filtro título e autor */}
+      <div className="flex flex-col sm:flex-row gap-4 py-4 max-w-3xl">
+        <div className="flex flex-col flex-1 max-w-sm">
+          <Label htmlFor="filterTitle">Pesquisar por título</Label>
+          <Input
+            id="filterTitle"
+            placeholder="Digite o título"
+            value={filterTitle}
+            onChange={(e) => setFilterTitle(e.target.value)}
+          />
+        </div>
 
-      {/* Filtros: título e autor */}
-      <div className="flex items-center py-4 gap-2">
-         <Label htmlFor="filter-title">Filtrar por título</Label>
-        <Input
-          placeholder="Pesquisar por título"
-          id="filter-title"
-          value={titleFilter}
-          onChange={(e) => setTitleFilter(e.target.value)}
-          className="max-w-sm"
-        />
-        <Label htmlFor="filter-author">Filtrar por autor</Label>
-        <Input
-          placeholder="Pesquisar por autor"
-          id="filter-author"
-          value={authorFilter}
-          onChange={(e) => setAuthorFilter(e.target.value)}
-          className="max-w-sm"
-        />
+        <div className="flex flex-col flex-1 max-w-sm">
+          <Label htmlFor="filterAuthor">Pesquisar por autor</Label>
+          <Input
+            id="filterAuthor"
+            placeholder="Digite o autor"
+            value={filterAuthor}
+            onChange={(e) => setFilterAuthor(e.target.value)}
+          />
+        </div>
+      </div>
 
+      {/* Colunas */}
+      <div className="flex items-center gap-2 mb-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-auto whitespace-nowrap">
               Colunas <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
@@ -315,9 +303,7 @@ export function DataTableDemo({
       {/* Paginação */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-sm text-muted-foreground flex-1">
-          Página {table.getState().pagination.pageIndex + 1} de{" "}
-          {table.getPageCount()} • Mostrando {table.getRowModel().rows.length} de{" "}
-          {table.getFilteredRowModel().rows.length} linhas
+          Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()} • Mostrando {table.getRowModel().rows.length} de {table.getFilteredRowModel().rows.length} linhas
         </div>
 
         <div className="space-x-2">
@@ -339,145 +325,33 @@ export function DataTableDemo({
           </Button>
         </div>
       </div>
+
+      {/* Popover do código de barras */}
+      <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+        <PopoverTrigger asChild>
+          {/* botão invisível para trigger */}
+          <button style={{ display: "none" }}>open popover</button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80 text-sm">
+          {selectedBook ? (
+            <>
+              <h3 className="font-semibold text-base mb-2">📘 {selectedBook.title}</h3>
+              <p><strong>Autor:</strong> {selectedBook.author}</p>
+              <p><strong>Editora:</strong> {selectedBook.publisher}</p>
+              <p><strong>Categoria:</strong> {selectedBook.category?.name}</p>
+              <p><strong>Totais:</strong> {selectedBook.totalCopies}</p>
+              <p><strong>Disponíveis:</strong> {selectedBook.availableCopies}</p>
+              <p><strong>Código:</strong> {selectedBook.barcode}</p>
+            </>
+          ) : (
+            <p>Livro não encontrado.</p>
+          )}
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
 
-// Componente BookActions dentro da mesma página
-function BookActions({
-  book,
-  readers,
-  categories,
-}: {
-  book: TypeBooks;
-  readers: TypeComboBoxReaders[];
-  categories: TypeCategories[];
-}) {
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [openCategoryDialog, setOpenCategoryDialog] = React.useState(false);
-  const [leitorSelecionado, setLeitorSelecionado] = React.useState("");
-  const [categoriaSelecionada, setCategoriaSelecionada] = React.useState("");
-  const session = useUserSession();
-
-  // Enviar consulta (ex: empréstimo)
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    fetch(
-      `/api/loan?email=${session?.email}&book=${book.id}&reader=${leitorSelecionado}`,
-      {
-        method: "POST",
-      }
-    ).then((res) => {
-      if (res.ok) {
-        toast.success("Consulta finalizada! ✅📅");
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        toast.error("Algo de errado aconteceu! ❌");
-      }
-    });
-
-    setOpenDialog(false);
-  };
-
-  // Atualizar categoria
-  const handleCategoryUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch(`/api/book?id=${book.id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: categoriaSelecionada }),
-    });
-    if (res.ok) {
-      toast.success("Categoria atualizada!");
-      setTimeout(() => window.location.reload(), 1000);
-    } else {
-      toast.error("Erro ao atualizar categoria.");
-    }
-    setOpenCategoryDialog(false);
-  };
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Abrir menu</span>
-          <MoreHorizontal />
-        </Button>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Ações</DropdownMenuLabel>
-
-        {/* Consultar Livro */}
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogTrigger asChild>
-            <DropdownMenuItem
-              onSelect={(e) => {
-                e.preventDefault();
-                setOpenDialog(true);
-              }}
-              className="text-teal-800! bg-teal-200! font-medium cursor-pointer hover:bg-teal-100!"
-            >
-              Consultar Livro
-            </DropdownMenuItem>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader className="border-b">
-              <DialogTitle>Escolha o leitor</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit}>
-              <ComboboxReaders
-                readers={readers}
-                value={leitorSelecionado}
-                onChange={setLeitorSelecionado}
-              />
-              <DialogFooter>
-                <Button type="submit" disabled={!leitorSelecionado}>
-                  Confirmar
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-
-        {/* Atualizar Categoria */}
-        <Dialog open={openCategoryDialog} onOpenChange={setOpenCategoryDialog}>
-          <DialogTrigger asChild>
-            <DropdownMenuItem
-              onSelect={(e) => {
-                e.preventDefault();
-                setOpenCategoryDialog(true);
-              }}
-              className="text-purple-700! bg-purple-100! font-medium cursor-pointer hover:bg-purple-200!"
-            >
-              Atualizar Categoria
-            </DropdownMenuItem>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader className="border-b">
-              <DialogTitle>Escolha a categoria</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleCategoryUpdate}>
-              <CategoryCombobox
-                categories={categories}
-                value={categoriaSelecionada}
-                onChange={setCategoriaSelecionada}
-              />
-              <DialogFooter>
-                <Button type="submit" disabled={!categoriaSelecionada}>
-                  Atualizar
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-// Função para truncar textos longos na tabela
 function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
