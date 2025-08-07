@@ -80,9 +80,9 @@ export default async function RelatorioPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="border-r">Alunos</TableHead>
+              <TableHead className="border-r font-bold">Nome</TableHead>
               {allDates.map((date) => (
-                <TableHead key={date} className="text-center border-x">
+                <TableHead key={date} className="text-center border-x font-bold">
                   {date}
                 </TableHead>
               ))}
@@ -92,13 +92,13 @@ export default async function RelatorioPage() {
           <TableBody>
             {Object.entries(dataByStudent).map(([name, dates]) => (
               <TableRow key={name} className="border-t">
-                <TableCell className="font-medium border-r">{name}</TableCell>
+                <TableCell className="font-bold border-r">{name}</TableCell>
                 {allDates.map((date) => {
                   const value = dates[date];
                   return (
                     <TableCell key={date} className="text-center border-x">
                       {value ? (
-                        <div className="flex items-center gap-1 text-sm ">
+                        <div className="flex justify-around items-center gap-1 text-sm">
                           <span className="flex items-center gap-1 text-green-600">
                             <LogIn className="w-4 h-4" />
                             {value.entry}
