@@ -68,7 +68,7 @@ export default function BookPage() {
                   ? new Date(e?.returnDate!).toLocaleDateString()
                   : "—"}
               </span>
-              <span>
+              <span className="inline!">
                 {e.status === "ACTIVE" ? (
                   <Emprestado />
                 ) : e.status === "RETURNED" ? (
