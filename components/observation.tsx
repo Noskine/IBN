@@ -1,19 +1,22 @@
 "use client";
 
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxTrigger,
-  ComboboxValue,
-} from "@/components/ui/combobox";
-
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Check, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import { Check, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 type Student = {
@@ -30,6 +33,7 @@ export function StudentObservationForm() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +53,7 @@ export function StudentObservationForm() {
       setSelectedStudent(student);
       setObservation(student.observation ?? "");
       setSaved(false);
+      setOpen(false);
     }
   };
 
@@ -80,25 +85,37 @@ export function StudentObservationForm() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <Combobox onValueChange={handleSelect}>
-          <ComboboxTrigger className="w-full">
-            <ComboboxValue placeholder="Selecione um aluno..." />
-          </ComboboxTrigger>
-          <ComboboxContent>
-            <ComboboxInput placeholder="Buscar aluno..." />
-            {students.length === 0 ? (
-              <ComboboxEmpty>Nenhum aluno presente hoje.</ComboboxEmpty>
-            ) : (
-              students.map((student) => (
-                <ComboboxItem key={student.id} value={student.id}>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="w-full justify-start">
+            {selectedStudent ? selectedStudent.name : "Selecione um aluno..."}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-full p-0">
+          <Command>
+            <CommandInput placeholder="Buscar aluno..." />
+            <CommandEmpty>Nenhum aluno presente hoje.</CommandEmpty>
+            <CommandGroup>
+              {students.map((student) => (
+                <CommandItem
+                  key={student.id}
+                  onSelect={() => handleSelect(student.id)}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      selectedStudent?.id === student.id
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
                   {student.name}
-                </ComboboxItem>
-              ))
-            )}
-          </ComboboxContent>
-        </Combobox>
-      </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
 
       {selectedStudent && (
         <div className="space-y-2">
