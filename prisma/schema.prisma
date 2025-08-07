@@ -20,19 +20,19 @@ model User {
 }
 
 model Attendance {
-  id         String   @id @default(nanoid())
-  peopleId   String
-  entryAt    DateTime @default(now())
-  exitAt     DateTime?
-  people     People   @relation(fields: [peopleId], references: [id])
+  id          String    @id @default(nanoid())
+  peopleId    String
+  entryAt     DateTime  @default(now())
+  observation String?
+  exitAt      DateTime?
+  people      People    @relation(fields: [peopleId], references: [id])
 }
 
-
 model People {
-  id       String  @id @default(cuid())
+  id       String @id @default(cuid())
   name     String
-  course   Course  @relation(fields: [courseId], references: [id])
-  status String
+  course   Course @relation(fields: [courseId], references: [id])
+  status   String
   loans    Loan[]
   courseId String
 
