@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { TypeBooks } from "@/types/books";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -23,7 +22,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Barcode, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { Label } from "./ui/label";
 import { CategoryCombobox } from "./category-combox";
 import { TypeCategories } from "@/types/categories";
@@ -39,216 +38,201 @@ export function BookActions({
   categories: TypeCategories[];
 }) {
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [openDialogTwo, setOpenDialogTwo] = React.useState(false);
-  const [openCategoryDialog, setOpenCategoryDialog] = React.useState(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = React.useState(false);
   const [leitorSelecionado, setLeitorSelecionado] = React.useState("");
-  const [categoriaSelecionada, setCategoriaSelecionada] = React.useState("");
+  const [categoriaSelecionada, setCategoriaSelecionada] = React.useState<string>(book.category?.id || "");
+  const [editora, setEditora] = React.useState<string>(book.publisher || "");
+  const [quantidadeTotal, setQuantidadeTotal] = React.useState<number>(book.totalCopies ?? 0);
   const session = useUserSession();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    fetch(
-      `/api/loan?email=${session?.email}&book=${book.id}&reader=${leitorSelecionado}`,
-      {
-        method: "POST",
-      }
-    ).then((res) => {
-      if (res.ok) {
-        toast("Consulta finalizada! ✅📅");
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        toast("Algo de errado aconteceu! ❌");
-      }
-    });
-
-    setOpenDialog(false);
-  };
-
-  const handleCategoryUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch(`/api/book?id=${book.id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: categoriaSelecionada }),
-    });
-    if (res.ok) {
-      toast.success("Categoria atualizada!");
-      setTimeout(() => window.location.reload(), 1000);
-    } else {
-      toast.error("Erro ao atualizar categoria.");
+  // Re-inicializa campos sempre que o diálogo de atualização abrir
+  React.useEffect(() => {
+    if (openUpdateDialog) {
+      setCategoriaSelecionada(book.category?.id || "");
+      setEditora(book.publisher || "");
+      setQuantidadeTotal(book.totalCopies ?? 0);
     }
-    setOpenCategoryDialog(false);
-  };
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Abrir menu</span>
-          <MoreHorizontal />
-        </Button>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Ações</DropdownMenuLabel>
-
-        {/* Consultar Livro */}
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogTrigger asChild>
-            <DropdownMenuItem
-              onSelect={(e) => {
-                e.preventDefault();
-                setOpenDialog(true);
-              }}
-              className="text-teal-800! bg-teal-200! font-medium cursor-pointer hover:bg-teal-100!"
-            >
-              Consultar Livro
-            </DropdownMenuItem>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader className="border-b">
-              <DialogTitle className="font-bold text-2xl">
-                Criando consulta
-              </DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-1">
-              <section className="shadow-md dark:bg-zinc-900 px-2 pb-2 pt-1 mb-2 rounded-md">
-                <h2 className="text-md font-bold">{book.title}</h2>
-                <p className="text-xs italic">
-                  De autoria de{" "}
-                  <span className="font-medium">{book.author}</span> pela{" "}
-                  {book.publisher}
-                </p>
-                <p className="text-xs italic text-end space-x-1">
-                  <Barcode className="inline size-3" />
-                  {book.barcode || "Código não cadastrado"}
-                </p>
-              </section>
-              <ComboboxReaders
-                data={readers}
-                onSelect={(leitor) => setLeitorSelecionado(leitor)}
-              />
-              <DialogFooter>
-                <Button type="submit" disabled={!leitorSelecionado}>
-                  Criar consulta
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-        <Separator className="my-1" />
-
-        {/* Atualizar Categoria */}
-        <Dialog open={openCategoryDialog} onOpenChange={setOpenCategoryDialog}>
-          <DialogTrigger asChild>
-            <DropdownMenuItem
-              onSelect={(e) => {
-                e.preventDefault();
-                setOpenCategoryDialog(true);
-              }}
-              className="font-medium cursor-pointer mb-1 "
-            >
-              Atualizar categoria
-            </DropdownMenuItem>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader className="border-b">
-              <DialogTitle className="font-bold text-2xl">
-                Atualizar Categoria
-              </DialogTitle>
-            </DialogHeader>
-            <form
-              onSubmit={handleCategoryUpdate}
-              className="flex flex-col gap-4 pt-4"
-            >
-              <Label>Categoria</Label>
-              <CategoryCombobox
-                categorias={categories}
-                onSelect={(val) => setCategoriaSelecionada(val)}
-              />
-              <DialogFooter>
-                <Button type="submit" disabled={!categoriaSelecionada}>
-                  Atualizar
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-
-        {/* Atualizar Código de Barras */}
-        {!book.barcode ? (
-          <Dialog open={openDialogTwo} onOpenChange={setOpenDialogTwo}>
-            <DialogTrigger asChild>
-              <DropdownMenuItem
-                onSelect={(e) => {
-                  e.preventDefault();
-                  setOpenDialogTwo(true);
-                }}
-                className="text-yellow-800! bg-yellow-200! font-medium cursor-pointer hover:bg-yellow-100!"
-              >
-                Atualizar código
-              </DropdownMenuItem>
-            </DialogTrigger>
-            <IsBarcode id={book.id} />
-          </Dialog>
-        ) : null}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function IsBarcode({ id }: { id: string }) {
-  const [code, setCode] = React.useState("");
+  }, [openUpdateDialog, book]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const res = await fetch(
+      `/api/loan?email=${session?.email}&book=${book.id}&reader=${leitorSelecionado}`,
+      { method: "POST" }
+    );
+
+    if (res.ok) {
+      toast("Consulta finalizada! ✅📅");
+      setTimeout(() => window.location.reload(), 1000);
+    } else {
+      toast("Algo de errado aconteceu! ❌");
+    }
+
+    setOpenDialog(false);
+  };
+
+  const handleUpdateAll = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const body = {
+      categoryId: categoriaSelecionada,
+      publisher: editora,
+      totalCopies: quantidadeTotal,
+    };
+
     try {
-      const res = await fetch(`/api/book?id=${id}`, {
+      const res = await fetch(`/api/book?id=${book.id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ code }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
       });
 
       if (res.ok) {
-        toast.success("Código de Barras registrado! 👍");
+        toast.success("Livro atualizado com sucesso!");
         setTimeout(() => window.location.reload(), 1000);
       } else {
-        toast.error("Algo de errado aconteceu! ❌");
+        toast.error("Erro ao atualizar livro.");
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Erro de rede! ❌");
+    } catch {
+      toast.error("Erro de rede ao atualizar livro.");
     }
+
+    setOpenUpdateDialog(false);
   };
 
   return (
-    <DialogContent>
-      <DialogHeader className="border-b">
-        <DialogTitle className="font-bold text-2xl">
-          Atualizar o código de barras
-        </DialogTitle>
-      </DialogHeader>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Abrir menu</span>
+            <MoreHorizontal />
+          </Button>
+        </DropdownMenuTrigger>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 pt-4">
-        <div className="space-y-1">
-          <Label htmlFor="code">Código de barras</Label>
-          <Input
-            id="code"
-            name="barcode"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            required
-          />
-        </div>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-        <DialogFooter>
-          <Button type="submit">Atualizar</Button>
-        </DialogFooter>
-      </form>
-    </DialogContent>
+          {/* Usando asChild + button para abrir o dialog */}
+          <DropdownMenuItem asChild>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                // abre o dialog (direto)
+                setOpenDialog(true);
+              }}
+              className="w-full text-left text-teal-800! bg-teal-200! font-medium cursor-pointer hover:bg-teal-100! px-2 py-1"
+            >
+              Consultar Livro
+            </button>
+          </DropdownMenuItem>
+
+          <Separator className="my-1" />
+
+          <DropdownMenuItem asChild>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenUpdateDialog(true);
+              }}
+              className="w-full text-left font-medium cursor-pointer mt-1 px-2 py-1"
+            >
+              Atualizar livro
+            </button>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* DIALOG CONSULTA (fora do menu) */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog} modal>
+        {/* Previne fechamento por ESC / clique fora enquanto testamos */}
+        <DialogContent
+          onEscapeKeyDown={(ev: any) => ev.preventDefault?.()}
+          onPointerDownOutside={(ev: any) => ev.preventDefault?.()}
+        >
+          <DialogHeader className="border-b">
+            <DialogTitle className="font-bold text-2xl">Criando consulta</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-1">
+            <section className="shadow-md dark:bg-zinc-900 px-2 pb-2 pt-1 mb-2 rounded-md">
+              <h2 className="text-md font-bold">{book.title}</h2>
+              <p className="text-xs italic">
+                De autoria de <span className="font-medium">{book.author}</span> pela {book.publisher}
+              </p>
+              <p className="text-xs italic text-end space-x-1">
+                Código: {book.barcode || "Não cadastrado"}
+              </p>
+            </section>
+
+            <ComboboxReaders
+              data={readers}
+              onSelect={(leitor) => setLeitorSelecionado(leitor)}
+            />
+
+            <DialogFooter>
+              <Button type="submit" disabled={!leitorSelecionado}>
+                Criar consulta
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* DIALOG ATUALIZAÇÃO (fora do menu) */}
+      <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog} modal>
+        <DialogContent
+          onEscapeKeyDown={(ev: any) => ev.preventDefault?.()}
+          onPointerDownOutside={(ev: any) => ev.preventDefault?.()}
+        >
+          <DialogHeader className="border-b">
+            <DialogTitle className="font-bold text-2xl">Atualizar Livro</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleUpdateAll} className="flex flex-col gap-4 pt-4">
+            <Label>Categoria</Label>
+            <CategoryCombobox
+              categorias={categories}
+              onSelect={(val) => setCategoriaSelecionada(val)}
+              selectedCategoryId={categoriaSelecionada}
+            />
+
+            <div>
+              <Label htmlFor="publisher">Editora</Label>
+              <Input
+                id="publisher"
+                value={editora}
+                onChange={(e) => setEditora(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="totalCopies">Quantidade Total</Label>
+              <Input
+                id="totalCopies"
+                type="number"
+                min={0}
+                value={quantidadeTotal}
+                onChange={(e) => setQuantidadeTotal(Number(e.target.value))}
+                required
+              />
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="submit"
+                disabled={!categoriaSelecionada || !editora || quantidadeTotal < 0}
+              >
+                Atualizar
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

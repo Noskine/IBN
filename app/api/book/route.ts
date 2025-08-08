@@ -95,19 +95,19 @@ export async function PUT(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const body = await req.json();
+    const id = searchParams.get("id");
 
-    let id = searchParams.get("id");
-
-    if (!id)
+    if (!id) {
       throw new ExpectedError({
         message: "Mal formatação da query!",
         status: Status.InternalServerError,
       });
+    }
 
-    const { code } = body;
+    const { code, categoryId, publisher, quantity } = body;
 
     // Validação básica
-    if (!code) {
+    if (!code || !categoryId || !publisher || quantity === undefined) {
       return NextResponse.json(
         { error: "Dados obrigatórios faltando." },
         { status: 400 }
@@ -115,30 +115,33 @@ export async function PUT(req: Request) {
     }
 
     const book = await prisma.book.update({
-      where: {
-        id: id,
-      },
+      where: { id },
       data: {
         barcode: code,
+        categoryId,
+        publisher,
+        quantity,
       },
     });
 
-    if (!book)
+    if (!book) {
       throw new ExpectedError({
         message: "Livro não encontrado!",
         status: Status.NotFound,
       });
+    }
 
-    return NextResponse.json({
-      status: Status.OK,
-    });
+    return NextResponse.json({ status: Status.OK });
   } catch (err) {
     if (err instanceof ExpectedError) {
-      console.log("entrou aqui");
-
       return NextResponse.json(err.json(), {
         status: err.getStatus(),
       });
     }
+
+    return NextResponse.json(
+      { error: "Erro interno do servidor." },
+      { status: 500 }
+    );
   }
 }

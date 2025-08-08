@@ -12,29 +12,38 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
- type category = {
+import { cn } from "@/lib/utils";
+import * as React from "react";
+
+type category = {
   name: string;
   id: string;
 };
 
-import { cn } from "@/lib/utils";
-import * as React from "react";
-
 export function CategoryCombobox({
   categorias,
   onSelect,
+  selectedCategoryId,
 }: {
   categorias: category[];
   onSelect: (val: string) => void;
+  selectedCategoryId: string;
 }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(selectedCategoryId || "");
+
+  React.useEffect(() => {
+    setValue(selectedCategoryId);
+  }, [selectedCategoryId]);
 
   const handleSelect = (currentValue: string) => {
     setValue(currentValue);
     onSelect(currentValue);
     setOpen(false);
   };
+
+  const selectedName =
+    categorias.find((cat) => cat.id === value)?.name ?? "Selecione uma categoria";
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -44,12 +53,17 @@ export function CategoryCombobox({
           role='combobox'
           className='w-full justify-between'
         >
-          {value ? value : "Selecione uma categoria"}
+          {selectedName}
           <ChevronDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-full p-0'>
-        <Command>
+      <PopoverContent
+        className='w-full p-0'
+        // ⛔ EVITA FECHAR AO DIGITAR
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
+        <Command loop>
           <CommandInput placeholder='Buscar categoria...' />
           <CommandEmpty>Nenhuma categoria encontrada.</CommandEmpty>
           <CommandGroup>
