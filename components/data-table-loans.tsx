@@ -229,7 +229,7 @@ export function LoanTable({ data }: { data: Loan[] }) {
 
   React.useEffect(() => {
     table.setPageIndex(0);
-  }, [globalFilter, categoryFilter, dateFilter]);
+  }, [globalFilter, categoryFilter, dateFilter, table]);
 
   return (
     <div className="w-full space-y-4">
