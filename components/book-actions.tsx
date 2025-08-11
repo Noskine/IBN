@@ -307,7 +307,7 @@ export function BookActions({
                 onChange={(e) => setbarcode(e.target.value)}
               />
             </div>
-            <DialogFooter>
+            <DialogFooter className="flex items-center gap-3">
               <Button
                 type='submit'
                 disabled={
