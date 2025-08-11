@@ -94,6 +94,8 @@ export function BookActions({
       quantity: quantidadeTotal,
       code: barcode,
       author: author,
+      title, 
+      availableCopies,
     };
 
     try {
