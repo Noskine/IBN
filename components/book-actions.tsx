@@ -228,7 +228,7 @@ export function BookActions({
               onSelect={(val) => setCategoriaSelecionada(val)}
               selectedCategoryId={categoriaSelecionada}
             />
-            <section className='flex gap-1 items-center justify-between'>
+            <section className='flex gap-1 items-center space-y-1 justify-between'>
               <div>
                 <Label htmlFor='author'>Author</Label>
                 <Input
@@ -250,7 +250,7 @@ export function BookActions({
               </div>
             </section>
             e
-            <section className='flex gap-1 items-center justify-between'>
+            <section className='flex gap-1 space-y-1 items-center justify-between'>
               <div>
                 <Label htmlFor='quantity'>Quantidade Total</Label>
                 <Input
