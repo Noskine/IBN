@@ -85,22 +85,6 @@ export function BookActions({
     setOpenDialog(false);
   };
 
-  const handleDelete = async () => {
-    if (confirmText !== "eu confirmo") return;
-    setIsDeleting(true);
-    try {
-      const res = await fetch(`/api/books/${book.id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Erro ao deletar livro");
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsDeleting(false);
-      setDeleteDialogOpen(false);
-      setConfirmText("");
-    }
-  };
-
   const handleUpdateAll = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -134,8 +118,7 @@ export function BookActions({
     setOpenUpdateDialog(false);
   };
 
-  const handleDelete = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleDelete = async () => {
 
     try {
       const res = await fetch(`/api/book?id=${book.id}`, {
