@@ -48,18 +48,22 @@ export function BookActions({
   );
   const [barcode, setbarcode] = React.useState<string>("");
   const [author, setAuthor] = React.useState<string>("");
-   const [title, setTitle] = React.useState<string>("");
+  const [title, setTitle] = React.useState<string>("");
+  const [availableCopies, setAvailableCopies] = React.useState<number>(
+    book.totalCopies ?? 0
+  );
   const session = useUserSession();
 
   // Re-inicializa campos sempre que o diálogo de atualização abrir
   React.useEffect(() => {
     if (openUpdateDialog) {
-      setTitle(book.title || "")
+      setTitle(book.title || "");
       setCategoriaSelecionada(book.category?.id || "");
       setEditora(book.publisher || "");
       setAuthor(book.author || "");
       setbarcode(book.barcode || "");
       setQuantidadeTotal(book.totalCopies ?? 0);
+      setAvailableCopies(book.availableCopies ?? 0);
     }
   }, [openUpdateDialog, book]);
 
@@ -224,41 +228,52 @@ export function BookActions({
               onSelect={(val) => setCategoriaSelecionada(val)}
               selectedCategoryId={categoriaSelecionada}
             />
-
-            <section className="flex gap-1 items-center justify-between">
+            <section className='flex gap-1 items-center justify-between'>
               <div>
-              <Label htmlFor='author'>Author</Label>
-              <Input
-                id='author'
-                type='string'
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor='publisher'>Editora</Label>
-              <Input
-                id='publisher'
-                value={editora}
-                onChange={(e) => setEditora(e.target.value)}
-                required
-              />
-            </div>
+                <Label htmlFor='author'>Author</Label>
+                <Input
+                  id='author'
+                  type='string'
+                  value={author}
+                  onChange={(e) => setAuthor(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor='publisher'>Editora</Label>
+                <Input
+                  id='publisher'
+                  value={editora}
+                  onChange={(e) => setEditora(e.target.value)}
+                  required
+                />
+              </div>
             </section>
-
-            <div>
-              <Label htmlFor='quantity'>Quantidade Total</Label>
-              <Input
-                id='quantity'
-                type='number'
-                min={0}
-                value={quantidadeTotal}
-                onChange={(e) => setQuantidadeTotal(Number(e.target.value))}
-                required
-              />
-            </div>
-
+            e
+            <section className='flex gap-1 items-center justify-between'>
+              <div>
+                <Label htmlFor='quantity'>Quantidade Total</Label>
+                <Input
+                  id='quantity'
+                  type='number'
+                  min={0}
+                  value={quantidadeTotal}
+                  onChange={(e) => setQuantidadeTotal(Number(e.target.value))}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor='availableCopies'>Quantidade Disponíveis</Label>
+                <Input
+                  id='availableCopies'
+                  type='number'
+                  min={0}
+                  value={availableCopies}
+                  onChange={(e) => setAvailableCopies(Number(e.target.value))}
+                  required
+                />
+              </div>
+            </section>
             <div>
               <Label htmlFor='barcode'>Código de Barras</Label>
               <Input
@@ -268,7 +283,6 @@ export function BookActions({
                 onChange={(e) => setbarcode(e.target.value)}
               />
             </div>
-
             <DialogFooter>
               <Button
                 type='submit'

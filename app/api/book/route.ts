@@ -104,7 +104,7 @@ export async function PUT(req: Request) {
       });
     }
 
-    const { title, author, code, categoryId, publisher, quantity } = body;
+    const { title, author, code, categoryId, publisher,availableCopies, quantity } = body;
 
     // Validação básica
     if (
@@ -126,7 +126,7 @@ export async function PUT(req: Request) {
       data: {
         title: title,
         author: author,
-        availableCopies: quantity,
+        availableCopies,
         barcode: code,
         categoryId,
         publisher,
