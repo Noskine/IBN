@@ -249,7 +249,7 @@ export function BookActions({
                 />
               </div>
             </section>
-            e
+            
             <section className='flex gap-1 space-y-1 items-center justify-between'>
               <div>
                 <Label htmlFor='quantity'>Quantidade Total</Label>
