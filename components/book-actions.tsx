@@ -47,14 +47,18 @@ export function BookActions({
     book.totalCopies ?? 0
   );
   const [barcode, setbarcode] = React.useState<string>("");
-   const [author, setAuthor] = React.useState<string>("");
+  const [author, setAuthor] = React.useState<string>("");
+   const [title, setTitle] = React.useState<string>("");
   const session = useUserSession();
 
   // Re-inicializa campos sempre que o diálogo de atualização abrir
   React.useEffect(() => {
     if (openUpdateDialog) {
+      setTitle(book.title || "")
       setCategoriaSelecionada(book.category?.id || "");
       setEditora(book.publisher || "");
+      setAuthor(book.author || "");
+      setbarcode(book.barcode || "");
       setQuantidadeTotal(book.totalCopies ?? 0);
     }
   }, [openUpdateDialog, book]);
@@ -206,6 +210,15 @@ export function BookActions({
 
           <form onSubmit={handleUpdateAll} className='flex flex-col gap-4 pt-4'>
             <Label>Categoria</Label>
+            <div>
+              <Label htmlFor='title'>Titulo</Label>
+              <Input
+                id='title'
+                type='string'
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
             <CategoryCombobox
               categorias={categories}
               onSelect={(val) => setCategoriaSelecionada(val)}
@@ -214,9 +227,9 @@ export function BookActions({
 
             <section className="flex gap-1 items-center justify-between">
               <div>
-              <Label htmlFor='barcode'>Author</Label>
+              <Label htmlFor='author'>Author</Label>
               <Input
-                id='barcode'
+                id='author'
                 type='string'
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}

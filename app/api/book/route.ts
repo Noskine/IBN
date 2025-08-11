@@ -47,7 +47,7 @@ export async function POST(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const body = await req.json();
-    
+
     let book = searchParams.get("id");
 
     if (!book)
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
         message: "Mal formatação da query!",
         status: Status.InternalServerError,
       });
-    
+
     const { id } = body;
 
     // Validação básica
@@ -66,7 +66,6 @@ export async function POST(req: Request) {
       );
     }
 
-
     await prisma.book.update({
       where: {
         id: book as string,
@@ -75,7 +74,6 @@ export async function POST(req: Request) {
         categoryId: id,
       },
     });
-
 
     return NextResponse.json({
       status: Status.OK,
@@ -97,7 +95,7 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const id = searchParams.get("id");
 
-    console.log(id)
+    console.log(id);
 
     if (!id) {
       throw new ExpectedError({
@@ -106,10 +104,17 @@ export async function PUT(req: Request) {
       });
     }
 
-    const { code, categoryId, publisher, quantity } = body;
+    const { title, author, code, categoryId, publisher, quantity } = body;
 
     // Validação básica
-    if (!code || !categoryId || !publisher || quantity < 0) {
+    if (
+      !title ||
+      !author ||
+      !code ||
+      !categoryId ||
+      !publisher ||
+      quantity < 0
+    ) {
       return NextResponse.json(
         { error: "Dados obrigatórios faltando." },
         { status: 400 }
@@ -119,6 +124,9 @@ export async function PUT(req: Request) {
     const book = await prisma.book.update({
       where: { id },
       data: {
+        title: title,
+        author: author,
+        availableCopies: quantity,
         barcode: code,
         categoryId,
         publisher,
@@ -126,7 +134,7 @@ export async function PUT(req: Request) {
       },
     });
 
-    console.log(book)
+    console.log(book);
 
     if (!book) {
       throw new ExpectedError({
