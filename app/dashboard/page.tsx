@@ -3,7 +3,6 @@
 import { AttendanceTable } from "@/components/AttendanceTable";
 import { DataTableDemo } from "@/components/data-table";
 import { LoanTable } from "@/components/data-table-loans";
-import ScannerListener from "@/components/ScannerListener";
 import { SectionCards } from "@/components/section-cards";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";

@@ -97,6 +97,8 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const id = searchParams.get("id");
 
+    console.log(id)
+
     if (!id) {
       throw new ExpectedError({
         message: "Mal formatação da query!",
@@ -107,7 +109,7 @@ export async function PUT(req: Request) {
     const { code, categoryId, publisher, quantity } = body;
 
     // Validação básica
-    if (!code || !categoryId || !publisher || quantity === undefined) {
+    if (!code || !categoryId || !publisher || quantity < 0) {
       return NextResponse.json(
         { error: "Dados obrigatórios faltando." },
         { status: 400 }
@@ -120,9 +122,11 @@ export async function PUT(req: Request) {
         barcode: code,
         categoryId,
         publisher,
-        quantity,
+        totalCopies: quantity,
       },
     });
+
+    console.log(book)
 
     if (!book) {
       throw new ExpectedError({

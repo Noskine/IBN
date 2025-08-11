@@ -18,7 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Archive, Clipboard, DoorClosedLocked } from "lucide-react";
+import { Archive, Barcode, Clipboard, DoorClosedLocked } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 const data = {
@@ -51,6 +51,12 @@ const data = {
       title: "Entrada/Saída",
       url: "/dashboard/register",
       icon: DoorClosedLocked,
+      variant: false,
+    },
+    {
+      title: "Procura rápida",
+      url: "/dashboard/consult",
+      icon: Barcode,
       variant: false,
     },
   ],
