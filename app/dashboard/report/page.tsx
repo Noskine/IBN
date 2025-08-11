@@ -145,7 +145,7 @@ export default async function RelatorioPage() {
       </div>
 
       {/* Observações */}
-      <div>
+      <div className="px-[10%]">
         <h2 className="text-xl font-semibold mb-4">Observações da Semana</h2>
         {weeklyObservations.length > 0 ? (
           <ul className="space-y-2">
