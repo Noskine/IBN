@@ -209,29 +209,29 @@ export function BookActions({
           onPointerDownOutside={(ev: any) => ev.preventDefault?.()}
         >
           <DialogHeader className='border-b'>
-            <DialogTitle className='font-bold text-2xl'>
-              Atualizar Livro
+            <DialogTitle className='font-bold text-2xl mb-1 capitalize'>
+              Atualizar {title}
             </DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleUpdateAll} className='flex flex-col gap-4 pt-4'>
-            <Label>Categoria</Label>
-            <div>
+            <div className="space-y-1">
               <Label htmlFor='title'>Titulo</Label>
               <Input
                 id='title'
                 type='string'
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-              />
+                />
             </div>
+                <Label>Categoria</Label>
             <CategoryCombobox
               categorias={categories}
               onSelect={(val) => setCategoriaSelecionada(val)}
               selectedCategoryId={categoriaSelecionada}
             />
             <section className='flex gap-1 items-center space-y-1 justify-between'>
-              <div>
+              <div className="space-y-1">
                 <Label htmlFor='author'>Author</Label>
                 <Input
                   id='author'
@@ -241,7 +241,7 @@ export function BookActions({
                 />
               </div>
 
-              <div>
+              <div className="space-y-1">
                 <Label htmlFor='publisher'>Editora</Label>
                 <Input
                   id='publisher'
@@ -253,7 +253,7 @@ export function BookActions({
             </section>
             
             <section className='flex gap-1 space-y-1 items-center justify-between'>
-              <div>
+              <div className="space-y-1">
                 <Label htmlFor='quantity'>Quantidade Total</Label>
                 <Input
                   id='quantity'
@@ -263,8 +263,8 @@ export function BookActions({
                   onChange={(e) => setQuantidadeTotal(Number(e.target.value))}
                   required
                 />
-              </div>
-              <div>
+              </div >
+              <div className="space-y-1">
                 <Label htmlFor='availableCopies'>Quantidade Disponíveis</Label>
                 <Input
                   id='availableCopies'
