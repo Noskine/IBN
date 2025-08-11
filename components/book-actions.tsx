@@ -39,29 +39,29 @@ export function BookActions({
 }) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = React.useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+
   const [leitorSelecionado, setLeitorSelecionado] = React.useState("");
-  const [categoriaSelecionada, setCategoriaSelecionada] =
-    React.useState<string>(book.category?.id || "");
+  const [categoriaSelecionada, setCategoriaSelecionada] = React.useState<string>(book.category?.id || "");
   const [editora, setEditora] = React.useState<string>(book.publisher || "");
-  const [quantidadeTotal, setQuantidadeTotal] = React.useState<number>(
-    book.totalCopies ?? 0
-  );
-  const [barcode, setbarcode] = React.useState<string>("");
-  const [author, setAuthor] = React.useState<string>("");
-  const [title, setTitle] = React.useState<string>("");
-  const [availableCopies, setAvailableCopies] = React.useState<number>(
-    book.totalCopies ?? 0
-  );
+  const [quantidadeTotal, setQuantidadeTotal] = React.useState<number>(book.totalCopies ?? 0);
+  const [barcode, setBarcode] = React.useState<string>(book.barcode || "");
+  const [author, setAuthor] = React.useState<string>(book.author || "");
+  const [title, setTitle] = React.useState<string>(book.title || "");
+  const [availableCopies, setAvailableCopies] = React.useState<number>(book.availableCopies ?? 0);
+
+  const [confirmText, setConfirmText] = React.useState("");
+  const [isDeleting, setIsDeleting] = React.useState(false);
+
   const session = useUserSession();
 
-  // Re-inicializa campos sempre que o diálogo de atualização abrir
   React.useEffect(() => {
     if (openUpdateDialog) {
       setTitle(book.title || "");
       setCategoriaSelecionada(book.category?.id || "");
       setEditora(book.publisher || "");
       setAuthor(book.author || "");
-      setbarcode(book.barcode || "");
+      setBarcode(book.barcode || "");
       setQuantidadeTotal(book.totalCopies ?? 0);
       setAvailableCopies(book.availableCopies ?? 0);
     }
@@ -84,20 +84,14 @@ export function BookActions({
 
     setOpenDialog(false);
   };
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  // const [bookToDelete, setBookToDelete] = React.useState<TypeBooks | null>(null);
-  const [confirmText, setConfirmText] = React.useState("");
-  const [isDeleting, setIsDeleting] = React.useState(false);
 
   const handleDelete = async () => {
-    if ( confirmText !== "eu confirmo") return;
+    if (confirmText !== "eu confirmo") return;
     setIsDeleting(true);
     try {
-      const res = await fetch(`/api/books/${book.id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/books/${book.id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Erro ao deletar livro");
-      window.location.reload(); // recarregar após deletar
+      window.location.reload();
     } catch (error) {
       console.error(error);
     } finally {
@@ -115,7 +109,7 @@ export function BookActions({
       publisher: editora,
       quantity: quantidadeTotal,
       code: barcode,
-      author: author,
+      author,
       title,
       availableCopies,
     };
@@ -144,79 +138,80 @@ export function BookActions({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='h-8 w-8 p-0'>
-            <span className='sr-only'>Abrir menu</span>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Abrir menu</span>
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align='end'>
+        <DropdownMenuContent align="end">
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-          {/* Usando asChild + button para abrir o dialog */}
           <DropdownMenuItem asChild>
             <button
-              type='button'
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                // abre o dialog (direto)
                 setOpenDialog(true);
               }}
-              className='w-full text-left text-teal-800! bg-teal-200! font-medium cursor-pointer hover:bg-teal-100! px-2 py-1'
+              className="w-full text-left font-medium cursor-pointer px-2 py-1"
             >
               Consultar Livro
             </button>
           </DropdownMenuItem>
 
-          <Separator className='my-1' />
+          <Separator className="my-1" />
 
           <DropdownMenuItem asChild>
             <button
-              type='button'
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 setOpenUpdateDialog(true);
               }}
-              className='w-full text-left font-medium cursor-pointer mt-1 px-2 py-1'
+              className="w-full text-left font-medium cursor-pointer px-2 py-1"
             >
               Atualizar livro
+            </button>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem asChild>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeleteDialogOpen(true);
+              }}
+              className="w-full text-left text-red-600 font-medium cursor-pointer px-2 py-1"
+            >
+              Deletar livro
             </button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* DIALOG CONSULTA (fora do menu) */}
-      <Dialog open={openDialog} onOpenChange={setOpenDialog} modal>
-        {/* Previne fechamento por ESC / clique fora enquanto testamos */}
-        <DialogContent
-          onEscapeKeyDown={(ev: any) => ev.preventDefault?.()}
-          onPointerDownOutside={(ev: any) => ev.preventDefault?.()}
-        >
-          <DialogHeader className='border-b'>
-            <DialogTitle className='font-bold text-2xl'>
-              Criando consulta
-            </DialogTitle>
+      {/* Dialog de Consulta */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Criando consulta</DialogTitle>
           </DialogHeader>
 
-          <form onSubmit={handleSubmit} className='flex flex-col gap-1'>
-            <section className='shadow-md dark:bg-zinc-900 px-2 pb-2 pt-1 mb-2 rounded-md'>
-              <h2 className='text-md font-bold'>{book.title}</h2>
-              <p className='text-xs italic'>
-                De autoria de <span className='font-medium'>{book.author}</span>{" "}
-                pela {book.publisher}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+            <section className="shadow-md px-2 pb-2 pt-1 mb-2 rounded-md">
+              <h2 className="text-md font-bold">{book.title}</h2>
+              <p className="text-xs italic">
+                De autoria de <span className="font-medium">{book.author}</span> pela {book.publisher}
               </p>
-              <p className='text-xs italic text-end space-x-1'>
+              <p className="text-xs italic text-end">
                 Código: {book.barcode || "Não cadastrado"}
               </p>
             </section>
 
-            <ComboboxReaders
-              data={readers}
-              onSelect={(leitor) => setLeitorSelecionado(leitor)}
-            />
+            <ComboboxReaders data={readers} onSelect={setLeitorSelecionado} />
 
             <DialogFooter>
-              <Button type='submit' disabled={!leitorSelecionado}>
+              <Button type="submit" disabled={!leitorSelecionado}>
                 Criar consulta
               </Button>
             </DialogFooter>
@@ -224,132 +219,70 @@ export function BookActions({
         </DialogContent>
       </Dialog>
 
-      {/* DIALOG ATUALIZAÇÃO (fora do menu) */}
-      <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog} modal>
-        <DialogContent
-          onEscapeKeyDown={(ev: any) => ev.preventDefault?.()}
-          onPointerDownOutside={(ev: any) => ev.preventDefault?.()}
-        >
-          <DialogHeader className='border-b'>
-            <DialogTitle className='font-bold text-2xl mb-1 capitalize'>
-              Atualizar {title}
-            </DialogTitle>
+      {/* Dialog de Atualização */}
+      <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Atualizar {title}</DialogTitle>
           </DialogHeader>
 
-          <form onSubmit={handleUpdateAll} className='flex flex-col gap-4 pt-4'>
-            <div className='space-y-1'>
-              <Label htmlFor='title'>Titulo</Label>
-              <Input
-                id='title'
-                type='string'
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+          <form onSubmit={handleUpdateAll} className="flex flex-col gap-4">
+            <div>
+              <Label htmlFor="title">Título</Label>
+              <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <Label>Categoria</Label>
-            <CategoryCombobox
-              categorias={categories}
-              onSelect={(val) => setCategoriaSelecionada(val)}
-              selectedCategoryId={categoriaSelecionada}
-            />
-            <section className='flex gap-1 items-center space-y-1 justify-between'>
-              <div className='space-y-1'>
-                <Label htmlFor='author'>Author</Label>
-                <Input
-                  id='author'
-                  type='string'
-                  value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
-                />
-              </div>
+            <CategoryCombobox categorias={categories} onSelect={setCategoriaSelecionada} selectedCategoryId={categoriaSelecionada} />
 
-              <div className='space-y-1'>
-                <Label htmlFor='publisher'>Editora</Label>
-                <Input
-                  id='publisher'
-                  value={editora}
-                  onChange={(e) => setEditora(e.target.value)}
-                  required
-                />
+            <div className="flex gap-2">
+              <div>
+                <Label htmlFor="author">Autor</Label>
+                <Input id="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
               </div>
-            </section>
-
-            <section className='flex gap-1 space-y-1 items-center justify-between'>
-              <div className='space-y-1'>
-                <Label htmlFor='quantity'>Quantidade Total</Label>
-                <Input
-                  id='quantity'
-                  type='number'
-                  min={0}
-                  value={quantidadeTotal}
-                  onChange={(e) => setQuantidadeTotal(Number(e.target.value))}
-                  required
-                />
+              <div>
+                <Label htmlFor="publisher">Editora</Label>
+                <Input id="publisher" value={editora} onChange={(e) => setEditora(e.target.value)} />
               </div>
-              <div className='space-y-1'>
-                <Label htmlFor='availableCopies'>Quantidade Disponíveis</Label>
-                <Input
-                  id='availableCopies'
-                  type='number'
-                  min={0}
-                  value={availableCopies}
-                  onChange={(e) => setAvailableCopies(Number(e.target.value))}
-                  required
-                />
-              </div>
-            </section>
-            <div>
-              <Label htmlFor='barcode'>Código de Barras</Label>
-              <Input
-                id='barcode'
-                type='string'
-                value={barcode}
-                onChange={(e) => setbarcode(e.target.value)}
-              />
             </div>
-            <DialogFooter className="flex items-center gap-3">
-              <Button
-                type='submit'
-                disabled={
-                  !categoriaSelecionada || !editora || quantidadeTotal < 0
-                }
-              >
-                Atualizar
-              </Button>
-              {/* Dialog de confirmação */}
-              <Dialog
-                open={deleteDialogOpen}
-                onOpenChange={setDeleteDialogOpen}
-              >
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Deletar Livro</DialogTitle>
-                  </DialogHeader>
-                  {book && (
-                    <p>
-                      Tem certeza que deseja deletar{" "}
-                      <strong>{book.title}</strong>? Digite{" "}
-                      <code>eu confirmo</code> para confirmar.
-                    </p>
-                  )}
-                  <Input
-                    placeholder='Digite eu confirmo'
-                    value={confirmText}
-                    onChange={(e) => setConfirmText(e.target.value)}
-                  />
-                  <DialogFooter>
-                    <Button
-                      variant='destructive'
-                      disabled={confirmText !== "eu confirmo" || isDeleting}
-                      onClick={handleDelete}
-                    >
-                      {isDeleting ? "Deletando..." : "Confirmar Exclusão"}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+
+            <div className="flex gap-2">
+              <div>
+                <Label htmlFor="quantity">Quantidade Total</Label>
+                <Input id="quantity" type="number" value={quantidadeTotal} onChange={(e) => setQuantidadeTotal(Number(e.target.value))} />
+              </div>
+              <div>
+                <Label htmlFor="availableCopies">Disponíveis</Label>
+                <Input id="availableCopies" type="number" value={availableCopies} onChange={(e) => setAvailableCopies(Number(e.target.value))} />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="barcode">Código de Barras</Label>
+              <Input id="barcode" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
+            </div>
+
+            <DialogFooter>
+              <Button type="submit">Atualizar</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de Exclusão */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Deletar Livro</DialogTitle>
+          </DialogHeader>
+          <p>
+            Tem certeza que deseja deletar <strong>{book.title}</strong>? Digite <code>eu confirmo</code> para confirmar.
+          </p>
+          <Input value={confirmText} onChange={(e) => setConfirmText(e.target.value)} placeholder="Digite eu confirmo" />
+          <DialogFooter>
+            <Button variant="destructive" disabled={confirmText !== "eu confirmo" || isDeleting} onClick={handleDelete}>
+              {isDeleting ? "Deletando..." : "Confirmar Exclusão"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
