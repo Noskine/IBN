@@ -185,7 +185,6 @@ export function BookActions({
               onClick={(e) => {
                 e.stopPropagation();
                 setDeleteDialogOpen(true);
-                handleDelete();
               }}
               className="w-full text-left text-red-600 font-medium cursor-pointer px-2 py-1"
             >
