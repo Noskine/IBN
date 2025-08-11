@@ -134,6 +134,27 @@ export function BookActions({
     setOpenUpdateDialog(false);
   };
 
+  const handleDelete = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(`/api/book?id=${book.id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        toast.success("Livro Deletado 👍");
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        toast.error("Erro ao atualizar livro. ❌");
+      }
+    } catch {
+      toast.error("Erro de rede ao atualizar livro.");
+    }
+
+    setOpenUpdateDialog(false);
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -181,6 +202,7 @@ export function BookActions({
               onClick={(e) => {
                 e.stopPropagation();
                 setDeleteDialogOpen(true);
+                handleDelete();
               }}
               className="w-full text-left text-red-600 font-medium cursor-pointer px-2 py-1"
             >
