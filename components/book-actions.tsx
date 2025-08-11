@@ -84,6 +84,28 @@ export function BookActions({
 
     setOpenDialog(false);
   };
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  // const [bookToDelete, setBookToDelete] = React.useState<TypeBooks | null>(null);
+  const [confirmText, setConfirmText] = React.useState("");
+  const [isDeleting, setIsDeleting] = React.useState(false);
+
+  const handleDelete = async () => {
+    if ( confirmText !== "eu confirmo") return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/books/${book.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Erro ao deletar livro");
+      window.location.reload(); // recarregar após deletar
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setConfirmText("");
+    }
+  };
 
   const handleUpdateAll = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,7 +116,7 @@ export function BookActions({
       quantity: quantidadeTotal,
       code: barcode,
       author: author,
-      title, 
+      title,
       availableCopies,
     };
 
@@ -215,23 +237,23 @@ export function BookActions({
           </DialogHeader>
 
           <form onSubmit={handleUpdateAll} className='flex flex-col gap-4 pt-4'>
-            <div className="space-y-1">
+            <div className='space-y-1'>
               <Label htmlFor='title'>Titulo</Label>
               <Input
                 id='title'
                 type='string'
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                />
+              />
             </div>
-                <Label>Categoria</Label>
+            <Label>Categoria</Label>
             <CategoryCombobox
               categorias={categories}
               onSelect={(val) => setCategoriaSelecionada(val)}
               selectedCategoryId={categoriaSelecionada}
             />
             <section className='flex gap-1 items-center space-y-1 justify-between'>
-              <div className="space-y-1">
+              <div className='space-y-1'>
                 <Label htmlFor='author'>Author</Label>
                 <Input
                   id='author'
@@ -241,7 +263,7 @@ export function BookActions({
                 />
               </div>
 
-              <div className="space-y-1">
+              <div className='space-y-1'>
                 <Label htmlFor='publisher'>Editora</Label>
                 <Input
                   id='publisher'
@@ -251,9 +273,9 @@ export function BookActions({
                 />
               </div>
             </section>
-            
+
             <section className='flex gap-1 space-y-1 items-center justify-between'>
-              <div className="space-y-1">
+              <div className='space-y-1'>
                 <Label htmlFor='quantity'>Quantidade Total</Label>
                 <Input
                   id='quantity'
@@ -263,8 +285,8 @@ export function BookActions({
                   onChange={(e) => setQuantidadeTotal(Number(e.target.value))}
                   required
                 />
-              </div >
-              <div className="space-y-1">
+              </div>
+              <div className='space-y-1'>
                 <Label htmlFor='availableCopies'>Quantidade Disponíveis</Label>
                 <Input
                   id='availableCopies'
@@ -294,6 +316,38 @@ export function BookActions({
               >
                 Atualizar
               </Button>
+              {/* Dialog de confirmação */}
+              <Dialog
+                open={deleteDialogOpen}
+                onOpenChange={setDeleteDialogOpen}
+              >
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Deletar Livro</DialogTitle>
+                  </DialogHeader>
+                  {book && (
+                    <p>
+                      Tem certeza que deseja deletar{" "}
+                      <strong>{book.title}</strong>? Digite{" "}
+                      <code>eu confirmo</code> para confirmar.
+                    </p>
+                  )}
+                  <Input
+                    placeholder='Digite eu confirmo'
+                    value={confirmText}
+                    onChange={(e) => setConfirmText(e.target.value)}
+                  />
+                  <DialogFooter>
+                    <Button
+                      variant='destructive'
+                      disabled={confirmText !== "eu confirmo" || isDeleting}
+                      onClick={handleDelete}
+                    >
+                      {isDeleting ? "Deletando..." : "Confirmar Exclusão"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </DialogFooter>
           </form>
         </DialogContent>

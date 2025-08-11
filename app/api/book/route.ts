@@ -157,3 +157,20 @@ export async function PUT(req: Request) {
     );
   }
 }
+
+export async function DELETE(req: Request) {
+    const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  
+  if (!id) {
+      throw new ExpectedError({
+        message: "Mal formatação da query!",
+        status: Status.InternalServerError,
+      });
+    }
+
+  await prisma.book.delete({
+    where: {id},
+  })
+ return NextResponse.json("ok")
+}
