@@ -212,7 +212,7 @@ export function BookActions({
               selectedCategoryId={categoriaSelecionada}
             />
 
-            <section className="flex gap-1 items-center">
+            <section className="flex gap-1 items-center justify-between">
               <div>
               <Label htmlFor='barcode'>Author</Label>
               <Input
