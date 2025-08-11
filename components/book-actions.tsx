@@ -47,6 +47,7 @@ export function BookActions({
     book.totalCopies ?? 0
   );
   const [barcode, setbarcode] = React.useState<string>("");
+   const [author, setAuthor] = React.useState<string>("");
   const session = useUserSession();
 
   // Re-inicializa campos sempre que o diálogo de atualização abrir
@@ -82,8 +83,9 @@ export function BookActions({
     const body = {
       categoryId: categoriaSelecionada,
       publisher: editora,
-      totalCopies: quantidadeTotal,
+      quantity: quantidadeTotal,
       code: barcode,
+      author: author,
     };
 
     try {
@@ -210,6 +212,17 @@ export function BookActions({
               selectedCategoryId={categoriaSelecionada}
             />
 
+            <section className="flex gap-1 items-center">
+              <div>
+              <Label htmlFor='barcode'>Author</Label>
+              <Input
+                id='barcode'
+                type='string'
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
+              />
+            </div>
+            
             <div>
               <Label htmlFor='publisher'>Editora</Label>
               <Input
@@ -219,6 +232,7 @@ export function BookActions({
                 required
               />
             </div>
+            </section>
 
             <div>
               <Label htmlFor='quantity'>Quantidade Total</Label>
@@ -237,10 +251,8 @@ export function BookActions({
               <Input
                 id='barcode'
                 type='string'
-                min={0}
                 value={barcode}
                 onChange={(e) => setbarcode(e.target.value)}
-                required
               />
             </div>
 
