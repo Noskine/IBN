@@ -203,7 +203,7 @@ export function LoanTable({ data }: { data: Loan[] }) {
 
     if (categoryFilter) {
       filtered = filtered.filter((loan) =>
-        loan.book.category.name.toLowerCase().includes(categoryFilter.toLowerCase())
+        loan.book.title.toLowerCase().includes(categoryFilter.toLowerCase())
       );
     }
 
@@ -250,11 +250,11 @@ export function LoanTable({ data }: { data: Loan[] }) {
 
         <div className="flex flex-col w-full sm:w-1/2 max-w-sm">
           <Label htmlFor="filterCategory" className="mb-1 font-medium text-xs">
-            Filtrar Categoria
+            Filtrar por livro
           </Label>
           <Input
             id="filterCategory"
-            placeholder="Digite a categoria do livro"
+            placeholder="Digite o nome do livro"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             className="w-full"
