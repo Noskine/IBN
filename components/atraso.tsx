@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, marginBottom: 10 },
   row: { flexDirection: "row", marginBottom: 5 },
   cell: { flex: 1, fontSize: 12, marginLeft: 10 },
+  name: { backgroundColor: "red" },
 });
 
 function LoanReportPDF({ loans }: { loans: Loan[] }) {
