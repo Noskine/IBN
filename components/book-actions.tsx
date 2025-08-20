@@ -281,7 +281,7 @@ export function BookActions({
             <DialogTitle>Deletar Livro</DialogTitle>
           </DialogHeader>
           <p>
-            Tem certeza que deseja deletar <strong>{book.title}</strong>? Digite <code>eu confirmo</code> para confirmar.
+            Tem certeza que deseja deletar <strong>{book.title}</strong>? Digite <span className="text-yellow-500 italic">eu confirmo</span> para confirmar.
           </p>
           <Input value={confirmText} onChange={(e) => setConfirmText(e.target.value)} placeholder="Digite eu confirmo" />
           <DialogFooter>
