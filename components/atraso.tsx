@@ -40,7 +40,7 @@ export default function Atrasados() {
           <tbody>
             {loans.map((loan) => (
               <tr key={loan.id}>
-                <td className='border p-2'>{loan.people.name}</td>
+                <td className='border p-2 bg-red-400'>{loan.people.name}</td>
                 <td className='border p-2'>{loan.book?.title}</td>
                 <td className='border p-2'>
                   {new Date(loan.dueDate).toLocaleDateString("pt-BR")}
