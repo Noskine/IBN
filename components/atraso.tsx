@@ -50,53 +50,6 @@ export default function Atrasados() {
           </tbody>
         </table>
       )}
-      <GeneratePDFButton lateLoans={loans} />
     </div>
-  );
-}
-
-import React from "react";
-import {
-  PDFDownloadLink,
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-} from "@react-pdf/renderer";
-
-import { Button } from "@/components/ui/button";
-
-const styles = StyleSheet.create({
-  page: { padding: 30 },
-  title: { fontSize: 18, marginBottom: 10 },
-  row: { flexDirection: "row", marginBottom: 5 },
-  cell: { flex: 1, fontSize: 12 },
-});
-
-export function GeneratePDFButton({ lateLoans }: { lateLoans: Loan[] }) {
-  const doc = (
-    <Document>
-      <Page size='A4' style={styles.page}>
-        <Text style={styles.title}>Relatório de Empréstimos Atrasados</Text>
-        {lateLoans.map((loan) => (
-          <View key={loan.id} style={styles.row}>
-            <Text style={styles.cell}>{loan.bookTitle}</Text>
-            <Text style={styles.cell}>{loan.readerName}</Text>
-            <Text style={styles.cell}>{loan.dueDate}</Text>
-          </View>
-        ))}
-      </Page>
-    </Document>
-  );
-
-  return (
-    <PDFDownloadLink document={doc} fileName='relatorio.pdf'>
-      {({ loading }) => (
-        <Button variant='default'>
-          {loading ? "Gerando PDF..." : "Baixar PDF"}
-        </Button>
-      )}
-    </PDFDownloadLink>
   );
 }
