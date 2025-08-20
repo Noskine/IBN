@@ -78,7 +78,9 @@ export function BookActions({
     if (res.ok) {
       toast("Consulta finalizada! ✅📅");
       setTimeout(() => window.location.reload(), 1000);
-    } else {
+    } if (res.status == 400) {
+      toast("Não se pode fazer mais emprestimos! ");
+     } else {
       toast("Algo de errado aconteceu! ❌");
     }
 

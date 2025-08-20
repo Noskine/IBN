@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-type Loan = {
+interface Loan {
+  book: any;
+  people: any;
   id: string;
-  people: { name: string };
-  book: { title: string };
+  bookTitle: string;
+  readerName: string;
   dueDate: string;
-};
+}
+
+import { useEffect, useState } from "react";
 
 export default function Atrasados() {
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -48,55 +50,53 @@ export default function Atrasados() {
           </tbody>
         </table>
       )}
-      <DownloadLoanReportButton loans={loans} />
+      <GeneratePDFButton lateLoans={loans} />
     </div>
   );
 }
 
 import React from "react";
 import {
+  PDFDownloadLink,
+  Document,
   Page,
   Text,
   View,
-  Document,
   StyleSheet,
-  PDFDownloadLink,
 } from "@react-pdf/renderer";
 
-// estilos do PDF
+import { Button } from "@/components/ui/button";
+
 const styles = StyleSheet.create({
   page: { padding: 30 },
-  title: { fontSize: 18, textAlign: "center", marginBottom: 20 },
-  row: { marginBottom: 10, fontSize: 12 },
+  title: { fontSize: 18, marginBottom: 10 },
+  row: { flexDirection: "row", marginBottom: 5 },
+  cell: { flex: 1, fontSize: 12 },
 });
 
-// componente que representa o PDF
-const LoanReportPDF = ({ loans }: { loans: any[] }) => (
-  <Document>
-    <Page size='A4' style={styles.page}>
-      <Text style={styles.title}>Relatório de Empréstimos Atrasados</Text>
-      {loans.map((loan) => (
-        <View key={loan.id} style={styles.row}>
-          <Text>
-            Pessoa: {loan.people.name} | Livro: {loan.book.title} | Vencimento:{" "}
-            {new Date(loan.dueDate).toLocaleDateString()}
-          </Text>
-        </View>
-      ))}
-    </Page>
-  </Document>
-);
+export function GeneratePDFButton({ lateLoans }: { lateLoans: Loan[] }) {
+  const doc = (
+    <Document>
+      <Page size='A4' style={styles.page}>
+        <Text style={styles.title}>Relatório de Empréstimos Atrasados</Text>
+        {lateLoans.map((loan) => (
+          <View key={loan.id} style={styles.row}>
+            <Text style={styles.cell}>{loan.bookTitle}</Text>
+            <Text style={styles.cell}>{loan.readerName}</Text>
+            <Text style={styles.cell}>{loan.dueDate}</Text>
+          </View>
+        ))}
+      </Page>
+    </Document>
+  );
 
-// botão de download
-function DownloadLoanReportButton({ loans }: { loans: any[] }) {
   return (
-    <PDFDownloadLink
-      document={<LoanReportPDF loans={loans} />}
-      fileName='relatorio-emprestimos.pdf'
-    >
-      {({ loading }) =>
-        loading ? "Gerando PDF..." : "📄 Baixar Relatório de Empréstimos"
-      }
+    <PDFDownloadLink document={doc} fileName='relatorio.pdf'>
+      {({ loading }) => (
+        <Button variant='default'>
+          {loading ? "Gerando PDF..." : "Baixar PDF"}
+        </Button>
+      )}
     </PDFDownloadLink>
   );
 }
