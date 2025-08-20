@@ -78,6 +78,22 @@ export const POST = async (req: Request) => {
       });
     }
 
+    // 🔎 Verifica quantos empréstimos ativos a pessoa já tem
+    const activeLoansCount = await prisma.loan.count({
+      where: {
+        peopleId: idPeople,
+        status: "ACTIVE",
+      },
+    });
+
+    if (activeLoansCount >= 3) {
+      throw new ExpectedError({
+        message:
+          "Este leitor já possui 3 empréstimos ativos e não pode realizar outro até devolver um livro.",
+        status: Status.BadRequest,
+      });
+    }
+
     const book = await prisma.book.findUnique({
       where: { id: idBook },
       select: { availableCopies: true },

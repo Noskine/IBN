@@ -11,6 +11,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { LogIn, LogOut } from "lucide-react";
+import Atrasados from "@/components/atraso";
+import { Separator } from "@/components/ui/separator";
 
 function isAllowedWeekday(date: Date) {
   const day = date.getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
@@ -159,6 +161,9 @@ export default async function RelatorioPage() {
           <p className="text-muted-foreground">Nenhuma observação registrada nesta semana.</p>
         )}
       </div>
+      <Separator />
+      <h1>Consultas que não foram devolvidas</h1>
+      <Atrasados />
     </div>
   );
 }
