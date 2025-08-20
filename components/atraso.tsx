@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   page: { padding: 30 },
   title: { fontSize: 18, marginBottom: 10 },
   row: { flexDirection: "row", marginBottom: 5 },
-  cell: { flex: 1, fontSize: 12 },
+  cell: { flex: 1, fontSize: 12, marginLeft: 10 },
 });
 
 function LoanReportPDF({ loans }: { loans: Loan[] }) {
