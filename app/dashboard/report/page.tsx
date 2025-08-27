@@ -21,10 +21,14 @@ function isAllowedWeekday(date: Date) {
   return [2, 3, 4].includes(day);
 }
 
+// ✅ Corrigido: converte horário para fuso de São Paulo
 function formatLocalTime(date: Date) {
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${hours}:${minutes}`;
+  return date.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "America/Sao_Paulo",
+  });
 }
 
 function formatDateToDayMonth(date: Date) {
