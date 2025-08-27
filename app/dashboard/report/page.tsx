@@ -1,3 +1,5 @@
+'use sever'
+
 import { prisma } from "@/lib/prisma";
 import {
   Table,
