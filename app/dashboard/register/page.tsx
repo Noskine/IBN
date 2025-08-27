@@ -1,4 +1,4 @@
-
+'use client'
 import { AttendanceTable } from "@/components/AttendanceTable";
 import ScannerListener from "@/components/ScannerListener";
 import { useEffect, useState } from "react";
