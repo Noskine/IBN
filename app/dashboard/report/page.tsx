@@ -1,6 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { format, startOfWeek, endOfWeek } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import {
   Table,
   TableBody,
@@ -13,17 +11,44 @@ import { LogIn, LogOut } from "lucide-react";
 import Atrasados from "@/components/atraso";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { formatInTimeZone } from "date-fns-tz"; // ✅ Novo import
 
-// Define os dias permitidos: terça, quarta e quinta
+// Dias permitidos: terça (2), quarta (3), quinta (4)
 function isAllowedWeekday(date: Date) {
   const day = date.getDay();
   return [2, 3, 4].includes(day);
 }
 
-// ✅ Nova função com timezone correto
+// ✅ Formata uma data como "HH:mm"
 function formatLocalTime(date: Date) {
-  return formatInTimeZone(date, "America/Sao_Paulo", "HH:mm");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
+// ✅ Formata uma data como "dd/MM"
+function formatDateToDayMonth(date: Date) {
+  const d = String(date.getDate()).padStart(2, "0");
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  return `${d}/${m}`;
+}
+
+// ✅ Retorna o início da semana (segunda-feira)
+function getStartOfWeek(date: Date) {
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+  const start = new Date(date);
+  start.setDate(diff);
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
+// ✅ Retorna o final da semana (domingo)
+function getEndOfWeek(date: Date) {
+  const start = getStartOfWeek(date);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  end.setHours(23, 59, 59, 999);
+  return end;
 }
 
 export default async function RelatorioPage() {
@@ -54,16 +79,16 @@ export default async function RelatorioPage() {
   > = {};
 
   attendances.forEach((a) => {
-    const date = new Date(a.entryAt);
-    if (!isAllowedWeekday(date)) return;
+    const entryDate = new Date(a.entryAt);
+    if (!isAllowedWeekday(entryDate)) return;
 
     const name = a.people.name;
-    const key = format(date, "dd/MM", { locale: ptBR });
+    const key = formatDateToDayMonth(entryDate);
 
     if (!dataByStudent[name]) dataByStudent[name] = {};
     if (!dataByStudent[name][key]) dataByStudent[name][key] = {};
 
-    dataByStudent[name][key].entry = formatLocalTime(date);
+    dataByStudent[name][key].entry = formatLocalTime(entryDate);
 
     if (a.exitAt) {
       dataByStudent[name][key].exit = formatLocalTime(new Date(a.exitAt));
@@ -76,7 +101,7 @@ export default async function RelatorioPage() {
         .map((a) => {
           const date = new Date(a.entryAt);
           if (!isAllowedWeekday(date)) return null;
-          return format(date, "dd/MM", { locale: ptBR });
+          return formatDateToDayMonth(date);
         })
         .filter(Boolean) as string[]
     )
@@ -89,8 +114,8 @@ export default async function RelatorioPage() {
   const weeklyObservations = await prisma.attendance.findMany({
     where: {
       entryAt: {
-        gte: startOfWeek(start),
-        lte: endOfWeek(end),
+        gte: getStartOfWeek(start),
+        lte: getEndOfWeek(end),
       },
       observation: {
         not: null,

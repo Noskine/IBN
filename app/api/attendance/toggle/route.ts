@@ -1,4 +1,3 @@
-// app/api/attendance/toggle/route.ts
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -14,21 +13,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Pessoa não encontrada" }, { status: 404 });
     }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
 
-    const existing = await prisma.attendance.findFirst({
+    // Buscar o último registro SEM saída
+    const lastOpenAttendance = await prisma.attendance.findFirst({
       where: {
         peopleId,
-        entryAt: { gte: today },
         exitAt: null,
+      },
+      orderBy: {
+        entryAt: "desc",
       },
     });
 
-    if (existing) {
+    if (
+      lastOpenAttendance &&
+      new Date(lastOpenAttendance.entryAt).toDateString() === now.toDateString()
+    ) {
+      // Se for do mesmo dia, registra saída
       const updated = await prisma.attendance.update({
-        where: { id: existing.id },
-        data: { exitAt: new Date() },
+        where: { id: lastOpenAttendance.id },
+        data: { exitAt: now },
         include: { people: true },
       });
 
@@ -39,6 +44,7 @@ export async function POST(req: Request) {
         name: updated.people.name,
       });
     } else {
+      // Se não há registro ou é de outro dia, cria nova entrada
       const created = await prisma.attendance.create({
         data: { peopleId },
         include: { people: true },
