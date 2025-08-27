@@ -1,4 +1,3 @@
-// app/relatorio/page.tsx
 import { prisma } from "@/lib/prisma";
 import { format, startOfWeek, endOfWeek } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -13,16 +12,27 @@ import {
 import { LogIn, LogOut } from "lucide-react";
 import Atrasados from "@/components/atraso";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
+// Define os dias permitidos: terça, quarta e quinta
 function isAllowedWeekday(date: Date) {
-  const day = date.getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
-  return [2, 3, 4].includes(day); // terça, quarta, quinta
+  const day = date.getDay();
+  return [2, 3, 4].includes(day);
+}
+
+// Função para formatar hora local corretamente
+function formatLocalTime(date: Date) {
+  return date.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 }
 
 export default async function RelatorioPage() {
   const end = new Date();
   const start = new Date();
-  start.setDate(end.getDate() - 7); // últimos 7 dias
+  start.setDate(end.getDate() - 7);
 
   const attendances = await prisma.attendance.findMany({
     where: {
@@ -37,7 +47,14 @@ export default async function RelatorioPage() {
     orderBy: [{ people: { name: "asc" } }, { entryAt: "asc" }],
   });
 
-  const dataByStudent: Record<string, Record<string, { entry?: string; exit?: string }>> = {};
+  const dlt = async () => {
+    await prisma.attendance.deleteMany();
+  };
+
+  const dataByStudent: Record<
+    string,
+    Record<string, { entry?: string; exit?: string }>
+  > = {};
 
   attendances.forEach((a) => {
     const date = new Date(a.entryAt);
@@ -49,10 +66,10 @@ export default async function RelatorioPage() {
     if (!dataByStudent[name]) dataByStudent[name] = {};
     if (!dataByStudent[name][key]) dataByStudent[name][key] = {};
 
-    dataByStudent[name][key].entry = format(date, "HH:mm");
+    dataByStudent[name][key].entry = formatLocalTime(date);
 
     if (a.exitAt) {
-      dataByStudent[name][key].exit = format(new Date(a.exitAt), "HH:mm");
+      dataByStudent[name][key].exit = formatLocalTime(new Date(a.exitAt));
     }
   });
 
@@ -72,12 +89,11 @@ export default async function RelatorioPage() {
     return ma !== mb ? ma - mb : da - db;
   });
 
-  // Buscar observações da semana
   const weeklyObservations = await prisma.attendance.findMany({
     where: {
       entryAt: {
-        gte: startOfWeek(start, { locale: ptBR, weekStartsOn: 1 }),
-        lte: endOfWeek(end, { locale: ptBR, weekStartsOn: 1 }),
+        gte: startOfWeek(start),
+        lte: endOfWeek(end),
       },
       observation: {
         not: null,
@@ -97,7 +113,9 @@ export default async function RelatorioPage() {
   return (
     <div className="p-6 space-y-10">
       <div>
-        <h1 className="text-2xl font-bold mb-6">Relatório de Presença (Última Semana)</h1>
+        <h1 className="text-2xl font-bold mb-6">
+          Relatório de Presença (Última Semana)
+        </h1>
 
         <div className="rounded-md border overflow-x-auto">
           <Table>
@@ -144,6 +162,9 @@ export default async function RelatorioPage() {
             </TableBody>
           </Table>
         </div>
+        <Button className="text-red-500 bg-red-700" onClick={dlt}>
+          Deletar
+        </Button>
       </div>
 
       {/* Observações */}
@@ -158,7 +179,9 @@ export default async function RelatorioPage() {
             ))}
           </ul>
         ) : (
-          <p className="text-muted-foreground">Nenhuma observação registrada nesta semana.</p>
+          <p className="text-muted-foreground">
+            Nenhuma observação registrada nesta semana.
+          </p>
         )}
       </div>
       <Separator />
