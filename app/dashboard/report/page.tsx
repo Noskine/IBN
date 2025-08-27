@@ -13,6 +13,7 @@ import { LogIn, LogOut } from "lucide-react";
 import Atrasados from "@/components/atraso";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { formatInTimeZone } from "date-fns-tz"; // ✅ Novo import
 
 // Define os dias permitidos: terça, quarta e quinta
 function isAllowedWeekday(date: Date) {
@@ -20,13 +21,9 @@ function isAllowedWeekday(date: Date) {
   return [2, 3, 4].includes(day);
 }
 
-// Função para formatar hora local corretamente
+// ✅ Nova função com timezone correto
 function formatLocalTime(date: Date) {
-  return date.toLocaleTimeString("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  return formatInTimeZone(date, "America/Sao_Paulo", "HH:mm");
 }
 
 export default async function RelatorioPage() {
@@ -162,6 +159,7 @@ export default async function RelatorioPage() {
             </TableBody>
           </Table>
         </div>
+
         <Button className="text-red-500 bg-red-700" onClick={dlt}>
           Deletar
         </Button>
@@ -184,6 +182,7 @@ export default async function RelatorioPage() {
           </p>
         )}
       </div>
+
       <Separator />
       <h1>Consultas que não foram devolvidas</h1>
       <Atrasados />
