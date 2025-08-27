@@ -13,6 +13,7 @@ import { LogIn, LogOut } from "lucide-react";
 import Atrasados from "@/components/atraso";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { deleteAllAttendances } from "./actions/deleteAttendances";
 
 // Dias permitidos: terça (2), quarta (3), quinta (4)
 function isAllowedWeekday(date: Date) {
@@ -20,21 +21,18 @@ function isAllowedWeekday(date: Date) {
   return [2, 3, 4].includes(day);
 }
 
-// ✅ Formata uma data como "HH:mm"
 function formatLocalTime(date: Date) {
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
   return `${hours}:${minutes}`;
 }
 
-// ✅ Formata uma data como "dd/MM"
 function formatDateToDayMonth(date: Date) {
   const d = String(date.getDate()).padStart(2, "0");
   const m = String(date.getMonth() + 1).padStart(2, "0");
   return `${d}/${m}`;
 }
 
-// ✅ Retorna o início da semana (segunda-feira)
 function getStartOfWeek(date: Date) {
   const day = date.getDay();
   const diff = date.getDate() - day + (day === 0 ? -6 : 1);
@@ -44,7 +42,6 @@ function getStartOfWeek(date: Date) {
   return start;
 }
 
-// ✅ Retorna o final da semana (domingo)
 function getEndOfWeek(date: Date) {
   const start = getStartOfWeek(date);
   const end = new Date(start);
@@ -70,10 +67,6 @@ export default async function RelatorioPage() {
     },
     orderBy: [{ people: { name: "asc" } }, { entryAt: "asc" }],
   });
-
-  const dlt = async () => {
-    await prisma.attendance.deleteMany();
-  };
 
   const dataByStudent: Record<
     string,
@@ -187,9 +180,12 @@ export default async function RelatorioPage() {
           </Table>
         </div>
 
-        <Button className="text-red-500 bg-red-700" onClick={dlt}>
-          Deletar
-        </Button>
+        {/* ✅ Botão deletar usando form */}
+        <form action={deleteAllAttendances} className="mt-4">
+          <Button type="submit" className="text-red-500 bg-red-700">
+            Deletar
+          </Button>
+        </form>
       </div>
 
       {/* Observações */}
