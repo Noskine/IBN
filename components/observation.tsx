@@ -38,10 +38,22 @@ export function StudentObservationForm() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await fetch("/api/readers");
-      const data = await res.json();
-      setStudents(data);
-      setLoading(false);
+      try {
+        const res = await fetch("/api/readers");
+        const data = await res.json();
+
+        // Verificação para garantir que data seja um array
+        if (Array.isArray(data)) {
+          setStudents(data);
+        } else {
+          toast.error("Erro ao carregar alunos.");
+        }
+      } catch (error) {
+        toast.error("Erro ao carregar alunos.");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
@@ -73,28 +85,36 @@ export function StudentObservationForm() {
         },
       });
 
-      if (!res.ok) throw new Error();
+      if (!res.ok) throw new Error("Erro no servidor");
+
       toast.success("Observação salva!");
       setSaved(true);
-    } catch {
+    } catch (error) {
       toast.error("Erro ao salvar observação.");
+      console.error(error);
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className='space-y-4'>
+    <div className="space-y-4">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant='outline' className='w-full justify-start'>
+          <Button variant="outline" className="w-full justify-start">
             {selectedStudent ? selectedStudent.name : "Selecione um aluno..."}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className='w-full p-0'>
+        <PopoverContent className="w-full p-0">
           <Command>
-            <CommandInput placeholder='Buscar aluno...' />
-            <CommandEmpty>Nenhum aluno presente hoje.</CommandEmpty>
+            <CommandInput placeholder="Buscar aluno..." />
+            {loading ? (
+              <CommandEmpty>Carregando alunos...</CommandEmpty>
+            ) : students.length === 0 ? (
+              <CommandEmpty>Nenhum aluno presente hoje.</CommandEmpty>
+            ) : (
+              <CommandEmpty />
+            )}
             <CommandGroup>
               {students.map((student) => (
                 <CommandItem
@@ -118,19 +138,19 @@ export function StudentObservationForm() {
       </Popover>
 
       {selectedStudent && (
-        <div className='space-y-2'>
+        <div className="space-y-2">
           <Textarea
             value={observation}
             onChange={(e) => setObservation(e.target.value)}
-            placeholder='Digite uma observação sobre este aluno...'
-            className='text-sm'
+            placeholder="Digite uma observação sobre este aluno..."
+            className="text-sm"
           />
           <Button onClick={handleSave} disabled={saving}>
             {saving ? (
-              <Loader2 className='w-4 h-4 animate-spin' />
+              <Loader2 className="w-4 h-4 animate-spin" />
             ) : saved ? (
               <>
-                <Check className='w-4 h-4 mr-2' /> Salvo
+                <Check className="w-4 h-4 mr-2" /> Salvo
               </>
             ) : (
               "Salvar observação"

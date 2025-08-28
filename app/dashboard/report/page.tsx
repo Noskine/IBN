@@ -186,7 +186,7 @@ export default async function RelatorioPage() {
 
         {/* ✅ Botão deletar usando form */}
         <form action={deleteAllAttendances} className="mt-4">
-          <Button type="submit" className="text-red-500 bg-red-700">
+          <Button type="submit" className="text-red-100 bg-red-700">
             Deletar
           </Button>
         </form>
