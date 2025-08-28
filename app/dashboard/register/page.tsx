@@ -1,5 +1,6 @@
 'use client'
 import { AttendanceTable } from "@/components/AttendanceTable";
+import { StudentObservationForm } from "@/components/observation";
 import ScannerListener from "@/components/ScannerListener";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
@@ -21,6 +22,7 @@ export default function Page() {
         <ScannerListener />
       </div>
       <AttendanceTable data={attendance} />
+      <StudentObservationForm />
     </div>
   );
 }

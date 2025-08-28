@@ -134,17 +134,17 @@ export default async function RelatorioPage() {
   return (
     <div className="p-6 space-y-10">
       <div>
-        <h1 className="text-2xl font-bold mb-6">
+        <h1 className="text-2xl print:text-sm font-bold mb-6">
           Relatório de Presença (Última Semana)
         </h1>
 
-        <div className="rounded-md border overflow-x-auto">
+        <div className="rounded-md border overflow-x-auto print:text-sm">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="border-r font-bold">Nome</TableHead>
                 {allDates.map((date) => (
-                  <TableHead key={date} className="text-center border-x font-bold">
+                  <TableHead key={date} className="text-center border-x font-bold print:text-sm">
                     {date}
                   </TableHead>
                 ))}
@@ -154,11 +154,11 @@ export default async function RelatorioPage() {
             <TableBody>
               {Object.entries(dataByStudent).map(([name, dates]) => (
                 <TableRow key={name} className="border-t">
-                  <TableCell className="font-bold border-r">{name}</TableCell>
+                  <TableCell className="font-bold border-r print:text-sm print:font-normal">{name}</TableCell>
                   {allDates.map((date) => {
                     const value = dates[date];
                     return (
-                      <TableCell key={date} className="text-center border-x">
+                      <TableCell key={date} className="text-center border-x print:text-sm print:font-normal">
                         {value ? (
                           <div className="flex justify-around items-center gap-1 text-sm">
                             <span className="flex items-center gap-1 text-green-600">
@@ -185,7 +185,7 @@ export default async function RelatorioPage() {
         </div>
 
         {/* ✅ Botão deletar usando form */}
-        <form action={deleteAllAttendances} className="mt-4">
+        <form action={deleteAllAttendances} className="mt-4 print:hidden">
           <Button type="submit" className="text-red-100 bg-red-700">
             Deletar
           </Button>
@@ -194,11 +194,11 @@ export default async function RelatorioPage() {
 
       {/* Observações */}
       <div className="px-[10%]">
-        <h2 className="text-xl font-semibold mb-4">Observações da Semana</h2>
+        <h2 className="text-xl font-semibold mb-4 print:text-sm">Observações da Semana</h2>
         {weeklyObservations.length > 0 ? (
           <ul className="space-y-2">
             {weeklyObservations.map((obs) => (
-              <li key={obs.id} className="p-4 border rounded-md bg-muted/30">
+              <li key={obs.id} className="p-4 border rounded-md bg-muted/30 print:text-sm">
                 <strong>{obs.people.name}:</strong> {obs.observation}
               </li>
             ))}
@@ -211,7 +211,7 @@ export default async function RelatorioPage() {
       </div>
 
       <Separator />
-      <h1>Consultas que não foram devolvidas</h1>
+      <h1 className="print:hidden">Consultas que não foram devolvidas</h1>
       <Atrasados />
     </div>
   );
