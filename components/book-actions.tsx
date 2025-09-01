@@ -216,8 +216,8 @@ export function BookActions({
 
             <ComboboxReaders data={readers} onSelect={setLeitorSelecionado} />
 
-            <DialogFooter>
-              <Button type="submit" disabled={!leitorSelecionado}>
+            <DialogFooter className="mt-1">
+              <Button type="submit" disabled={!leitorSelecionado} onClick={() => {setOpenDialog(false)}}>
                 Criar consulta
               </Button>
             </DialogFooter>
