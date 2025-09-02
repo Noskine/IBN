@@ -18,11 +18,13 @@ export async function POST(req: Request) {
     if (existing) {
       result = await prisma.weeklyObservation.update({
         where: { id: existing.id },
-        data: { observations: observation },
+        data: { observation },
       });
     } else {
       result = await prisma.weeklyObservation.create({
-        data: { id:peopleId , weekStart, observations: observation },
+        data: { people: {
+          connect: peopleId,
+        } , weekStart, observation },
       });
     }
 
