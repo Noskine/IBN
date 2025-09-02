@@ -79,8 +79,7 @@ export function BookActions({
   toast("Consulta finalizada! ✅📅");
   setTimeout(() => window.location.reload(), 1000);
 } else if (res.status === 400) {
-  const l = await res.json()
-  toast(`${l.message} 😢`);
+  toast(`O Usuário não pode pegar mais que 3 livros 😢`);
 } else {
   toast("Algo de errado aconteceu! ❌");
 }
