@@ -6,6 +6,11 @@ export async function POST(req: Request) {
   try {
     const { peopleId, observation } = await req.json();
 
+    // Verifique se peopleId e observation são válidos
+    if (!peopleId || !observation) {
+      return NextResponse.json({ error: "peopleId e observation são obrigatórios" }, { status: 400 });
+    }
+
     // Calcula o início da semana (segunda-feira)
     const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
 
@@ -25,7 +30,7 @@ export async function POST(req: Request) {
       // Se já existe uma observação, atualiza
       result = await prisma.weeklyObservation.update({
         where: { id: existing.id },
-        data: { observation },
+        data: { observation: existing.observation + " ... " + observation },
       });
     } else {
       // Se não existe, cria uma nova observação
