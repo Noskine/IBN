@@ -110,19 +110,11 @@ export default async function RelatorioPage() {
     return ma !== mb ? ma - mb : da - db;
   });
 
-  const weeklyObservations = await prisma.attendance.findMany({
-    where: {
-      entryAt: {
-        gte: getStartOfWeek(start),
-        lte: getEndOfWeek(end),
-      },
-      observation: {
-        not: null,
-      },
-    },
+  const weeklyObservations = await prisma.weeklyObservation.findMany({
     select: {
       id: true,
       observation: true,
+      weekStart: true,
       people: {
         select: {
           name: true,
@@ -198,8 +190,15 @@ export default async function RelatorioPage() {
         {weeklyObservations.length > 0 ? (
           <ul className="space-y-2">
             {weeklyObservations.map((obs) => (
-              <li key={obs.id} className="p-4 border rounded-md bg-muted/30 print:text-sm">
-                <strong>{obs.people.name}:</strong> {obs.observation}
+              <li key={obs.id} >
+                <span className="p-3 w-full border rounded-md bg-muted/30 print:text-sm">
+                  <strong >{obs.people.name}:</strong> {obs.observation}</span>
+                <p className="font-bold text-xs mx-3 my-3">{new Date(obs.weekStart).toLocaleDateString('pt-BR', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}</p>
               </li>
             ))}
           </ul>
