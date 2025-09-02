@@ -75,15 +75,14 @@ export function BookActions({
       { method: "POST" }
     );
 
-    if (res.ok) {
-      toast("Consulta finalizada! ✅📅");
-      setTimeout(() => window.location.reload(), 1000);
-    } if (res.status == 400) {
-      toast("Não se pode fazer mais emprestimos! ");
-     } else {
-      toast("Algo de errado aconteceu! ❌");
-    }
-
+   if (res.ok) {
+  toast("Consulta finalizada! ✅📅");
+  setTimeout(() => window.location.reload(), 1000);
+} else if (res.status === 400) {
+  toast(`${await res.json()} 😢`);
+} else {
+  toast("Algo de errado aconteceu! ❌");
+}
     setOpenDialog(false);
   };
 

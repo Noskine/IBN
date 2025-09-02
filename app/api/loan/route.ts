@@ -115,7 +115,7 @@ export const POST = async (req: Request) => {
 
     const loanDate = new Date();
     const dueDate = new Date();
-    dueDate.setDate(loanDate.getDate() + 7);
+    dueDate.setDate(loanDate.getDate() + 8);
 
     const loan = await prisma.loan.create({
       data: {
