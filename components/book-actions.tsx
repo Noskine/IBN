@@ -79,7 +79,8 @@ export function BookActions({
   toast("Consulta finalizada! ✅📅");
   setTimeout(() => window.location.reload(), 1000);
 } else if (res.status === 400) {
-  toast(`${await res.json()} 😢`);
+  const l = await res.json()
+  toast(`${l.message} 😢`);
 } else {
   toast("Algo de errado aconteceu! ❌");
 }
