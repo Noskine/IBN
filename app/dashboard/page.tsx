@@ -1,10 +1,13 @@
 "use client";
 
+import { LoanReportPDF } from "@/components/atraso";
 import { AttendanceTable } from "@/components/AttendanceTable";
 import { DataTableDemo } from "@/components/data-table";
 import { LoanTable } from "@/components/data-table-loans";
 import { SectionCards } from "@/components/section-cards";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
@@ -40,6 +43,7 @@ export default function DashboardPage() {
             <Separator className='mt-1 mb-3' />
             <SectionCards data={books!} />
           </div>
+           
           <div>
             <h2 className='text-2xl font-bold'>Livros</h2>
             <Separator className='mt-1 mb-3' />
@@ -54,7 +58,22 @@ export default function DashboardPage() {
             <AttendanceTable data={attendance!} />
           </div>
         </div>
+        <div className="my-3">
+          {loans.length > 0 && (
+                    <PDFDownloadLink
+                      document={<LoanReportPDF loans={loans} />}
+                      fileName="emprestimos_atrasados.pdf"
+                    >
+                      {({ loading }) => (
+                        <Button variant="default">
+                          {loading ? "Gerando PDF..." : "Exportar PDF"}
+                        </Button>
+                      )}
+                    </PDFDownloadLink>
+                  )}
+        </div>
       </div>
+      
     </div>
   );
 }

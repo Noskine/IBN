@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   name: { backgroundColor: "red" },
 });
 
-function LoanReportPDF({ loans }: { loans: Loan[] }) {
+export function LoanReportPDF({ loans }: { loans: Loan[] }) {
   return (
     <Document>
       <Page style={styles.page}>
