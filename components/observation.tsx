@@ -45,9 +45,7 @@ export function StudentObservationForm() {
         // Verificação para garantir que data seja um array
         if (Array.isArray(data)) {
           setStudents(data);
-        } else {
-          toast.error("Erro ao carregar alunos.");
-        }
+        } 
       } catch (error) {
         toast.error("Erro ao carregar alunos.");
         console.error(error);
@@ -141,7 +139,10 @@ export function StudentObservationForm() {
         <div className="space-y-2">
           <Textarea
             value={observation}
-            onChange={(e) => setObservation(e.target.value)}
+            onChange={(e) => {
+              setObservation(e.target.value)
+              console.log(e.target.value)
+            }}
             placeholder="Digite uma observação sobre este aluno..."
             className="text-sm"
           />

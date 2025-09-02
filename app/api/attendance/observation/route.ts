@@ -11,18 +11,18 @@ export async function POST(req: Request) {
 
     // verifica se já existe uma observação nessa semana
     const existing = await prisma.weeklyObservation.findFirst({
-      where: { peopleId, weekStart },
+      where: { id: peopleId, weekStart },
     });
 
     let result;
     if (existing) {
       result = await prisma.weeklyObservation.update({
         where: { id: existing.id },
-        data: { observation },
+        data: { observations: observation },
       });
     } else {
       result = await prisma.weeklyObservation.create({
-        data: { peopleId, weekStart, observation },
+        data: { id:peopleId , weekStart, observations: observation },
       });
     }
 
