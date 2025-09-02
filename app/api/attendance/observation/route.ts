@@ -6,6 +6,7 @@ export async function POST(req: Request) {
   try {
     // Extrair o corpo da requisição
     const { peopleId, observation } = await req.json();
+    console.log(peopleId, observation)
 
     // Verificação de dados obrigatórios
     if (!peopleId || !observation) {
@@ -62,7 +63,9 @@ export async function POST(req: Request) {
     }
 
     // Retorna a resposta com a mensagem e os dados
-    return NextResponse.json({ message: "Observação salva", data: result });
+    return NextResponse.json({ message: "Observação salva", data: result }, 
+      {status: 200}
+    );
   } catch (err) {
     console.error("Erro ao salvar a observação:", err);
     return NextResponse.json(

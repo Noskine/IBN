@@ -70,12 +70,16 @@ export function StudentObservationForm() {
   const handleSave = async () => {
     if (!selectedStudent) return;
 
+    console.log(selectedStudent.id)
+
     setSaving(true);
+    setObservation("")
+    setSelectedStudent(null)
     try {
       const res = await fetch("/api/attendance/observation", {
         method: "POST",
         body: JSON.stringify({
-          attendanceId: selectedStudent.attendanceId,
+          peopleId: selectedStudent.id,
           observation,
         }),
         headers: {
