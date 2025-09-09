@@ -1,41 +1,71 @@
+"use client";
+
 import { useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle, AlertCircle } from "lucide-react";
 
+const ManualEntry = () => {
+  const [manualId, setManualId] = useState("");  // Estado para armazenar o ID digitado
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);  // Mensagem de status
 
-//@ts-expect-error
-const ManualEntry = ({ onManualEntry }) => {
-  const [studentId, setStudentId] = useState(""); // Estado para armazenar o ID digitado
-  const [error, setError] = useState(""); // Mensagem de erro, caso o ID não seja válido
-
-  const handleSubmit = () => {
-    if (!studentId.trim()) {
-      setError("O ID do aluno não pode estar vazio.");
+  const handleManualEntry = async () => {
+    if (!manualId.trim()) {
+      setMessage({ type: "error", text: "O ID do aluno não pode estar vazio." });
       return;
     }
-    // Chama a função de callback que foi passada por props para registrar a entrada
-    onManualEntry(studentId);
-    setStudentId(""); // Limpa o campo de texto após o envio
-    setError(""); // Limpa a mensagem de erro
+
+    try {
+      // Envia a requisição para registrar a entrada
+      const res = await fetch("/api/attendance/toggle", {
+        method: "POST",
+        body: JSON.stringify({ peopleId: manualId }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        const actionText = data.action === "entry" ? "Entrada registrada" : "Saída registrada";
+        setMessage({ type: "success", text: `${actionText} para ${data.name}` });
+      } else {
+        setMessage({ type: "error", text: data.error || "Erro no servidor" });
+      }
+    } catch {
+      setMessage({ type: "error", text: "Falha ao comunicar com o servidor" });
+    }
+
+    setManualId(""); // Limpa o campo após o envio
+    setTimeout(() => setMessage(null), 4000);
   };
 
   return (
-    <div className="my-4 p-4 bg-gray-100 rounded-md shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Registrar Entrada Manualmente</h2>
-      <div>
+    <div className="p-4 mt-6 bg-gray-100 rounded-md shadow-md">
+      {message && (
+        <Alert
+          variant={message.type === "success" ? "default" : "destructive"}
+          className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md"
+        >
+          {message.type === "success" ? <CheckCircle className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+          <AlertTitle>{message.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
+          <AlertDescription>{message.text}</AlertDescription>
+        </Alert>
+      )}
+      <h2 className="text-lg font-semibold mb-4">Registrar Entrada Manualmente</h2>
+      <div className="flex">
         <input
           type="text"
-          value={studentId}
-          onChange={(e) => setStudentId(e.target.value)}
+          value={manualId}
+          onChange={(e) => setManualId(e.target.value)}
           className="p-2 border border-gray-300 rounded-md"
           placeholder="Digite o ID do aluno"
         />
         <button
-          onClick={handleSubmit}
+          onClick={handleManualEntry}
           className="ml-2 p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
           Registrar Entrada
         </button>
       </div>
-      {error && <div className="mt-2 text-red-600">{error}</div>}
     </div>
   );
 };
