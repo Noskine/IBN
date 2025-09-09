@@ -39,19 +39,19 @@ const ManualEntry = () => {
   };
 
   return (
-    <div className="p-4 mt-6 bg-gray-100 rounded-md shadow-md">
+    <div className="p-4 mt-6 rounded-md shadow-md">
       <h2 className="text-lg font-semibold mb-4">Registrar Entrada Manualmente</h2>
       <div className="flex">
         <Input
           type="text"
           value={manualId}
           onChange={(e) => setManualId(e.target.value)}
-          className="p-2 border border-gray-300 rounded-md"
+          className="p-2 border  rounded-md"
           placeholder="Digite o ID do aluno"
         />
         <Button
           onClick={handleManualEntry}
-          className="ml-2 p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="ml-2 p-2 "
         >
           Registrar Entrada
         </Button>
