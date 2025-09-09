@@ -17,20 +17,20 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="p-6 min-[100vh]!">
+    <div className="p-6 space-y-2">
       <div className='h-1/2 flex items-center justify-center'>
         <h1 className='text-2xl font-bold'>Controle de Entrada e Saída</h1>
         <ScannerListener /> {/* Componente do Scanner */}
       </div>
 
-      {/* Componente para Entrada Manual */}
-      <ManualEntry />
 
       {/* Tabela de presença */}
       <AttendanceTable data={attendance} />
 
       {/* Formulário de observação */}
       <StudentObservationForm />
+      {/* Componente para Entrada Manual */}
+      <ManualEntry />
     </div>
   );
 }
