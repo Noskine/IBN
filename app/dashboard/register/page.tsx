@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react";
 import { AttendanceTable } from "@/components/AttendanceTable";
 import { StudentObservationForm } from "@/components/observation";
