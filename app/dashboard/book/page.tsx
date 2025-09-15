@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/command";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface Category {
   id: string;
@@ -103,7 +104,7 @@ export default function NewBookPage() {
         throw new Error("Erro ao criar livro");
       }
 
-      alert("Livro criado com sucesso!");
+      toast("Livro cadrastrado com sucesso! 👍")
       setFormData({
         title: "",
         author: "",
@@ -114,7 +115,7 @@ export default function NewBookPage() {
       setCategoryValue("");
       setQuery("");
     } catch (error) {
-      alert("Erro ao criar livro. Veja o console.");
+      toast.error("Erro ao criar livro. Veja o console.");
       console.error(error);
     }
   }

@@ -46,10 +46,10 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { title, author, publisher, categoryId, quantity } = body;
+    const { title, author, publisher, categoryId, quantity, barcode } = body;
 
     // Validação básica
-    if (!title || !author || !categoryId || !quantity) {
+    if (!title || !author || !categoryId || !quantity || barcode) {
       return NextResponse.json(
         { error: "Dados obrigatórios faltando." },
         { status: 400 }
@@ -66,6 +66,7 @@ export async function POST(req: Request) {
         category: {
           connect: { id: categoryId },
         },
+        barcode: barcode,
       },
     });
 

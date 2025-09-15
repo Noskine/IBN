@@ -44,14 +44,14 @@ export type Loan = {
   people: {
     id: string;
     name: string;
-  };
+  } | null;
   book: {
     title: string;
     author: string;
     category: {
       name: string;
-    };
-  };
+    } | null;
+  } | null;
   loanDate: string;
   returnDate: string | null;
   dueDate: string;
@@ -69,11 +69,14 @@ const columns: ColumnDef<Loan>[] = [
         Leitor <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      return (
-        <Link href={`/dashboard/readers/${row.original.people.id}`} className="underline cursor-pointer">{row.original.people.name}</Link>
-      )
-    },
+    cell: ({ row }) => (
+      <Link
+        href={`/dashboard/readers/${row.original.people?.id ?? "#"}`}
+        className="underline cursor-pointer"
+      >
+        {row.original.people?.name ?? "—"}
+      </Link>
+    ),
   },
   {
     accessorKey: "book.title",
@@ -81,10 +84,10 @@ const columns: ColumnDef<Loan>[] = [
     cell: ({ row }) => (
       <HoverCard>
         <HoverCardTrigger className="cursor-default capitalize font-medium">
-          {truncate(row.original.book.title, 25)}
+          {truncate(row.original.book?.title ?? "—", 25)}
         </HoverCardTrigger>
         <HoverCardContent className="text-xs! p-1! text-center w-fit">
-          {row.original.book.title}
+          {row.original.book?.title ?? "—"}
         </HoverCardContent>
       </HoverCard>
     ),
@@ -92,12 +95,12 @@ const columns: ColumnDef<Loan>[] = [
   {
     accessorKey: "book.author",
     header: "Autor",
-    cell: ({ row }) => row.original.book.author,
+    cell: ({ row }) => row.original.book?.author ?? "—",
   },
   {
     accessorKey: "book.category.name",
     header: "Categoria",
-    cell: ({ row }) =>  truncate(row.original.book.category.name, 20),
+    cell: ({ row }) => truncate(row.original.book?.category?.name ?? "—", 20),
   },
   {
     accessorKey: "loanDate",
@@ -197,13 +200,13 @@ export function LoanTable({ data }: { data: Loan[] }) {
 
     if (globalFilter) {
       filtered = filtered.filter((loan) =>
-        loan.people.name.toLowerCase().includes(globalFilter.toLowerCase())
+        loan.people?.name?.toLowerCase().includes(globalFilter.toLowerCase())
       );
     }
 
     if (categoryFilter) {
       filtered = filtered.filter((loan) =>
-        loan.book.title.toLowerCase().includes(categoryFilter.toLowerCase())
+        loan.book?.title?.toLowerCase().includes(categoryFilter.toLowerCase())
       );
     }
 
@@ -394,6 +397,7 @@ function Atrasado() {
 }
 
 function truncate(text: string, maxLength: number): string {
+  if (!text) return "—";
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
 }
