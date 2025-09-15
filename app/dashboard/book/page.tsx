@@ -38,6 +38,7 @@ export default function NewBookPage() {
     publisher: "",
     categoryId: "",
     quantity: 1,
+    barcode: "",
   });
 
   React.useEffect(() => {
@@ -111,6 +112,7 @@ export default function NewBookPage() {
         publisher: "",
         categoryId: "",
         quantity: 1,
+        barcode:""
       });
       setCategoryValue("");
       setQuery("");
@@ -234,6 +236,19 @@ export default function NewBookPage() {
           value={formData.quantity}
           onChange={handleChange}
           required
+        />
+      </div>
+
+      <div>
+        <Label className="mb-1 text-xs" htmlFor="barcode">
+          Código de Barras
+        </Label>
+        <Input
+          id="barcode"
+          name="barcode"
+          value={formData.barcode}
+          onChange={handleChange}
+          placeholder="Editora (opcional)"
         />
       </div>
 
