@@ -187,7 +187,7 @@ export default async function RelatorioPage() {
           Observações da Semana
         </h2>
         {weeklyObservations.length > 0 ? (
-          <ul className="space-y-4">
+          <ul className="space-y-4 mb-2">
             {weeklyObservations.map((obs) => (
               <li key={obs.id} className="text-justify leading-relaxed">
                 <p className="border border-black p-3 rounded-md">
