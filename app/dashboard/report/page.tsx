@@ -1,4 +1,4 @@
-'use server'
+"use server";
 
 import { prisma } from "@/lib/prisma";
 import {
@@ -10,18 +10,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { LogIn, LogOut } from "lucide-react";
-import Atrasados from "@/components/atraso";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { deleteAllAttendances } from "./actions/deleteAttendances";
 
-// Dias permitidos: terça (2), quarta (3), quinta (4)
 function isAllowedWeekday(date: Date) {
   const day = date.getDay();
-  return [2, 3, 4].includes(day);
+  return [2, 3, 4].includes(day); // terça, quarta, quinta
 }
 
-// ✅ Corrigido: converte horário para fuso de São Paulo
 function formatLocalTime(date: Date) {
   return date.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
@@ -35,23 +30,6 @@ function formatDateToDayMonth(date: Date) {
   const d = String(date.getDate()).padStart(2, "0");
   const m = String(date.getMonth() + 1).padStart(2, "0");
   return `${d}/${m}`;
-}
-
-function getStartOfWeek(date: Date) {
-  const day = date.getDay();
-  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-  const start = new Date(date);
-  start.setDate(diff);
-  start.setHours(0, 0, 0, 0);
-  return start;
-}
-
-function getEndOfWeek(date: Date) {
-  const start = getStartOfWeek(date);
-  const end = new Date(start);
-  end.setDate(start.getDate() + 6);
-  end.setHours(23, 59, 59, 999);
-  return end;
 }
 
 export default async function RelatorioPage() {
@@ -124,94 +102,114 @@ export default async function RelatorioPage() {
   });
 
   return (
-    <div className="p-6 space-y-10">
-      <div>
-        <h1 className="text-2xl print:text-sm font-bold mb-6">
-          Relatório de Presença (Última Semana)
-        </h1>
+    <div className="p-10 print:p-0 print:m-0 font-serif text-black">
+      <style>{`
+        @media print {
+          @page {
+            size: A4 portrait;
+            margin: 2cm;
+          }
+          body {
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+          }
+          .no-print { display: none !important; }
+          table, th, td {
+            border: 1px solid #000;
+            border-collapse: collapse;
+          }
+        }
+        table, th, td {
+          border: 1px solid #000;
+          border-collapse: collapse;
+        }
+      `}</style>
 
-        <div className="rounded-md border overflow-x-auto print:text-sm">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="border-r font-bold">Nome</TableHead>
-                {allDates.map((date) => (
-                  <TableHead key={date} className="text-center border-x font-bold print:text-sm">
-                    {date}
-                  </TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
+      <h1 className="text-2xl font-bold mb-6 text-center uppercase">
+        Relatório de Presença — Última Semana
+      </h1>
 
-            <TableBody>
-              {Object.entries(dataByStudent).map(([name, dates]) => (
-                <TableRow key={name} className="border-t">
-                  <TableCell className="font-bold border-r print:text-sm print:font-normal">{name}</TableCell>
-                  {allDates.map((date) => {
-                    const value = dates[date];
-                    return (
-                      <TableCell key={date} className="text-center border-x print:text-sm print:font-normal">
-                        {value ? (
-                          <div className="flex justify-around items-center gap-1 text-sm">
-                            <span className="flex items-center gap-1 text-green-600">
-                              <LogIn className="w-4 h-4" />
-                              {value.entry}
-                            </span>
-                            {value.exit && (
-                              <span className="flex items-center gap-1 text-red-600">
-                                <LogOut className="w-4 h-4" />
-                                {value.exit}
-                              </span>
-                            )}
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground">—</span>
-                        )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
+      {/* Tabela de Presença */}
+      <div className="overflow-x-auto">
+        <Table className="w-full text-sm">
+          <TableHeader>
+            <TableRow className="bg-gray-200">
+              <TableHead className="border-r font-bold text-center w-48">
+                Nome
+              </TableHead>
+              {allDates.map((date) => (
+                <TableHead
+                  key={date}
+                  className="border-x font-bold text-center"
+                >
+                  {date}
+                </TableHead>
               ))}
-            </TableBody>
-          </Table>
-        </div>
+            </TableRow>
+          </TableHeader>
 
-        {/* ✅ Botão deletar usando form */}
-        <form action={deleteAllAttendances} className="mt-4 print:hidden">
-          <Button type="submit" className="text-red-100 bg-red-700">
-            Deletar
-          </Button>
-        </form>
+          <TableBody>
+            {Object.entries(dataByStudent).map(([name, dates]) => (
+              <TableRow key={name}>
+                <TableCell className="border-r font-semibold">{name}</TableCell>
+                {allDates.map((date) => {
+                  const value = dates[date];
+                  return (
+                    <TableCell key={date} className="border-x text-center">
+                      {value ? (
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="flex items-center gap-1 text-green-700">
+                            <LogIn className="w-3 h-3" /> {value.entry}
+                          </span>
+                          {value.exit && (
+                            <span className="flex items-center gap-1 text-red-700">
+                              <LogOut className="w-3 h-3" /> {value.exit}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span>—</span>
+                      )}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
 
-      {/* Observações */}
-      <div className="px-[10%]">
-        <h2 className="text-xl font-semibold mb-4 print:text-sm">Observações da Semana</h2>
+      <Separator className="my-10" />
+
+      {/* Observações da Semana */}
+      <div>
+        <h2 className="text-xl font-bold mb-4 text-center uppercase">
+          Observações da Semana
+        </h2>
         {weeklyObservations.length > 0 ? (
-          <ul className="space-y-2">
+          <ul className="space-y-4">
             {weeklyObservations.map((obs) => (
-              <li key={obs.id} >
-                <span className="p-3 w-full border rounded-md bg-muted/30 print:text-sm">
-                  <strong >{obs.people.name}:</strong> {obs.observation}</span>
-                <p className="font-bold text-xs mx-3 my-3">{new Date(obs.weekStart).toLocaleDateString('pt-BR', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}</p>
+              <li key={obs.id} className="text-justify leading-relaxed">
+                <p className="border border-black p-3 rounded-md">
+                  <strong>{obs.people.name}:</strong> {obs.observation}
+                </p>
+                <p className="text-xs italic text-right mt-1">
+                  {new Date(obs.weekStart).toLocaleDateString("pt-BR", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-muted-foreground">
+          <p className="text-center italic">
             Nenhuma observação registrada nesta semana.
           </p>
         )}
       </div>
-
-      <Separator />
-      <h1 className="print:hidden">Consultas que não foram devolvidas</h1>
-      <Atrasados />
     </div>
   );
 }
