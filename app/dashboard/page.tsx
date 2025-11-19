@@ -5,6 +5,7 @@ import { DataTableDemo } from "@/components/data-table";
 import { LoanTable } from "@/components/data-table-loans";
 import { SectionCards } from "@/components/section-cards";
 import { Separator } from "@/components/ui/separator";
+import RelatorioConsultasButton from "@/components/RelatorioConsultasButton";
 import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
@@ -13,22 +14,17 @@ export default function DashboardPage() {
   const [loans, setLoans] = useState([]);
   const [categories, setCategories] = useState([]);
   const [attendance, setAttendance] = useState([]);
-  
-  useEffect(() => {
-    fetch("/api/books").then((res) =>
-      res.json().then((data) => setBooks(data))
-    );
 
-    fetch("/api/readers").then((res) =>
-      res.json().then((data) => setReaders(data))
-    );
+  useEffect(() => {
+    fetch("/api/books").then((res) => res.json().then((data) => setBooks(data)));
+
+    fetch("/api/readers").then((res) => res.json().then((data) => setReaders(data)));
 
     fetch("/api/loan").then((res) => res.json().then((data) => setLoans(data)));
 
     fetch("/api/categories").then((res) => res.json().then((data) => setCategories(data)));
 
     fetch("/api/attendance/list").then((res) => res.json().then((data) => setAttendance(data)));
-
   }, []);
 
   return (
@@ -40,17 +36,22 @@ export default function DashboardPage() {
             <Separator className='mt-1 mb-3' />
             <SectionCards data={books!} />
           </div>
-           
+
           <div>
             <h2 className='text-2xl font-bold'>Livros</h2>
             <Separator className='mt-1 mb-3' />
             <DataTableDemo data={books!} readers={readers!} categories={categories!} />
           </div>
+
           <div>
             <h2 className='text-2xl font-bold'>Consultas</h2>
             <Separator className='mt-1 mb-3' />
             <LoanTable data={loans!} />
+
+            {/* BOTÃO DE GERAR PDF DAS CONSULTAS */}
+            <RelatorioConsultasButton />
           </div>
+
           <div>
             <AttendanceTable data={attendance!} />
           </div>
