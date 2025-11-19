@@ -92,33 +92,6 @@ export default function RelatorioConsultas() {
           </PDFDownloadLink>
         )}
       </div>
-
-      {loans.length === 0 ? (
-        <p>Nenhuma consulta encontrada.</p>
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Aluno</TableHead>
-              <TableHead>Livro</TableHead>
-              <TableHead>Dia da Consulta</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loans.map((loan) => (
-              <TableRow key={loan.id}>
-                <TableCell>{loan.people.name}</TableCell>
-                <TableCell>{loan.book?.title ?? "Sem título"}</TableCell>
-                <TableCell>
-                  {new Date(loan.loanDate).toLocaleDateString("pt-BR")}
-                </TableCell>
-                <TableCell>{loan.status}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
     </div>
   );
 }
