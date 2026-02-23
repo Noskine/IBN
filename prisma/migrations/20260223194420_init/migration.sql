@@ -19,11 +19,31 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "Attendance" (
+    "id" TEXT NOT NULL,
+    "peopleId" TEXT NOT NULL,
+    "entryAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "observation" TEXT,
+    "exitAt" TIMESTAMP(3),
+
+    CONSTRAINT "Attendance_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WeeklyObservation" (
+    "id" TEXT NOT NULL,
+    "peopleId" TEXT NOT NULL,
+    "weekStart" TIMESTAMP(3) NOT NULL,
+    "observation" TEXT NOT NULL,
+
+    CONSTRAINT "WeeklyObservation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "People" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "status" TEXT NOT NULL,
-    "courseId" TEXT NOT NULL,
 
     CONSTRAINT "People_pkey" PRIMARY KEY ("id")
 );
@@ -53,15 +73,6 @@ CREATE TABLE "Category" (
 );
 
 -- CreateTable
-CREATE TABLE "Course" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "year" TEXT NOT NULL,
-
-    CONSTRAINT "Course_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Loan" (
     "id" TEXT NOT NULL,
     "peopleId" TEXT NOT NULL,
@@ -81,11 +92,11 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Course_name_key" ON "Course"("name");
+-- AddForeignKey
+ALTER TABLE "Attendance" ADD CONSTRAINT "Attendance_peopleId_fkey" FOREIGN KEY ("peopleId") REFERENCES "People"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "People" ADD CONSTRAINT "People_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "WeeklyObservation" ADD CONSTRAINT "WeeklyObservation_peopleId_fkey" FOREIGN KEY ("peopleId") REFERENCES "People"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Book" ADD CONSTRAINT "Book_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -11,12 +11,6 @@ export const GET = async () => {
         id: true,
         name: true,
         status: true,
-        course: {
-          select: {
-            name: true,
-            year: true,
-          },
-        },
       },
     });
 
@@ -52,7 +46,7 @@ export const POST = async (req: Request) => {
       data: {
         name,
         status,
-        courseId,
+  
       },
     });
 
