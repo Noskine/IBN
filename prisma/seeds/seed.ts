@@ -11,9 +11,9 @@ async function main() {
     data: {
         name: "Enikson Sonay",
         email: "sonay021@ibn.org",
-        password: await hash("Enikson@1", 10),
+        pass: await hash("Enikson@1", 10),
         isAdm: "Yes",
-        image: "https://avatars.githubusercontent.com/u/112139254",
+        urlImage: "https://avatars.githubusercontent.com/u/112139254",
       },
     }).finally(() => console.log("Banco de dados criado! 👍✅"))
   }

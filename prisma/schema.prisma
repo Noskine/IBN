@@ -11,33 +11,14 @@ model User {
   id        String    @id @default(cuid())
   name      String
   email     String    @unique
-  password  String
-  image     String?
+  pass      String
+  urlImage  String?
   createdAt DateTime  @default(now())
   isAdm     IsUserAdm @default(No)
-  Loan      Loan[]
-  loanId    String?
-}
-
-model Attendance {
-  id          String    @id @default(nanoid())
-  peopleId    String
-  entryAt     DateTime  @default(now())
-  observation String?
-  exitAt      DateTime?
-  people      People    @relation(fields: [peopleId], references: [id])
-}
-
-model WeeklyObservation {
-  id          String   @id @default(cuid())
-  peopleId    String
-  weekStart   DateTime // sempre uma segunda-feira
-  observation String
-
-  people People @relation(fields: [peopleId], references: [id])
 }
 
 model People {
+<<<<<<< HEAD
   id       String @id @default(cuid())
   name     String
   status   String
@@ -45,17 +26,29 @@ model People {
 
   Attendance        Attendance[]
   WeeklyObservation WeeklyObservation[]
+=======
+  id        String       @id @default(cuid())
+  name      String
+  email     String?      @unique
+  status    peopleStatus
+  course    String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime
+  loans     Loan[]
+>>>>>>> c65e35a697f18ae785c97ddbce5096a2aa84f47f
 }
 
 model Book {
   id              String    @id @default(uuid())
   title           String
   author          String
-  barcode         String?
+  barcode         String?   @unique
   categoryId      String?
   totalCopies     Int       @default(0)
   availableCopies Int       @default(0)
   publisher       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime
   category        Category? @relation(fields: [categoryId], references: [id])
   loans           Loan[]
 }
@@ -76,8 +69,6 @@ model Loan {
   dueDate    DateTime
   returnDate DateTime?
   status     LoanStatus @default(ACTIVE)
-  user       User       @relation(fields: [userId], references: [id])
-  userId     String
   book       Book?      @relation(fields: [bookId], references: [id])
   people     People     @relation(fields: [peopleId], references: [id])
 }
@@ -85,11 +76,16 @@ model Loan {
 enum LoanStatus {
   ACTIVE
   RETURNED
+  OVERDUE
   LOST
-  LATE
 }
 
 enum IsUserAdm {
   Yes
   No
+}
+
+enum peopleStatus {
+  DICENTE
+  DOCENTE
 }

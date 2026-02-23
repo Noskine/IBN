@@ -21,7 +21,7 @@ export const authOptions: AuthOptions = {
 
         const senhaCorreta = await compare(
           credentials?.password!,
-          user.password
+          user.pass
         );
         if (!senhaCorreta) throw new Error("Senha incorreta");
 

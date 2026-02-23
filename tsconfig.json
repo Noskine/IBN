@@ -1,17 +1,26 @@
 {
   "compilerOptions": {
+<<<<<<< HEAD
     "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2023",
     "strict": true,
     "esModuleInterop": true,
     "lib": ["dom", "dom.iterable", "esnext"],
+=======
+    "target": "ES2020",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+>>>>>>> c65e35a697f18ae785c97ddbce5096a2aa84f47f
     "allowJs": true,
     "skipLibCheck": true,
     "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -19,9 +28,21 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "prisma/seeds/seed.ts"],
-  "exclude": ["node_modules", "prisma/seeds"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "prisma/seeds/seed.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "prisma/seeds"
+  ]
 }
