@@ -34,12 +34,7 @@ export const GET = async (req: NextRequest) => {
           select: {
             name: true,
             status: true,
-            course: {
-              select: {
-                name: true,
-                year: true,
-              }
-            }
+            course: true,
           }
         },
         user: {
