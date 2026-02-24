@@ -60,7 +60,7 @@ model Book {
   availableCopies Int       @default(0)
   publisher       String?
   createdAt       DateTime  @default(now())
-  updatedAt       DateTime
+  updatedAt       DateTime  @updatedAt
   category        Category? @relation(fields: [categoryId], references: [id])
   loans           Loan[]
 }
