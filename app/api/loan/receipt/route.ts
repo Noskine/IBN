@@ -37,12 +37,6 @@ export const GET = async (req: NextRequest) => {
             course: true,
           }
         },
-        user: {
-          select: {
-            name: true,
-            email: true,
-          }
-        }
       }
     });
 
