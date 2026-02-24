@@ -1,23 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  PDFDownloadLink,
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-} from "@react-pdf/renderer";
+import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 
 interface Loan {
   id: string;
@@ -41,6 +26,7 @@ export function ConsultasReportPDF({ loans }: { loans: Loan[] }) {
     <Document>
       <Page style={styles.page}>
         <Text style={styles.title}>Relatório de Consultas</Text>
+        {loans.length === 0 && <Text>Nenhuma consulta disponível.</Text>}
         {loans.map((loan) => (
           <View key={loan.id} style={styles.row}>
             <Text style={styles.cell}>{loan.people.name}</Text>
@@ -56,42 +42,57 @@ export function ConsultasReportPDF({ loans }: { loans: Loan[] }) {
   );
 }
 
-export default function RelatorioConsultas() {
+export default function RelatorioConsultasButton() {
   const [loans, setLoans] = useState<Loan[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchLoans = async () => {
-      const res = await fetch("/api/loan");
-      const data = await res.json();
+      setLoading(true);
+      try {
+        const res = await fetch("/api/loan");
 
-      // ordenar pela data da consulta (loanDate) da mais antiga para a mais nova
-      const sorted = data.sort(
-        (a: Loan, b: Loan) => new Date(a.loanDate).getTime() - new Date(b.loanDate).getTime()
-      );
+        // Lê o corpo como texto antes de tentar JSON
+        const text = await res.text();
+        if (!res.ok) {
+          console.error("Erro ao buscar empréstimos:", res.status, text || "(vazio)");
+          setError(`Falha ao buscar empréstimos (status ${res.status})`);
+          setLoans([]);
+          return;
+        }
 
-      setLoans(sorted);
+        const data: Loan[] = text ? JSON.parse(text) : [];
+        const sorted = data.sort(
+          (a, b) => new Date(a.loanDate).getTime() - new Date(b.loanDate).getTime()
+        );
+        setLoans(sorted);
+        setError(null);
+      } catch (err) {
+        console.error("Erro inesperado ao buscar empréstimos:", err);
+        setError("Erro inesperado ao buscar empréstimos");
+        setLoans([]);
+      } finally {
+        setLoading(false);
+      }
     };
+
     fetchLoans();
   }, []);
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">Consultas Realizadas</h1>
-
-        {loans.length > 0 && (
-          <PDFDownloadLink
-            document={<ConsultasReportPDF loans={loans} />}
-            fileName="consultas_relatorio.pdf"
-          >
-            {({ loading }) => (
-              <Button variant="default">
-                {loading ? "Gerando PDF..." : "Exportar PDF"}
-              </Button>
-            )}
-          </PDFDownloadLink>
-        )}
-      </div>
+    <div>
+      {error && <div className="text-red-600 mb-2">{error}</div>}
+      {loans.length > 0 && (
+        <PDFDownloadLink document={<ConsultasReportPDF loans={loans} />} fileName="consultas_relatorio.pdf">
+          {({ loading: pdfLoading }) => (
+            <Button variant="default">{loading || pdfLoading ? "Gerando PDF..." : "Exportar PDF"}</Button>
+          )}
+        </PDFDownloadLink>
+      )}
+      {!loading && !error && loans.length === 0 && (
+        <div className="text-gray-500">Nenhuma consulta disponível.</div>
+      )}
     </div>
   );
 }

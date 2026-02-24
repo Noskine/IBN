@@ -9,22 +9,47 @@ import RelatorioConsultasButton from "@/components/RelatorioConsultasButton";
 import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
-  const [books, setBooks] = useState([]);
-  const [readers, setReaders] = useState([]);
-  const [loans, setLoans] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [attendance, setAttendance] = useState([]);
+  const [books, setBooks] = useState<any[]>([]);
+  const [readers, setReaders] = useState<any[]>([]);
+  const [loans, setLoans] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [attendance, setAttendance] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch("/api/books").then((res) => res.json().then((data) => setBooks(data)));
+    const fetchData = async () => {
+      try {
+        const fetchJson = async (url: string) => {
+          const res = await fetch(url);
 
-    fetch("/api/readers").then((res) => res.json().then((data) => setReaders(data)));
+          if (!res.ok) {
+            console.warn(`Erro ao buscar ${url}: ${res.status}`);
+            return [];
+          }
 
-    fetch("/api/loan").then((res) => res.json().then((data) => setLoans(data)));
+          const text = await res.text();
+          return text ? JSON.parse(text) : [];
+        };
 
-    fetch("/api/categories").then((res) => res.json().then((data) => setCategories(data)));
+        const [booksData, readersData, loansData, categoriesData, attendanceData] = await Promise.all([
+          fetchJson("/api/books"),
+          fetchJson("/api/readers"),
+          fetchJson("/api/loan"),
+          fetchJson("/api/categories"),
+          fetchJson("/api/attendance/list"),
+        ]);
 
-    fetch("/api/attendance/list").then((res) => res.json().then((data) => setAttendance(data)));
+        setBooks(booksData);
+        setReaders(readersData);
+        setLoans(loansData);
+        console.log(loansData)
+        setCategories(categoriesData);
+        setAttendance(attendanceData);
+      } catch (error) {
+        console.error("Falha ao carregar dados do dashboard:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -34,26 +59,23 @@ export default function DashboardPage() {
           <div>
             <h2 className='text-2xl font-bold'>Livros em maior quantidade</h2>
             <Separator className='mt-1 mb-3' />
-            <SectionCards data={books!} />
+            <SectionCards data={books} />
           </div>
 
           <div>
             <h2 className='text-2xl font-bold'>Livros</h2>
             <Separator className='mt-1 mb-3' />
-            <DataTableDemo data={books!} readers={readers!} categories={categories!} />
+            <DataTableDemo data={books} readers={readers} categories={categories} />
           </div>
 
           <div>
             <h2 className='text-2xl font-bold'>Consultas</h2>
             <Separator className='mt-1 mb-3' />
-            <LoanTable data={loans!} />
+            <LoanTable data={loans} />
 
-            {/* BOTÃO DE GERAR PDF DAS CONSULTAS */}
-            <RelatorioConsultasButton />
           </div>
-
           <div>
-            <AttendanceTable data={attendance!} />
+            <AttendanceTable data={attendance} />
           </div>
         </div>
       </div>

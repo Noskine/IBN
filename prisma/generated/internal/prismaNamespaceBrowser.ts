@@ -52,8 +52,6 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Attendance: 'Attendance',
-  WeeklyObservation: 'WeeklyObservation',
   People: 'People',
   Book: 'Book',
   Category: 'Category',
@@ -80,41 +78,23 @@ export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  password: 'password',
-  image: 'image',
+  pass: 'pass',
+  urlImage: 'urlImage',
   createdAt: 'createdAt',
-  isAdm: 'isAdm',
-  loanId: 'loanId'
+  isAdm: 'isAdm'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const AttendanceScalarFieldEnum = {
-  id: 'id',
-  peopleId: 'peopleId',
-  entryAt: 'entryAt',
-  observation: 'observation',
-  exitAt: 'exitAt'
-} as const
-
-export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
-
-
-export const WeeklyObservationScalarFieldEnum = {
-  id: 'id',
-  peopleId: 'peopleId',
-  weekStart: 'weekStart',
-  observation: 'observation'
-} as const
-
-export type WeeklyObservationScalarFieldEnum = (typeof WeeklyObservationScalarFieldEnum)[keyof typeof WeeklyObservationScalarFieldEnum]
-
-
 export const PeopleScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  status: 'status'
+  email: 'email',
+  status: 'status',
+  course: 'course',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type PeopleScalarFieldEnum = (typeof PeopleScalarFieldEnum)[keyof typeof PeopleScalarFieldEnum]
@@ -128,7 +108,9 @@ export const BookScalarFieldEnum = {
   categoryId: 'categoryId',
   totalCopies: 'totalCopies',
   availableCopies: 'availableCopies',
-  publisher: 'publisher'
+  publisher: 'publisher',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type BookScalarFieldEnum = (typeof BookScalarFieldEnum)[keyof typeof BookScalarFieldEnum]
@@ -151,8 +133,7 @@ export const LoanScalarFieldEnum = {
   loanDate: 'loanDate',
   dueDate: 'dueDate',
   returnDate: 'returnDate',
-  status: 'status',
-  userId: 'userId'
+  status: 'status'
 } as const
 
 export type LoanScalarFieldEnum = (typeof LoanScalarFieldEnum)[keyof typeof LoanScalarFieldEnum]

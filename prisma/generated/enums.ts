@@ -12,8 +12,8 @@
 export const LoanStatus = {
   ACTIVE: 'ACTIVE',
   RETURNED: 'RETURNED',
-  LOST: 'LOST',
-  LATE: 'LATE'
+  OVERDUE: 'OVERDUE',
+  LOST: 'LOST'
 } as const
 
 export type LoanStatus = (typeof LoanStatus)[keyof typeof LoanStatus]
@@ -25,3 +25,11 @@ export const IsUserAdm = {
 } as const
 
 export type IsUserAdm = (typeof IsUserAdm)[keyof typeof IsUserAdm]
+
+
+export const peopleStatus = {
+  DICENTE: 'DICENTE',
+  DOCENTE: 'DOCENTE'
+} as const
+
+export type peopleStatus = (typeof peopleStatus)[keyof typeof peopleStatus]

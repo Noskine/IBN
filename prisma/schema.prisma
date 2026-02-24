@@ -7,6 +7,24 @@ datasource db {
   provider = "postgresql"
 }
 
+model Attendance {
+  id          String    @id @default(nanoid())
+  peopleId    String
+  entryAt     DateTime  @default(now())
+  observation String?
+  exitAt      DateTime?
+  people      People    @relation(fields: [peopleId], references: [id])
+}
+
+model WeeklyObservation {
+  id          String   @id @default(cuid())
+  peopleId    String
+  weekStart   DateTime // sempre uma segunda-feira
+  observation String
+
+  people People @relation(fields: [peopleId], references: [id])
+}
+
 model User {
   id        String    @id @default(cuid())
   name      String
@@ -18,15 +36,6 @@ model User {
 }
 
 model People {
-<<<<<<< HEAD
-  id       String @id @default(cuid())
-  name     String
-  status   String
-  loans    Loan[]
-
-  Attendance        Attendance[]
-  WeeklyObservation WeeklyObservation[]
-=======
   id        String       @id @default(cuid())
   name      String
   email     String?      @unique
@@ -35,7 +44,10 @@ model People {
   createdAt DateTime     @default(now())
   updatedAt DateTime
   loans     Loan[]
->>>>>>> c65e35a697f18ae785c97ddbce5096a2aa84f47f
+
+  attendances Attendance[]
+
+  weeklyObservations WeeklyObservation[]
 }
 
 model Book {

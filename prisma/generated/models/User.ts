@@ -28,33 +28,30 @@ export type UserMinAggregateOutputType = {
   id: string | null
   name: string | null
   email: string | null
-  password: string | null
-  image: string | null
+  pass: string | null
+  urlImage: string | null
   createdAt: Date | null
   isAdm: $Enums.IsUserAdm | null
-  loanId: string | null
 }
 
 export type UserMaxAggregateOutputType = {
   id: string | null
   name: string | null
   email: string | null
-  password: string | null
-  image: string | null
+  pass: string | null
+  urlImage: string | null
   createdAt: Date | null
   isAdm: $Enums.IsUserAdm | null
-  loanId: string | null
 }
 
 export type UserCountAggregateOutputType = {
   id: number
   name: number
   email: number
-  password: number
-  image: number
+  pass: number
+  urlImage: number
   createdAt: number
   isAdm: number
-  loanId: number
   _all: number
 }
 
@@ -63,33 +60,30 @@ export type UserMinAggregateInputType = {
   id?: true
   name?: true
   email?: true
-  password?: true
-  image?: true
+  pass?: true
+  urlImage?: true
   createdAt?: true
   isAdm?: true
-  loanId?: true
 }
 
 export type UserMaxAggregateInputType = {
   id?: true
   name?: true
   email?: true
-  password?: true
-  image?: true
+  pass?: true
+  urlImage?: true
   createdAt?: true
   isAdm?: true
-  loanId?: true
 }
 
 export type UserCountAggregateInputType = {
   id?: true
   name?: true
   email?: true
-  password?: true
-  image?: true
+  pass?: true
+  urlImage?: true
   createdAt?: true
   isAdm?: true
-  loanId?: true
   _all?: true
 }
 
@@ -169,11 +163,10 @@ export type UserGroupByOutputType = {
   id: string
   name: string
   email: string
-  password: string
-  image: string | null
+  pass: string
+  urlImage: string | null
   createdAt: Date
   isAdm: $Enums.IsUserAdm
-  loanId: string | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -201,24 +194,20 @@ export type UserWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  password?: Prisma.StringFilter<"User"> | string
-  image?: Prisma.StringNullableFilter<"User"> | string | null
+  pass?: Prisma.StringFilter<"User"> | string
+  urlImage?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isAdm?: Prisma.EnumIsUserAdmFilter<"User"> | $Enums.IsUserAdm
-  loanId?: Prisma.StringNullableFilter<"User"> | string | null
-  Loan?: Prisma.LoanListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
-  image?: Prisma.SortOrderInput | Prisma.SortOrder
+  pass?: Prisma.SortOrder
+  urlImage?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   isAdm?: Prisma.SortOrder
-  loanId?: Prisma.SortOrderInput | Prisma.SortOrder
-  Loan?: Prisma.LoanOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -228,23 +217,20 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
-  password?: Prisma.StringFilter<"User"> | string
-  image?: Prisma.StringNullableFilter<"User"> | string | null
+  pass?: Prisma.StringFilter<"User"> | string
+  urlImage?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isAdm?: Prisma.EnumIsUserAdmFilter<"User"> | $Enums.IsUserAdm
-  loanId?: Prisma.StringNullableFilter<"User"> | string | null
-  Loan?: Prisma.LoanListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
-  image?: Prisma.SortOrderInput | Prisma.SortOrder
+  pass?: Prisma.SortOrder
+  urlImage?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   isAdm?: Prisma.SortOrder
-  loanId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -257,130 +243,110 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
-  password?: Prisma.StringWithAggregatesFilter<"User"> | string
-  image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  pass?: Prisma.StringWithAggregatesFilter<"User"> | string
+  urlImage?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   isAdm?: Prisma.EnumIsUserAdmWithAggregatesFilter<"User"> | $Enums.IsUserAdm
-  loanId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
   id?: string
   name: string
   email: string
-  password: string
-  image?: string | null
+  pass: string
+  urlImage?: string | null
   createdAt?: Date | string
   isAdm?: $Enums.IsUserAdm
-  loanId?: string | null
-  Loan?: Prisma.LoanCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   name: string
   email: string
-  password: string
-  image?: string | null
+  pass: string
+  urlImage?: string | null
   createdAt?: Date | string
   isAdm?: $Enums.IsUserAdm
-  loanId?: string | null
-  Loan?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pass?: Prisma.StringFieldUpdateOperationsInput | string
+  urlImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isAdm?: Prisma.EnumIsUserAdmFieldUpdateOperationsInput | $Enums.IsUserAdm
-  loanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  Loan?: Prisma.LoanUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pass?: Prisma.StringFieldUpdateOperationsInput | string
+  urlImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isAdm?: Prisma.EnumIsUserAdmFieldUpdateOperationsInput | $Enums.IsUserAdm
-  loanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  Loan?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   name: string
   email: string
-  password: string
-  image?: string | null
+  pass: string
+  urlImage?: string | null
   createdAt?: Date | string
   isAdm?: $Enums.IsUserAdm
-  loanId?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pass?: Prisma.StringFieldUpdateOperationsInput | string
+  urlImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isAdm?: Prisma.EnumIsUserAdmFieldUpdateOperationsInput | $Enums.IsUserAdm
-  loanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pass?: Prisma.StringFieldUpdateOperationsInput | string
+  urlImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isAdm?: Prisma.EnumIsUserAdmFieldUpdateOperationsInput | $Enums.IsUserAdm
-  loanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
-  image?: Prisma.SortOrder
+  pass?: Prisma.SortOrder
+  urlImage?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   isAdm?: Prisma.SortOrder
-  loanId?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
-  image?: Prisma.SortOrder
+  pass?: Prisma.SortOrder
+  urlImage?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   isAdm?: Prisma.SortOrder
-  loanId?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
-  image?: Prisma.SortOrder
+  pass?: Prisma.SortOrder
+  urlImage?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   isAdm?: Prisma.SortOrder
-  loanId?: Prisma.SortOrder
-}
-
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -399,179 +365,61 @@ export type EnumIsUserAdmFieldUpdateOperationsInput = {
   set?: $Enums.IsUserAdm
 }
 
-export type UserCreateNestedOneWithoutLoanInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutLoanInput, Prisma.UserUncheckedCreateWithoutLoanInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoanInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutLoanNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutLoanInput, Prisma.UserUncheckedCreateWithoutLoanInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoanInput
-  upsert?: Prisma.UserUpsertWithoutLoanInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLoanInput, Prisma.UserUpdateWithoutLoanInput>, Prisma.UserUncheckedUpdateWithoutLoanInput>
-}
-
-export type UserCreateWithoutLoanInput = {
-  id?: string
-  name: string
-  email: string
-  password: string
-  image?: string | null
-  createdAt?: Date | string
-  isAdm?: $Enums.IsUserAdm
-  loanId?: string | null
-}
-
-export type UserUncheckedCreateWithoutLoanInput = {
-  id?: string
-  name: string
-  email: string
-  password: string
-  image?: string | null
-  createdAt?: Date | string
-  isAdm?: $Enums.IsUserAdm
-  loanId?: string | null
-}
-
-export type UserCreateOrConnectWithoutLoanInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutLoanInput, Prisma.UserUncheckedCreateWithoutLoanInput>
-}
-
-export type UserUpsertWithoutLoanInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutLoanInput, Prisma.UserUncheckedUpdateWithoutLoanInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutLoanInput, Prisma.UserUncheckedCreateWithoutLoanInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutLoanInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutLoanInput, Prisma.UserUncheckedUpdateWithoutLoanInput>
-}
-
-export type UserUpdateWithoutLoanInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isAdm?: Prisma.EnumIsUserAdmFieldUpdateOperationsInput | $Enums.IsUserAdm
-  loanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type UserUncheckedUpdateWithoutLoanInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isAdm?: Prisma.EnumIsUserAdmFieldUpdateOperationsInput | $Enums.IsUserAdm
-  loanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-
-/**
- * Count Type UserCountOutputType
- */
-
-export type UserCountOutputType = {
-  Loan: number
-}
-
-export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Loan?: boolean | UserCountOutputTypeCountLoanArgs
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the UserCountOutputType
-   */
-  select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountLoanArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LoanWhereInput
-}
 
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   email?: boolean
-  password?: boolean
-  image?: boolean
+  pass?: boolean
+  urlImage?: boolean
   createdAt?: boolean
   isAdm?: boolean
-  loanId?: boolean
-  Loan?: boolean | Prisma.User$LoanArgs<ExtArgs>
-  _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   email?: boolean
-  password?: boolean
-  image?: boolean
+  pass?: boolean
+  urlImage?: boolean
   createdAt?: boolean
   isAdm?: boolean
-  loanId?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   email?: boolean
-  password?: boolean
-  image?: boolean
+  pass?: boolean
+  urlImage?: boolean
   createdAt?: boolean
   isAdm?: boolean
-  loanId?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
   name?: boolean
   email?: boolean
-  password?: boolean
-  image?: boolean
+  pass?: boolean
+  urlImage?: boolean
   createdAt?: boolean
   isAdm?: boolean
-  loanId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "image" | "createdAt" | "isAdm" | "loanId", ExtArgs["result"]["user"]>
-export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Loan?: boolean | Prisma.User$LoanArgs<ExtArgs>
-  _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "pass" | "urlImage" | "createdAt" | "isAdm", ExtArgs["result"]["user"]>
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
-  objects: {
-    Loan: Prisma.$LoanPayload<ExtArgs>[]
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     email: string
-    password: string
-    image: string | null
+    pass: string
+    urlImage: string | null
     createdAt: Date
     isAdm: $Enums.IsUserAdm
-    loanId: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -966,7 +814,6 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  Loan<T extends Prisma.User$LoanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$LoanArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -999,11 +846,10 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
-  readonly password: Prisma.FieldRef<"User", 'String'>
-  readonly image: Prisma.FieldRef<"User", 'String'>
+  readonly pass: Prisma.FieldRef<"User", 'String'>
+  readonly urlImage: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly isAdm: Prisma.FieldRef<"User", 'IsUserAdm'>
-  readonly loanId: Prisma.FieldRef<"User", 'String'>
 }
     
 
@@ -1020,10 +866,6 @@ export type UserFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * Filter, which User to fetch.
    */
@@ -1043,10 +885,6 @@ export type UserFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  /**
    * Filter, which User to fetch.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1064,10 +902,6 @@ export type UserFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * Filter, which User to fetch.
    */
@@ -1117,10 +951,6 @@ export type UserFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  /**
    * Filter, which User to fetch.
    */
   where?: Prisma.UserWhereInput
@@ -1169,10 +999,6 @@ export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  /**
    * Filter, which Users to fetch.
    */
   where?: Prisma.UserWhereInput
@@ -1215,10 +1041,6 @@ export type UserCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * The data needed to create a User.
    */
@@ -1267,10 +1089,6 @@ export type UserUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * The data needed to update a User.
    */
@@ -1338,10 +1156,6 @@ export type UserUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  /**
    * The filter to search for the User to update in case it exists.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1368,10 +1182,6 @@ export type UserDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  /**
    * Filter which User to delete.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1392,30 +1202,6 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.Loan
- */
-export type User$LoanArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Loan
-   */
-  select?: Prisma.LoanSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Loan
-   */
-  omit?: Prisma.LoanOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.LoanInclude<ExtArgs> | null
-  where?: Prisma.LoanWhereInput
-  orderBy?: Prisma.LoanOrderByWithRelationInput | Prisma.LoanOrderByWithRelationInput[]
-  cursor?: Prisma.LoanWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.LoanScalarFieldEnum | Prisma.LoanScalarFieldEnum[]
-}
-
-/**
  * User without action
  */
 export type UserDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1427,8 +1213,4 @@ export type UserDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
 }

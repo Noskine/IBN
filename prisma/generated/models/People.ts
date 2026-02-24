@@ -27,19 +27,31 @@ export type AggregatePeople = {
 export type PeopleMinAggregateOutputType = {
   id: string | null
   name: string | null
-  status: string | null
+  email: string | null
+  status: $Enums.peopleStatus | null
+  course: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PeopleMaxAggregateOutputType = {
   id: string | null
   name: string | null
-  status: string | null
+  email: string | null
+  status: $Enums.peopleStatus | null
+  course: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PeopleCountAggregateOutputType = {
   id: number
   name: number
+  email: number
   status: number
+  course: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -47,19 +59,31 @@ export type PeopleCountAggregateOutputType = {
 export type PeopleMinAggregateInputType = {
   id?: true
   name?: true
+  email?: true
   status?: true
+  course?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type PeopleMaxAggregateInputType = {
   id?: true
   name?: true
+  email?: true
   status?: true
+  course?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type PeopleCountAggregateInputType = {
   id?: true
   name?: true
+  email?: true
   status?: true
+  course?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -138,7 +162,11 @@ export type PeopleGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type PeopleGroupByOutputType = {
   id: string
   name: string
-  status: string
+  email: string | null
+  status: $Enums.peopleStatus
+  course: string
+  createdAt: Date
+  updatedAt: Date
   _count: PeopleCountAggregateOutputType | null
   _min: PeopleMinAggregateOutputType | null
   _max: PeopleMaxAggregateOutputType | null
@@ -165,37 +193,47 @@ export type PeopleWhereInput = {
   NOT?: Prisma.PeopleWhereInput | Prisma.PeopleWhereInput[]
   id?: Prisma.StringFilter<"People"> | string
   name?: Prisma.StringFilter<"People"> | string
-  status?: Prisma.StringFilter<"People"> | string
+  email?: Prisma.StringNullableFilter<"People"> | string | null
+  status?: Prisma.EnumpeopleStatusFilter<"People"> | $Enums.peopleStatus
+  course?: Prisma.StringFilter<"People"> | string
+  createdAt?: Prisma.DateTimeFilter<"People"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"People"> | Date | string
   loans?: Prisma.LoanListRelationFilter
-  Attendance?: Prisma.AttendanceListRelationFilter
-  WeeklyObservation?: Prisma.WeeklyObservationListRelationFilter
 }
 
 export type PeopleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  course?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   loans?: Prisma.LoanOrderByRelationAggregateInput
-  Attendance?: Prisma.AttendanceOrderByRelationAggregateInput
-  WeeklyObservation?: Prisma.WeeklyObservationOrderByRelationAggregateInput
 }
 
 export type PeopleWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  email?: string
   AND?: Prisma.PeopleWhereInput | Prisma.PeopleWhereInput[]
   OR?: Prisma.PeopleWhereInput[]
   NOT?: Prisma.PeopleWhereInput | Prisma.PeopleWhereInput[]
   name?: Prisma.StringFilter<"People"> | string
-  status?: Prisma.StringFilter<"People"> | string
+  status?: Prisma.EnumpeopleStatusFilter<"People"> | $Enums.peopleStatus
+  course?: Prisma.StringFilter<"People"> | string
+  createdAt?: Prisma.DateTimeFilter<"People"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"People"> | Date | string
   loans?: Prisma.LoanListRelationFilter
-  Attendance?: Prisma.AttendanceListRelationFilter
-  WeeklyObservation?: Prisma.WeeklyObservationListRelationFilter
-}, "id">
+}, "id" | "email">
 
 export type PeopleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  course?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.PeopleCountOrderByAggregateInput
   _max?: Prisma.PeopleMaxOrderByAggregateInput
   _min?: Prisma.PeopleMinOrderByAggregateInput
@@ -207,61 +245,115 @@ export type PeopleScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PeopleScalarWhereWithAggregatesInput | Prisma.PeopleScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"People"> | string
   name?: Prisma.StringWithAggregatesFilter<"People"> | string
-  status?: Prisma.StringWithAggregatesFilter<"People"> | string
+  email?: Prisma.StringNullableWithAggregatesFilter<"People"> | string | null
+  status?: Prisma.EnumpeopleStatusWithAggregatesFilter<"People"> | $Enums.peopleStatus
+  course?: Prisma.StringWithAggregatesFilter<"People"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"People"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"People"> | Date | string
 }
 
 export type PeopleCreateInput = {
   id?: string
   name: string
-  status: string
+  email?: string | null
+  status: $Enums.peopleStatus
+  course: string
+  createdAt?: Date | string
+  updatedAt: Date | string
   loans?: Prisma.LoanCreateNestedManyWithoutPeopleInput
-  Attendance?: Prisma.AttendanceCreateNestedManyWithoutPeopleInput
-  WeeklyObservation?: Prisma.WeeklyObservationCreateNestedManyWithoutPeopleInput
 }
 
 export type PeopleUncheckedCreateInput = {
   id?: string
   name: string
-  status: string
+  email?: string | null
+  status: $Enums.peopleStatus
+  course: string
+  createdAt?: Date | string
+  updatedAt: Date | string
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutPeopleInput
-  Attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutPeopleInput
-  WeeklyObservation?: Prisma.WeeklyObservationUncheckedCreateNestedManyWithoutPeopleInput
 }
 
 export type PeopleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumpeopleStatusFieldUpdateOperationsInput | $Enums.peopleStatus
+  course?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loans?: Prisma.LoanUpdateManyWithoutPeopleNestedInput
-  Attendance?: Prisma.AttendanceUpdateManyWithoutPeopleNestedInput
-  WeeklyObservation?: Prisma.WeeklyObservationUpdateManyWithoutPeopleNestedInput
 }
 
 export type PeopleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumpeopleStatusFieldUpdateOperationsInput | $Enums.peopleStatus
+  course?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loans?: Prisma.LoanUncheckedUpdateManyWithoutPeopleNestedInput
-  Attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutPeopleNestedInput
-  WeeklyObservation?: Prisma.WeeklyObservationUncheckedUpdateManyWithoutPeopleNestedInput
 }
 
 export type PeopleCreateManyInput = {
   id?: string
   name: string
-  status: string
+  email?: string | null
+  status: $Enums.peopleStatus
+  course: string
+  createdAt?: Date | string
+  updatedAt: Date | string
 }
 
 export type PeopleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumpeopleStatusFieldUpdateOperationsInput | $Enums.peopleStatus
+  course?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PeopleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumpeopleStatusFieldUpdateOperationsInput | $Enums.peopleStatus
+  course?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PeopleCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  course?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type PeopleMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  course?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type PeopleMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  course?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PeopleScalarRelationFilter = {
@@ -269,50 +361,8 @@ export type PeopleScalarRelationFilter = {
   isNot?: Prisma.PeopleWhereInput
 }
 
-export type PeopleCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-}
-
-export type PeopleMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-}
-
-export type PeopleMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-}
-
-export type PeopleCreateNestedOneWithoutAttendanceInput = {
-  create?: Prisma.XOR<Prisma.PeopleCreateWithoutAttendanceInput, Prisma.PeopleUncheckedCreateWithoutAttendanceInput>
-  connectOrCreate?: Prisma.PeopleCreateOrConnectWithoutAttendanceInput
-  connect?: Prisma.PeopleWhereUniqueInput
-}
-
-export type PeopleUpdateOneRequiredWithoutAttendanceNestedInput = {
-  create?: Prisma.XOR<Prisma.PeopleCreateWithoutAttendanceInput, Prisma.PeopleUncheckedCreateWithoutAttendanceInput>
-  connectOrCreate?: Prisma.PeopleCreateOrConnectWithoutAttendanceInput
-  upsert?: Prisma.PeopleUpsertWithoutAttendanceInput
-  connect?: Prisma.PeopleWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PeopleUpdateToOneWithWhereWithoutAttendanceInput, Prisma.PeopleUpdateWithoutAttendanceInput>, Prisma.PeopleUncheckedUpdateWithoutAttendanceInput>
-}
-
-export type PeopleCreateNestedOneWithoutWeeklyObservationInput = {
-  create?: Prisma.XOR<Prisma.PeopleCreateWithoutWeeklyObservationInput, Prisma.PeopleUncheckedCreateWithoutWeeklyObservationInput>
-  connectOrCreate?: Prisma.PeopleCreateOrConnectWithoutWeeklyObservationInput
-  connect?: Prisma.PeopleWhereUniqueInput
-}
-
-export type PeopleUpdateOneRequiredWithoutWeeklyObservationNestedInput = {
-  create?: Prisma.XOR<Prisma.PeopleCreateWithoutWeeklyObservationInput, Prisma.PeopleUncheckedCreateWithoutWeeklyObservationInput>
-  connectOrCreate?: Prisma.PeopleCreateOrConnectWithoutWeeklyObservationInput
-  upsert?: Prisma.PeopleUpsertWithoutWeeklyObservationInput
-  connect?: Prisma.PeopleWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PeopleUpdateToOneWithWhereWithoutWeeklyObservationInput, Prisma.PeopleUpdateWithoutWeeklyObservationInput>, Prisma.PeopleUncheckedUpdateWithoutWeeklyObservationInput>
+export type EnumpeopleStatusFieldUpdateOperationsInput = {
+  set?: $Enums.peopleStatus
 }
 
 export type PeopleCreateNestedOneWithoutLoansInput = {
@@ -329,116 +379,24 @@ export type PeopleUpdateOneRequiredWithoutLoansNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PeopleUpdateToOneWithWhereWithoutLoansInput, Prisma.PeopleUpdateWithoutLoansInput>, Prisma.PeopleUncheckedUpdateWithoutLoansInput>
 }
 
-export type PeopleCreateWithoutAttendanceInput = {
-  id?: string
-  name: string
-  status: string
-  loans?: Prisma.LoanCreateNestedManyWithoutPeopleInput
-  WeeklyObservation?: Prisma.WeeklyObservationCreateNestedManyWithoutPeopleInput
-}
-
-export type PeopleUncheckedCreateWithoutAttendanceInput = {
-  id?: string
-  name: string
-  status: string
-  loans?: Prisma.LoanUncheckedCreateNestedManyWithoutPeopleInput
-  WeeklyObservation?: Prisma.WeeklyObservationUncheckedCreateNestedManyWithoutPeopleInput
-}
-
-export type PeopleCreateOrConnectWithoutAttendanceInput = {
-  where: Prisma.PeopleWhereUniqueInput
-  create: Prisma.XOR<Prisma.PeopleCreateWithoutAttendanceInput, Prisma.PeopleUncheckedCreateWithoutAttendanceInput>
-}
-
-export type PeopleUpsertWithoutAttendanceInput = {
-  update: Prisma.XOR<Prisma.PeopleUpdateWithoutAttendanceInput, Prisma.PeopleUncheckedUpdateWithoutAttendanceInput>
-  create: Prisma.XOR<Prisma.PeopleCreateWithoutAttendanceInput, Prisma.PeopleUncheckedCreateWithoutAttendanceInput>
-  where?: Prisma.PeopleWhereInput
-}
-
-export type PeopleUpdateToOneWithWhereWithoutAttendanceInput = {
-  where?: Prisma.PeopleWhereInput
-  data: Prisma.XOR<Prisma.PeopleUpdateWithoutAttendanceInput, Prisma.PeopleUncheckedUpdateWithoutAttendanceInput>
-}
-
-export type PeopleUpdateWithoutAttendanceInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  loans?: Prisma.LoanUpdateManyWithoutPeopleNestedInput
-  WeeklyObservation?: Prisma.WeeklyObservationUpdateManyWithoutPeopleNestedInput
-}
-
-export type PeopleUncheckedUpdateWithoutAttendanceInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  loans?: Prisma.LoanUncheckedUpdateManyWithoutPeopleNestedInput
-  WeeklyObservation?: Prisma.WeeklyObservationUncheckedUpdateManyWithoutPeopleNestedInput
-}
-
-export type PeopleCreateWithoutWeeklyObservationInput = {
-  id?: string
-  name: string
-  status: string
-  loans?: Prisma.LoanCreateNestedManyWithoutPeopleInput
-  Attendance?: Prisma.AttendanceCreateNestedManyWithoutPeopleInput
-}
-
-export type PeopleUncheckedCreateWithoutWeeklyObservationInput = {
-  id?: string
-  name: string
-  status: string
-  loans?: Prisma.LoanUncheckedCreateNestedManyWithoutPeopleInput
-  Attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutPeopleInput
-}
-
-export type PeopleCreateOrConnectWithoutWeeklyObservationInput = {
-  where: Prisma.PeopleWhereUniqueInput
-  create: Prisma.XOR<Prisma.PeopleCreateWithoutWeeklyObservationInput, Prisma.PeopleUncheckedCreateWithoutWeeklyObservationInput>
-}
-
-export type PeopleUpsertWithoutWeeklyObservationInput = {
-  update: Prisma.XOR<Prisma.PeopleUpdateWithoutWeeklyObservationInput, Prisma.PeopleUncheckedUpdateWithoutWeeklyObservationInput>
-  create: Prisma.XOR<Prisma.PeopleCreateWithoutWeeklyObservationInput, Prisma.PeopleUncheckedCreateWithoutWeeklyObservationInput>
-  where?: Prisma.PeopleWhereInput
-}
-
-export type PeopleUpdateToOneWithWhereWithoutWeeklyObservationInput = {
-  where?: Prisma.PeopleWhereInput
-  data: Prisma.XOR<Prisma.PeopleUpdateWithoutWeeklyObservationInput, Prisma.PeopleUncheckedUpdateWithoutWeeklyObservationInput>
-}
-
-export type PeopleUpdateWithoutWeeklyObservationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  loans?: Prisma.LoanUpdateManyWithoutPeopleNestedInput
-  Attendance?: Prisma.AttendanceUpdateManyWithoutPeopleNestedInput
-}
-
-export type PeopleUncheckedUpdateWithoutWeeklyObservationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  loans?: Prisma.LoanUncheckedUpdateManyWithoutPeopleNestedInput
-  Attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutPeopleNestedInput
-}
-
 export type PeopleCreateWithoutLoansInput = {
   id?: string
   name: string
-  status: string
-  Attendance?: Prisma.AttendanceCreateNestedManyWithoutPeopleInput
-  WeeklyObservation?: Prisma.WeeklyObservationCreateNestedManyWithoutPeopleInput
+  email?: string | null
+  status: $Enums.peopleStatus
+  course: string
+  createdAt?: Date | string
+  updatedAt: Date | string
 }
 
 export type PeopleUncheckedCreateWithoutLoansInput = {
   id?: string
   name: string
-  status: string
-  Attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutPeopleInput
-  WeeklyObservation?: Prisma.WeeklyObservationUncheckedCreateNestedManyWithoutPeopleInput
+  email?: string | null
+  status: $Enums.peopleStatus
+  course: string
+  createdAt?: Date | string
+  updatedAt: Date | string
 }
 
 export type PeopleCreateOrConnectWithoutLoansInput = {
@@ -460,17 +418,21 @@ export type PeopleUpdateToOneWithWhereWithoutLoansInput = {
 export type PeopleUpdateWithoutLoansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  Attendance?: Prisma.AttendanceUpdateManyWithoutPeopleNestedInput
-  WeeklyObservation?: Prisma.WeeklyObservationUpdateManyWithoutPeopleNestedInput
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumpeopleStatusFieldUpdateOperationsInput | $Enums.peopleStatus
+  course?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PeopleUncheckedUpdateWithoutLoansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  Attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutPeopleNestedInput
-  WeeklyObservation?: Prisma.WeeklyObservationUncheckedUpdateManyWithoutPeopleNestedInput
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumpeopleStatusFieldUpdateOperationsInput | $Enums.peopleStatus
+  course?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -480,14 +442,10 @@ export type PeopleUncheckedUpdateWithoutLoansInput = {
 
 export type PeopleCountOutputType = {
   loans: number
-  Attendance: number
-  WeeklyObservation: number
 }
 
 export type PeopleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loans?: boolean | PeopleCountOutputTypeCountLoansArgs
-  Attendance?: boolean | PeopleCountOutputTypeCountAttendanceArgs
-  WeeklyObservation?: boolean | PeopleCountOutputTypeCountWeeklyObservationArgs
 }
 
 /**
@@ -507,54 +465,52 @@ export type PeopleCountOutputTypeCountLoansArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.LoanWhereInput
 }
 
-/**
- * PeopleCountOutputType without action
- */
-export type PeopleCountOutputTypeCountAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AttendanceWhereInput
-}
-
-/**
- * PeopleCountOutputType without action
- */
-export type PeopleCountOutputTypeCountWeeklyObservationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.WeeklyObservationWhereInput
-}
-
 
 export type PeopleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  email?: boolean
   status?: boolean
+  course?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   loans?: boolean | Prisma.People$loansArgs<ExtArgs>
-  Attendance?: boolean | Prisma.People$AttendanceArgs<ExtArgs>
-  WeeklyObservation?: boolean | Prisma.People$WeeklyObservationArgs<ExtArgs>
   _count?: boolean | Prisma.PeopleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["people"]>
 
 export type PeopleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  email?: boolean
   status?: boolean
+  course?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["people"]>
 
 export type PeopleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  email?: boolean
   status?: boolean
+  course?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["people"]>
 
 export type PeopleSelectScalar = {
   id?: boolean
   name?: boolean
+  email?: boolean
   status?: boolean
+  course?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type PeopleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "status", ExtArgs["result"]["people"]>
+export type PeopleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "status" | "course" | "createdAt" | "updatedAt", ExtArgs["result"]["people"]>
 export type PeopleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loans?: boolean | Prisma.People$loansArgs<ExtArgs>
-  Attendance?: boolean | Prisma.People$AttendanceArgs<ExtArgs>
-  WeeklyObservation?: boolean | Prisma.People$WeeklyObservationArgs<ExtArgs>
   _count?: boolean | Prisma.PeopleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PeopleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -564,13 +520,15 @@ export type $PeoplePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "People"
   objects: {
     loans: Prisma.$LoanPayload<ExtArgs>[]
-    Attendance: Prisma.$AttendancePayload<ExtArgs>[]
-    WeeklyObservation: Prisma.$WeeklyObservationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
-    status: string
+    email: string | null
+    status: $Enums.peopleStatus
+    course: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["people"]>
   composites: {}
 }
@@ -966,8 +924,6 @@ readonly fields: PeopleFieldRefs;
 export interface Prisma__PeopleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   loans<T extends Prisma.People$loansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.People$loansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  Attendance<T extends Prisma.People$AttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.People$AttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  WeeklyObservation<T extends Prisma.People$WeeklyObservationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.People$WeeklyObservationArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WeeklyObservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -999,7 +955,11 @@ export interface Prisma__PeopleClient<T, Null = never, ExtArgs extends runtime.T
 export interface PeopleFieldRefs {
   readonly id: Prisma.FieldRef<"People", 'String'>
   readonly name: Prisma.FieldRef<"People", 'String'>
-  readonly status: Prisma.FieldRef<"People", 'String'>
+  readonly email: Prisma.FieldRef<"People", 'String'>
+  readonly status: Prisma.FieldRef<"People", 'peopleStatus'>
+  readonly course: Prisma.FieldRef<"People", 'String'>
+  readonly createdAt: Prisma.FieldRef<"People", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"People", 'DateTime'>
 }
     
 
@@ -1409,54 +1369,6 @@ export type People$loansArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.LoanScalarFieldEnum | Prisma.LoanScalarFieldEnum[]
-}
-
-/**
- * People.Attendance
- */
-export type People$AttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Attendance
-   */
-  select?: Prisma.AttendanceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Attendance
-   */
-  omit?: Prisma.AttendanceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AttendanceInclude<ExtArgs> | null
-  where?: Prisma.AttendanceWhereInput
-  orderBy?: Prisma.AttendanceOrderByWithRelationInput | Prisma.AttendanceOrderByWithRelationInput[]
-  cursor?: Prisma.AttendanceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AttendanceScalarFieldEnum | Prisma.AttendanceScalarFieldEnum[]
-}
-
-/**
- * People.WeeklyObservation
- */
-export type People$WeeklyObservationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the WeeklyObservation
-   */
-  select?: Prisma.WeeklyObservationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the WeeklyObservation
-   */
-  omit?: Prisma.WeeklyObservationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.WeeklyObservationInclude<ExtArgs> | null
-  where?: Prisma.WeeklyObservationWhereInput
-  orderBy?: Prisma.WeeklyObservationOrderByWithRelationInput | Prisma.WeeklyObservationOrderByWithRelationInput[]
-  cursor?: Prisma.WeeklyObservationWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.WeeklyObservationScalarFieldEnum | Prisma.WeeklyObservationScalarFieldEnum[]
 }
 
 /**
