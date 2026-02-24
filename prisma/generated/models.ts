@@ -8,6 +8,8 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Attendance'
+export type * from './models/WeeklyObservation'
 export type * from './models/User'
 export type * from './models/People'
 export type * from './models/Book'

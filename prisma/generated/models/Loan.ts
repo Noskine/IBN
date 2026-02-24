@@ -447,10 +447,6 @@ export type LoanUncheckedUpdateManyWithoutBookNestedInput = {
   deleteMany?: Prisma.LoanScalarWhereInput | Prisma.LoanScalarWhereInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type EnumLoanStatusFieldUpdateOperationsInput = {
   set?: $Enums.LoanStatus
 }

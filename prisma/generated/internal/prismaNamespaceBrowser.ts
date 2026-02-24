@@ -51,6 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Attendance: 'Attendance',
+  WeeklyObservation: 'WeeklyObservation',
   User: 'User',
   People: 'People',
   Book: 'Book',
@@ -72,6 +74,27 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AttendanceScalarFieldEnum = {
+  id: 'id',
+  peopleId: 'peopleId',
+  entryAt: 'entryAt',
+  observation: 'observation',
+  exitAt: 'exitAt'
+} as const
+
+export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
+
+
+export const WeeklyObservationScalarFieldEnum = {
+  id: 'id',
+  peopleId: 'peopleId',
+  weekStart: 'weekStart',
+  observation: 'observation'
+} as const
+
+export type WeeklyObservationScalarFieldEnum = (typeof WeeklyObservationScalarFieldEnum)[keyof typeof WeeklyObservationScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
