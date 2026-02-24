@@ -1,6 +1,6 @@
 {
-  "name": "fullstack_libary",
-  "version": "0.1.0",
+  "name": "ibn",
+  "version": "1.4.0",
   "private": true,
   "type": "module",
   "scripts": {
