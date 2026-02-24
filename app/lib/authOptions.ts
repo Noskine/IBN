@@ -19,25 +19,27 @@ export const authOptions: AuthOptions = {
 
         if (!user) throw new Error("Usuário não encontrado");
 
-        const senhaCorreta = await compare(credentials?.password!, user.pass);
+        const senhaCorreta = await compare(
+          credentials?.password!,
+          user.pass
+        );
         if (!senhaCorreta) throw new Error("Senha incorreta");
 
-        // Mapeando urlImage para image
         return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          image: user.urlImage || null, // ✅ corrigido
+          id: user.id!,
+          email: user.email!,
+          name: user.name!,
+          image: user.urlImage || null,
         };
       },
     }),
   ],
   session: {
     strategy: "jwt",
-    maxAge: 5 * 60 * 60, // 5 horas
+    maxAge: 5 * 60 * 60,
   },
   pages: {
-    signIn: "/", // página de login
+    signIn: "/",
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -45,13 +47,13 @@ export const authOptions: AuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
-        token.image = user.image; // já mapeado acima
+        token.image = user.image;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        // @ts-expect-error: adicionando campos customizados
+        // @ts-expect-error
         session.user.id = token.id;
         // @ts-expect-error
         session.user.email = token.email;
