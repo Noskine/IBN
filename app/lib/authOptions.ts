@@ -57,7 +57,6 @@ export const authOptions: AuthOptions = {
         session.user.email = token.email;
         // @ts-expect-error
         session.user.name = token.name;
-        // @ts-expect-error
       }
       return session;
     },
