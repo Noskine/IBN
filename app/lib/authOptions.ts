@@ -29,7 +29,6 @@ export const authOptions: AuthOptions = {
           id: user.id!,
           email: user.email!,
           name: user.name!,
-          image: user.urlImage!,
         };
       },
     }),
@@ -47,7 +46,6 @@ export const authOptions: AuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
-        token.image = user.image;
       }
       return token;
     },
@@ -60,7 +58,6 @@ export const authOptions: AuthOptions = {
         // @ts-expect-error
         session.user.name = token.name;
         // @ts-expect-error
-        session.user.image = token.image;
       }
       return session;
     },
