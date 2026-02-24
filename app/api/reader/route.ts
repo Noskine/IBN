@@ -17,12 +17,7 @@ export const GET = async (req: NextRequest) => {
         id: true,
         name: true,
         status: true,
-        course: {
-          select: {
-            name: true,
-            year: true,
-          }
-        },
+
         loans: {
           select: {
             book: {

@@ -265,7 +265,7 @@ export type PeopleCreateInput = {
   status: $Enums.peopleStatus
   course: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   loans?: Prisma.LoanCreateNestedManyWithoutPeopleInput
   attendances?: Prisma.AttendanceCreateNestedManyWithoutPeopleInput
   weeklyObservations?: Prisma.WeeklyObservationCreateNestedManyWithoutPeopleInput
@@ -278,7 +278,7 @@ export type PeopleUncheckedCreateInput = {
   status: $Enums.peopleStatus
   course: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutPeopleInput
   attendances?: Prisma.AttendanceUncheckedCreateNestedManyWithoutPeopleInput
   weeklyObservations?: Prisma.WeeklyObservationUncheckedCreateNestedManyWithoutPeopleInput
@@ -317,7 +317,7 @@ export type PeopleCreateManyInput = {
   status: $Enums.peopleStatus
   course: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type PeopleUpdateManyMutationInput = {
@@ -428,7 +428,7 @@ export type PeopleCreateWithoutAttendancesInput = {
   status: $Enums.peopleStatus
   course: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   loans?: Prisma.LoanCreateNestedManyWithoutPeopleInput
   weeklyObservations?: Prisma.WeeklyObservationCreateNestedManyWithoutPeopleInput
 }
@@ -440,7 +440,7 @@ export type PeopleUncheckedCreateWithoutAttendancesInput = {
   status: $Enums.peopleStatus
   course: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutPeopleInput
   weeklyObservations?: Prisma.WeeklyObservationUncheckedCreateNestedManyWithoutPeopleInput
 }
@@ -492,7 +492,7 @@ export type PeopleCreateWithoutWeeklyObservationsInput = {
   status: $Enums.peopleStatus
   course: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   loans?: Prisma.LoanCreateNestedManyWithoutPeopleInput
   attendances?: Prisma.AttendanceCreateNestedManyWithoutPeopleInput
 }
@@ -504,7 +504,7 @@ export type PeopleUncheckedCreateWithoutWeeklyObservationsInput = {
   status: $Enums.peopleStatus
   course: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutPeopleInput
   attendances?: Prisma.AttendanceUncheckedCreateNestedManyWithoutPeopleInput
 }
@@ -556,7 +556,7 @@ export type PeopleCreateWithoutLoansInput = {
   status: $Enums.peopleStatus
   course: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   attendances?: Prisma.AttendanceCreateNestedManyWithoutPeopleInput
   weeklyObservations?: Prisma.WeeklyObservationCreateNestedManyWithoutPeopleInput
 }
@@ -568,7 +568,7 @@ export type PeopleUncheckedCreateWithoutLoansInput = {
   status: $Enums.peopleStatus
   course: string
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   attendances?: Prisma.AttendanceUncheckedCreateNestedManyWithoutPeopleInput
   weeklyObservations?: Prisma.WeeklyObservationUncheckedCreateNestedManyWithoutPeopleInput
 }

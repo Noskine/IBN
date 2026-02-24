@@ -340,7 +340,7 @@ export type BookCreateInput = {
   availableCopies?: number
   publisher?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutBooksInput
   loans?: Prisma.LoanCreateNestedManyWithoutBookInput
 }
@@ -355,7 +355,7 @@ export type BookUncheckedCreateInput = {
   availableCopies?: number
   publisher?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutBookInput
 }
 
@@ -397,7 +397,7 @@ export type BookCreateManyInput = {
   availableCopies?: number
   publisher?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type BookUpdateManyMutationInput = {
@@ -564,7 +564,7 @@ export type BookCreateWithoutCategoryInput = {
   availableCopies?: number
   publisher?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   loans?: Prisma.LoanCreateNestedManyWithoutBookInput
 }
 
@@ -577,7 +577,7 @@ export type BookUncheckedCreateWithoutCategoryInput = {
   availableCopies?: number
   publisher?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutBookInput
 }
 
@@ -632,7 +632,7 @@ export type BookCreateWithoutLoansInput = {
   availableCopies?: number
   publisher?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutBooksInput
 }
 
@@ -646,7 +646,7 @@ export type BookUncheckedCreateWithoutLoansInput = {
   availableCopies?: number
   publisher?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type BookCreateOrConnectWithoutLoansInput = {
@@ -700,7 +700,7 @@ export type BookCreateManyCategoryInput = {
   availableCopies?: number
   publisher?: string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type BookUpdateWithoutCategoryInput = {

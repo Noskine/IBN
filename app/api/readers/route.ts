@@ -44,9 +44,9 @@ export const POST = async (req: Request) => {
 
     const newReader = await prisma.people.create({
       data: {
+        course : courseId,
         name,
         status,
-  
       },
     });
 
