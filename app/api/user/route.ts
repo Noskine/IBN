@@ -25,7 +25,7 @@ export const POST = async (req: NextRequest) => {
       data: {
         email: data.email,
         pass: await hash(data.password, 10),
-        image: data.url,
+        urlImage: data.url,
         name: data.name,
         isAdm: data.isAdm,
       },
