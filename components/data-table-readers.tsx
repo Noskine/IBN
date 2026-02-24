@@ -64,7 +64,7 @@ const columns: ColumnDef<Read>[] = [
   {
     accessorKey: "course",
     header: "Curso",
-    cell: ({ row }) => row.original.course.name,
+    cell: ({ row }) => row.original.course,
   },
   {
     accessorKey: "status",

@@ -56,7 +56,6 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 function PeopleForm() {
-  const [courses, setCourses] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -68,15 +67,6 @@ function PeopleForm() {
       courseId: "",
     },
   });
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      const res = await fetch("/api/courses");
-      const data = await res.json();
-      setCourses(data);
-    };
-    fetchCourses();
-  }, []);
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
@@ -144,7 +134,7 @@ function PeopleForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {courses.map((course) => (
+                  {[{id: "1", name:"1 ANO"}, {id: "1", name:"2 ANO"}].map((course) => (
                     <SelectItem key={course.id} value={course.id}>
                       {course.name}
                     </SelectItem>
