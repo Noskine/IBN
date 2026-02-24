@@ -1,5 +1,5 @@
 // /app/api/attendance/route.ts
-import { prisma } from "@/prisma.config";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
