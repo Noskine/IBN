@@ -31,7 +31,7 @@
     ".next/types/**/*.ts",
     "prisma/seeds/seed.ts",
     ".next/dev/types/**/*.ts"
-, "prisma.config.ts"  ],
+, "hooks/prisma.config.ts"  ],
   "exclude": [
     "node_modules",
     "prisma/seeds"
