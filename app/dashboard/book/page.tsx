@@ -128,7 +128,7 @@ export default function NewBookPage() {
       <form onSubmit={handleSubmit} className=" mx-auto p-4  px-4 space-y-6">
         <h1 className="font-black text-2xl py-2 text-emerald-800 dark:text-emerald-400">Criar novo Livro</h1>
 
-        <h3 className="text-lg  font-bold bg-emerald-800/20 w-1/3 border-[1px]dark:border-zinc-800 shadow-black/20 shadow-md dark:bg-zinc-200/20  px-3 rounded-xl  dark:text-zinc-100 text-emerald-800">Dados sobre a obra</h3>
+        <h3 className="text-lg  font-bold bg-emerald-800/20 w-1/3 py-1 border-[1px]dark:border-zinc-800 shadow-black/20 shadow-md dark:bg-zinc-200/20  px-3 rounded-xl  dark:text-zinc-100 text-emerald-800">Dados sobre a obra</h3>
         <div>
           <Label className="mb-1 text-xs flex gap-0.5 font-bold" htmlFor="title">
             Título<span className="text-emerald-500">*</span>
@@ -274,6 +274,7 @@ export default function NewBookPage() {
             </Label>
             <Input
               className="shadow-black/20 shadow-md rounded-xl bg-zinc-200 border-zinc-300 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0"
+            
               id="qp"
 
               name=""
