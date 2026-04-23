@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { title, author, publisher, categoryId, quantity } = body;
+    const { title, author, publisher, categoryId, quantity, barcode } = body;
 
     // 🔸 Validação
     if (!title || !author || !categoryId || !quantity) {
@@ -92,6 +92,7 @@ export async function POST(req: NextRequest) {
         publisher: publisher || null,
         totalCopies: quantity,
         availableCopies: quantity,
+        barcode: barcode || null,
         category: {
           connect: { id: categoryId },
         },
