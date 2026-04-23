@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Status } from "@/types/status";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const categories = await prisma.category.findMany({
       select: {
@@ -14,6 +14,7 @@ export async function GET() {
         name: "asc",
       },
     });
+    console.log("Categorias encontradas:", categories);
 
     return NextResponse.json(categories);
   } catch (error) {

@@ -17,6 +17,7 @@ import {
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
 
 interface Category {
   id: string;
@@ -86,7 +87,7 @@ export default function NewBookPage() {
     e.preventDefault();
 
     if (!formData.categoryId) {
-      alert("Por favor, selecione uma categoria válida.");
+      toast.error("Por favor, selecione uma categoria válida.");
       return;
     }
 
@@ -112,147 +113,178 @@ export default function NewBookPage() {
         publisher: "",
         categoryId: "",
         quantity: 1,
-        barcode:""
+        barcode: ""
       });
       setCategoryValue("");
       setQuery("");
     } catch (error) {
-      toast.error("Erro ao criar livro. Veja o console.");
+      toast.error("🚫 Erro ao criar livro");
       console.error(error);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full mx-auto p-4 space-y-6">
-      <h1 className="font-bold text-2xl py-2">Criar novo Livro</h1>
+    <section className="">
+      <form onSubmit={handleSubmit} className=" mx-auto p-4  px-4 space-y-6">
+        <h1 className="font-black text-2xl py-2 text-emerald-800 dark:text-emerald-400">Criar novo Livro</h1>
 
-      <div>
-        <Label className="mb-1 text-xs" htmlFor="title">
-          Título
-        </Label>
-        <Input
-          id="title"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-          placeholder="Título do livro"
-        />
-      </div>
+        <h3 className="text-lg  font-bold bg-emerald-800/20 w-1/3 border-[1px]dark:border-zinc-800 shadow-black/20 shadow-md dark:bg-zinc-200/20  px-3 rounded-xl  dark:text-zinc-100 text-emerald-800">Dados sobre a obra</h3>
+        <div>
+          <Label className="mb-1 text-xs flex gap-0.5 font-bold" htmlFor="title">
+            Título<span className="text-emerald-500">*</span>
+          </Label>
+          <Input
+            className="shadow-black/20 shadow-md rounded-xl bg-zinc-200 border-zinc-300 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0"
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+            placeholder="ex. As Instituições da Fé Cristã - Tomo I"
+          />
+        </div>
 
-      <div>
-        <Label className="mb-1 text-xs" htmlFor="author">
-          Autor
-        </Label>
-        <Input
-          id="author"
-          name="author"
-          value={formData.author}
-          onChange={handleChange}
-          required
-          placeholder="Nome do autor"
-        />
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label className="mb-1 text-xs  flex gap-0.5 font-bold" htmlFor="author">
+              Autor<span className="text-emerald-500">*</span>
+            </Label>
+            <Input
+              className="shadow-black/20 shadow-md rounded-xl bg-zinc-200 border-zinc-300 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0"
+              id="author"
+              name="author"
+              value={formData.author}
+              onChange={handleChange}
+              required
+              placeholder="ex. João Calvino"
+            />
+          </div>
 
-      <div>
-        <Label className="mb-1 text-xs" htmlFor="publisher">
-          Editora
-        </Label>
-        <Input
-          id="publisher"
-          name="publisher"
-          value={formData.publisher}
-          onChange={handleChange}
-          placeholder="Editora (opcional)"
-        />
-      </div>
+          <div>
+            <Label className="mb-1 text-xs flex gap-0.5 font-bold " htmlFor="publisher">
+              Editora<span className="text-emerald-500">*</span>
+            </Label>
+            <Input
+              className="shadow-black/20 shadow-md rounded-xl bg-zinc-200 border-zinc-300 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0"
+              id="publisher"
+              name="publisher"
+              value={formData.publisher}
+              onChange={handleChange}
+              placeholder="ex. Cultura Cristã"
+            />
+          </div>
+        </div>
+        <Separator className="my-4 " />
 
-      <div>
-        <Label className="mb-1 text-xs" htmlFor="category">
-          Categoria
-        </Label>
+        <h3 className="text-lg  font-bold bg-emerald-800/20 w-1/3 border-[1px]dark:border-zinc-800 shadow-black/20 shadow-md dark:bg-zinc-200/20  px-3 rounded-xl  dark:text-zinc-100 text-emerald-800">Logística</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label className="mb-1 flex gap-0.5 text-xs font-bold" htmlFor="category">
+              Categoria<span className="text-emerald-500">*</span>
+            </Label>
 
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="w-full justify-between"
-            >
-              {categoryValue
-                ? categories.find((cat) => cat.id === categoryValue)?.name
-                : "Selecione uma categoria..."}
-              <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
 
-          <PopoverContent className="w-full p-0">
-            <Command>
-              {/* NOTE: Aqui não controlamos 'value', só 'onValueChange' */}
-              <CommandInput
-                placeholder="Busque uma categoria..."
-                onValueChange={setQuery}
-              />
-              <CommandList>
-                <CommandEmpty>Nenhuma categoria encontrada.</CommandEmpty>
-                <CommandGroup>
-                  {filteredCategories.map((cat) => (
-                    <CommandItem
-                      key={cat.id}
-                      value={cat.id}
-                      onSelect={(val) => {
-                        setCategoryValue(val);
-                        setFormData((prev) => ({ ...prev, categoryId: val }));
-                        setOpen(false);
-                        setQuery("");
-                      }}
-                    >
-                      <CheckIcon
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          categoryValue === cat.id ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      {cat.name}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </div>
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="w-full justify-between shadow-black/20 shadow-md rounded-xl bg-zinc-200 border-zinc-300  dark:bg-zinc-800 dark:border-zinc-700"
+                >
+                  {categoryValue
+                    ? categories.find((cat) => cat.id === categoryValue)?.name
+                    : "Selecione uma categoria..."}
+                  <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
 
-      <div>
-        <Label className="mb-1 text-xs" htmlFor="quantity">
-          Quantidade
-        </Label>
-        <Input
-          id="quantity"
-          name="quantity"
-          type="number"
-          min={1}
-          value={formData.quantity}
-          onChange={handleChange}
-          required
-        />
-      </div>
+              <PopoverContent className="w-full p-0 uppercase ">
+                <Command>
+                  <CommandInput placeholder="Busque uma categoria..." />
 
-      <div>
-        <Label className="mb-1 text-xs" htmlFor="barcode">
-          Código de Barras
-        </Label>
-        <Input
-          id="barcode"
-          name="barcode"
-          value={formData.barcode}
-          onChange={handleChange}
-          placeholder="Editora (opcional)"
-        />
-      </div>
+                  <CommandList>
+                    <CommandEmpty>Nenhuma categoria encontrada.</CommandEmpty>
 
-      <Button type="submit">Cadastrar Livro</Button>
-    </form>
+                    <CommandGroup>
+                      {categories.map((cat) => (
+                        <CommandItem
+                          key={cat.id}
+                          value={cat.name}
+                          onSelect={() => {
+                            setCategoryValue(cat.id);
+                            setFormData((prev) => ({
+                              ...prev,
+                              categoryId: cat.id,
+                            }));
+                            setOpen(false);
+                          }}
+                        >
+                          <CheckIcon
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              categoryValue === cat.id
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          {cat.name}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          <div>
+            <Label className="mb-1 text-xs font-bold" htmlFor="quantity">
+              Quantidade
+            </Label>
+            <Input
+              className="shadow-black/20 shadow-md rounded-xl bg-zinc-200 border-zinc-300 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0"
+              id="quantity"
+              name="quantity"
+              type="number"
+              min={1}
+              value={formData.quantity}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <Label className="mb-1 text-xs font-bold" htmlFor="barcode">
+              Código de Barras
+            </Label>
+            <Input
+              className="shadow-black/20 shadow-md rounded-xl bg-zinc-200 border-zinc-300 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0"
+              id="barcode"
+              name="barcode"
+              value={formData.barcode}
+              onChange={handleChange}
+              placeholder="Código de barras (opcional)"
+            />
+          </div>
+
+          <div>
+            <Label className="mb-1 text-xs font-bold" htmlFor="barcode">
+              Quantidade de Páginas
+            </Label>
+            <Input
+              className="shadow-black/20 shadow-md rounded-xl bg-zinc-200 border-zinc-300 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0"
+              id="qp"
+
+              name=""
+              placeholder="Quantidade de páginas (opcional)"
+            />
+          </div>
+        </div>
+
+        <Button type="submit" className="bg-emerald-700 hover:bg-emerald-800 focus:bg-emerald-900">Cadastrar Livro</Button>
+      </form>
+    </section>
+
   );
 }
