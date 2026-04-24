@@ -26,7 +26,7 @@ export function NavMain({
             <Link href='/dashboard/book' className='w-full'>
               <SidebarMenuButton
                 tooltip='Quick Create'
-                className='bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear cursor-pointer'
+                className='bg-emerald-700  text-background hover:bg-emerald-800 dark:bg-emerald-500 dark:hover:bg-emerald-600 rounded-xl font-bold hover:text-background w-full transition-colors duration-200 cursor-pointer'
               >
                 <IconCirclePlusFilled />
                 <span>Cadrastrar Livro</span>

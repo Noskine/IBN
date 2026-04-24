@@ -8,6 +8,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { prisma } from "@/lib/prisma";
 
 export default async function DbLayout({
   children,
@@ -20,10 +21,16 @@ export default async function DbLayout({
     redirect("/");
   }
 
+  // Busca a foto do banco primeiro, senão usa a do provedor (Google)
+  const dbUser = await prisma.user.findUnique({
+    where: { email: session.user.email! },
+    select: { urlImage: true },
+  });
+
   const user = {
     email: session.user.email,
     name: session.user.name,
-    image: session.user.image!,
+    image: dbUser?.urlImage || session.user.image || "",
   };
 
   return (

@@ -51,7 +51,7 @@ export function CategoryCombobox({
         <Button
           variant='outline'
           role='combobox'
-          className='w-full justify-between'
+          className="w-full justify-between bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 rounded-xl dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md"
         >
           {selectedName}
           <ChevronDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />

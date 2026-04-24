@@ -193,7 +193,7 @@ export function DataTableDemo({
           <Input
             id="filterTitle"
             placeholder="Digite o título"
-            className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md"
+            className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 rounded-xl dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md"
             value={filterTitle}
             onChange={(e) => setFilterTitle(e.target.value)}
           />
@@ -206,14 +206,14 @@ export function DataTableDemo({
           <Input
             id="filterAuthor"
             placeholder="Digite o autor"
-            className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md"
+            className="bg-zinc-200 border-zinc-400 rounded-xl focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md"
             value={filterAuthor}
             onChange={(e) => setFilterAuthor(e.target.value)}
           />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto whitespace-nowrap bg-zinc-200  border-zinc-400  dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 shadow-black/20 shadow-md ">
+            <Button variant="outline" className="ml-auto whitespace-nowrap bg-zinc-200 rounded-xl border-zinc-400  dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 shadow-black/20 shadow-md ">
               Colunas <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
@@ -251,13 +251,13 @@ export function DataTableDemo({
       </div>
 
       {/* Tabela */}
-      <div className="rounded-md border px-2">
+      <div className="rounded-xl border bg-zinc-50 dark:bg-zinc-900 px-2 py-1 border-emerald-300 dark:border-emerald-800">
         <Table>
-          <TableHeader>
+          <TableHeader >
             {table.getHeaderGroups().map((group) => (
-              <TableRow key={group.id}>
+              <TableRow  key={group.id}>
                 {group.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -305,6 +305,7 @@ export function DataTableDemo({
         <div className="space-x-2">
           <Button
             variant="outline"
+            className="border-emerald-800 dark:border-emerald-500 cursor-pointer dark:disabled:border-red-500/60 dark:disabled:text-red-500/60 disabled:border-red-500/60 disabled:text-red-500/60 bg-zinc-200 dark:bg-zinc-800 shadow-md text-emerald-700 dark:text-emerald-500 disabled:cursor-not-allowed hover:text-emerald-700 "
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
@@ -314,6 +315,7 @@ export function DataTableDemo({
           <Button
             variant="outline"
             size="sm"
+            className="border-emerald-800 dark:border-emerald-500 cursor-pointer dark:disabled:border-red-500/60 dark:disabled:text-red-500/60 disabled:border-red-500/60 disabled:text-red-500/60 bg-zinc-200 dark:bg-zinc-800 shadow-md text-emerald-700 dark:text-emerald-500 disabled:cursor-not-allowed hover:text-emerald-700 "
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >

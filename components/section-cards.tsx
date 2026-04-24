@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { TypeBooks } from "@/types/books";
-import { BookMarkedIcon, BookmarkIcon } from "lucide-react";
+import { BookMarkedIcon, SignatureIcon } from "lucide-react";
 
 export function SectionCards({ data }: { data: TypeBooks[] }) {
   const DataCards = filtrarLivrosMaisVendidos(data, 10, 4);
@@ -20,19 +20,19 @@ export function SectionCards({ data }: { data: TypeBooks[] }) {
           <Card className='@container/card' key={k}>
             <CardHeader>
               <CardDescription>Quantidade total</CardDescription>
-              <CardTitle className='text-xl font-semibold tabular-nums @[250px]/card:text-3xl'>
+              <CardTitle className='text-xl font-bold text-emerald-700 dark:text-emerald-500 tabular-nums @[250px]/card:text-3xl'>
                 {limitarTexto(e.title)}
               </CardTitle>
               <CardAction>
                 <Badge variant='outline'>
-                  <BookmarkIcon />
+                  <BookMarkedIcon/>
                   {e.totalCopies}
                 </Badge>
               </CardAction>
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex items-center gap-2 font-medium'>
-                {e.author} <BookMarkedIcon className='size-4' />
+                {e.author} <SignatureIcon className='size-4' />
               </div>
               <div className='text-muted-foreground'>
                 {e.publisher}

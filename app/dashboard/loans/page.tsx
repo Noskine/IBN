@@ -17,8 +17,10 @@ export default function NewUserPage() {
     );
   }, []);
   return (
-    <div className="px-6 mt-6 lg:px-4">
-      <LoanTable data={loans!} />
+    <div className="px-6 mt-6 max-w-full lg:px-4">
+      <div className="@container/main mb-4">
+        <LoanTable data={loans!} />
+      </div>
     </div>
   );
 }

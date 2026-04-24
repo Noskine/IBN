@@ -8,8 +8,11 @@ import { signIn } from "next-auth/react";
 import { ThemeSwitch } from "@/components/theme-switch";
 import Image from "next/image";
 import icon from "@/assets/icon.png";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import pkg from "../package.json" with { type: "json" };
 
 export default function HomePage() {
+    const APP_VERSION = pkg.version;
   const router = useRouter();
   const [error, setError] = useState("");
 
@@ -47,7 +50,7 @@ export default function HomePage() {
             <ThemeSwitch />
 
         </div>
-        <div className='flex flex-1 items-center justify-center'>
+        <div className='flex flex-col flex-1 items-center justify-center'>
           <div className='w-full max-w-xs'>
             <LoginForm onSubmit={handleSubmit} />
             {error && (
@@ -55,6 +58,12 @@ export default function HomePage() {
             )}
           </div>
         </div>
+        <Separator className='my-1 border-zinc-300 dark:border-zinc-700' />
+      <footer>
+        <p className="text-[11px] text-center font-medium">
+           &copy; {new Date().getFullYear()} - Todos os direitos reservados ao Instituto Bíblico do Norte. <span >v{APP_VERSION}.</span>
+        </p>
+      </footer>
       </div>
       <div className='bg-muted relative hidden lg:block'>
         <Image

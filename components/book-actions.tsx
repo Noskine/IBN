@@ -110,6 +110,7 @@ export function BookActions({
         toast.success("Livro atualizado com sucesso!");
         setTimeout(() => window.location.reload(), 1000);
       } else {
+        console.log(res)
         toast.error("Erro ao atualizar livro.");
       }
     } catch {
@@ -197,18 +198,14 @@ export function BookActions({
 
       {/* Dialog de Consulta */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Criando consulta</DialogTitle>
-          </DialogHeader>
-
+        <DialogContent className="space-x-1">
           <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <section className="shadow-md px-2 pb-2 pt-1 mb-2 rounded-md">
-              <h2 className="text-md font-bold">{book.title}</h2>
+              <h2 className="text-md font-bold text-emerald-700 dark:text-emerald-500">{book.title}</h2>
               <p className="text-xs italic">
                 De autoria de <span className="font-medium">{book.author}</span> pela {book.publisher}
               </p>
-              <p className="text-xs italic text-end">
+              <p className="text-xs italic text-end text-sky-700 dark:text-sky-500">
                 Código: {book.barcode || "Não cadastrado"}
               </p>
             </section>
@@ -228,46 +225,49 @@ export function BookActions({
       <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Atualizar {title}</DialogTitle>
+            <DialogTitle className="font-bold text-emerald-700 dark:text-emerald-500">Atualizar {title}</DialogTitle>
+            <Separator className="" />
           </DialogHeader>
 
-          <form onSubmit={handleUpdateAll} className="flex flex-col gap-4">
-            <div>
+          <form onSubmit={handleUpdateAll} className="space-y-2">
+            <div className="space-y-0.5">
               <Label htmlFor="title">Título</Label>
-              <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+              <Input id="title" className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 rounded-xl dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <Label>Categoria</Label>
             <CategoryCombobox categorias={categories} onSelect={setCategoriaSelecionada} selectedCategoryId={categoriaSelecionada} />
 
-            <div className="flex gap-2">
-              <div>
+            <div className="flex justify-between space-x-1">
+              <div className="space-y-0.5 w-full">
                 <Label htmlFor="author">Autor</Label>
-                <Input id="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
+                <Input id="author" className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 rounded-xl dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md" value={author} onChange={(e) => setAuthor(e.target.value)} />
               </div>
-              <div>
+              <div className="space-y-0.5 w-full">
                 <Label htmlFor="publisher">Editora</Label>
-                <Input id="publisher" value={editora} onChange={(e) => setEditora(e.target.value)} />
+                <Input id="publisher" className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 rounded-xl dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md"  value={editora} onChange={(e) => setEditora(e.target.value)} />
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <div>
+             <Separator className="" />
+
+            <div className="flex justify-between space-x-1">
+              <div className="space-y-0.5 w-full">
                 <Label htmlFor="quantity">Quantidade Total</Label>
-                <Input id="quantity" type="number" value={quantidadeTotal} onChange={(e) => setQuantidadeTotal(Number(e.target.value))} />
+                <Input id="quantity" type="number" className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 rounded-xl dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md" value={quantidadeTotal} onChange={(e) => setQuantidadeTotal(Number(e.target.value))} />
               </div>
-              <div>
+              <div className="space-y-0.5 w-full">
                 <Label htmlFor="availableCopies">Disponíveis</Label>
-                <Input id="availableCopies" type="number" value={availableCopies} onChange={(e) => setAvailableCopies(Number(e.target.value))} />
+                <Input id="availableCopies" type="number" className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 rounded-xl dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md"  value={availableCopies} onChange={(e) => setAvailableCopies(Number(e.target.value))} />
               </div>
             </div>
 
-            <div>
+            <div className="space-y-0.5">
               <Label htmlFor="barcode">Código de Barras</Label>
-              <Input id="barcode" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
+              <Input id="barcode" className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 rounded-xl dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
             </div>
 
             <DialogFooter>
-              <Button type="submit">Atualizar</Button>
+              <Button type="submit" className="w-1/3 bg-emerald-700 dark:bg-emerald-500 hover:bg-emerald-700 focus:bg-emerald-800 cursor-pointer mt-2">Atualizar</Button>
             </DialogFooter>
           </form>
         </DialogContent>

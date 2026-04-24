@@ -95,8 +95,6 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const id = searchParams.get("id");
 
-    console.log(id);
-
     if (!id) {
       throw new ExpectedError({
         message: "Mal formatação da query!",
@@ -104,37 +102,33 @@ export async function PUT(req: Request) {
       });
     }
 
-    const { title, author, code, categoryId, publisher,availableCopies, quantity } = body;
+    const { title, author, code, categoryId, publisher, availableCopies, quantity } = body;
 
-    // Validação básica
-    if (
-      !title ||
-      !author ||
-      !code ||
-      !categoryId ||
-      !publisher ||
-      quantity < 0
-    ) {
-      return NextResponse.json(
-        { error: "Dados obrigatórios faltando." },
-        { status: 400 }
-      );
+    if (!title || !author || !categoryId) {
+      throw new ExpectedError({
+        message: "Dados obrigatórios faltando.",
+        status: Status.BadRequest,
+      });
+    }
+
+    // Só define barcode se não for vazio
+    const bookData: Parameters<typeof prisma.book.update>[0]["data"] = {
+      title,
+      author,
+      availableCopies,
+      categoryId,
+      publisher,
+      totalCopies: quantity,
+    };
+
+    if (code && code.trim() !== "") {
+      bookData.barcode = code;
     }
 
     const book = await prisma.book.update({
       where: { id },
-      data: {
-        title: title,
-        author: author,
-        availableCopies,
-        barcode: code,
-        categoryId,
-        publisher,
-        totalCopies: quantity,
-      },
+      data: bookData,
     });
-
-    console.log(book);
 
     if (!book) {
       throw new ExpectedError({
@@ -152,25 +146,26 @@ export async function PUT(req: Request) {
     }
 
     return NextResponse.json(
-      { error: "Erro interno do servidor." },
+      // @ts-expect-error
+      { error: err.message || "Erro interno do servidor." },
       { status: 500 }
     );
   }
 }
 
 export async function DELETE(req: Request) {
-    const { searchParams } = new URL(req.url);
+  const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
-  
+
   if (!id) {
-      throw new ExpectedError({
-        message: "Mal formatação da query!",
-        status: Status.InternalServerError,
-      });
-    }
+    throw new ExpectedError({
+      message: "Mal formatação da query!",
+      status: Status.InternalServerError,
+    });
+  }
 
   await prisma.book.delete({
-    where: {id},
+    where: { id },
   })
- return NextResponse.json("ok")
+  return NextResponse.json("ok")
 }

@@ -25,6 +25,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { Separator } from "./ui/separator";
 
 export function RowActions({ loan }: { loan: Loan }) {
   const [openDialog, setOpenDialog] = useState(false);
@@ -86,31 +87,25 @@ export function RowActions({ loan }: { loan: Loan }) {
     <div className='flex justify-end gap-2'>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='h-8 w-8 p-0'>
+          <Button variant='ghost' className="h-8 w-8 p-0 bg-zinc-300 hover:bg-zinc-400 dark:bg-zinc-800 cursor-pointer dark:focus:ring-emerald-400 dark:focus:ring-offset-0 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0">
             <span className='sr-only'>Abrir menu</span>
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align='end'>
+        <DropdownMenuContent align='end' className="space-y-0.5 bg-zinc-200 dark:bg-zinc-800 border-zinc-400 dark:border-zinc-600">
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
+          <DropdownMenuSeparator className="my-1 bg-zinc-400 dark:bg-zinc-600" />
 
-          {/* Link para outra página */}
-          <Link href={`/receipt?id=${loan.id}`}>
-            <DropdownMenuItem className='cursor-pointer'>
-              Comprovante
-            </DropdownMenuItem>
-          </Link>
-          <DropdownMenuSeparator />
+
 
           <DropdownMenuItem
             onClick={handleRenovar}
-            className='cursor-pointer text-yellow-900 hover:text-yellow-900! hover:bg-yellow-100! bg-yellow-200'
+            className="w-full text-left font-medium cursor-pointer px-2 py-1 bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:hover:bg-yellow-800 dark:text-yellow-200"
           >
             Renovar
           </DropdownMenuItem>
 
-          <DropdownMenuSeparator />
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
               <DropdownMenuItem
@@ -118,26 +113,27 @@ export function RowActions({ loan }: { loan: Loan }) {
                   e.preventDefault(); // Evita fechar o menu ao abrir o Dialog
                   setOpenDialog(true);
                 }}
-                className='text-green-800! bg-green-200 cursor-pointer hover:bg-green-100! transition-colors!'
+                 className="w-full text-left font-black cursor-pointer px-2 py-1 bg-emerald-200 text-emerald-800 dark:bg-emerald-700 dark:hover:bg-emerald-800 dark:text-emerald-200"
               >
                 Confirmar Devolução
               </DropdownMenuItem>
             </DialogTrigger>
+            <Separator className="my-1 bg-zinc-400 dark:bg-zinc-600" />
 
             <DialogContent className='border-green-50 dark:border-green-800 shadow-xl'>
               <DialogHeader>
-                <DialogTitle>Confirmar devolução</DialogTitle>
+                <DialogTitle className="text-emerald-700 dark:text-emerald-500 font-bold">Confirmar devolução</DialogTitle>
               </DialogHeader>
-
               <p className='text-sm text-muted-foreground mb-2 select-none'>
                 Digite{" "}
-                <strong className='text-green-500 italic'>eu confirmo</strong>{" "}
+                <strong className='text-sky-500 italic'>eu confirmo</strong>{" "}
                 para confirmar a devolução do livro.
               </p>
 
               <Input
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
+                 className=" rounded-xl bg-zinc-50 dark:bg-zinc-800 shadow-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:ring-emerald-500 focus:border-emerald-500 focus-visible:ring-emerald-500 focus-visible:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-500 disabled:border-zinc-200"
                 placeholder='Digite aqui...'
               />
 
@@ -145,13 +141,20 @@ export function RowActions({ loan }: { loan: Loan }) {
                 <Button
                   onClick={handleConfirm}
                   disabled={confirmText !== "eu confirmo" || loading}
-                  className='disabled:bg-red-500 disabled:cursor-not-allowed! no-select-none cursor-pointer text-white dark:text-zinc-950 hover:bg-green-600! transition-colors bg-green-500'
+                  className='disabled:bg-red-500 disabled:cursor-not-allowed! no-select-none cursor-pointer text-white dark:text-zinc-950 hover:bg-yellow-600! transition-colors bg-yellow-500'
                 >
                   {loading ? "Confirmando..." : "Confirmar devolução"}
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
+
+          {/* Link para outra página */}
+              <Link href={`/receipt?id=${loan.id}`}>
+                <DropdownMenuItem className='w-full text-left font-medium cursor-pointer px-2 py-1'>
+                  Comprovante
+                </DropdownMenuItem>
+              </Link>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

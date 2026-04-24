@@ -237,43 +237,41 @@ export function LoanTable({ data }: { data: Loan[] }) {
   return (
     <div className="w-full space-y-4">
       {/* Filtros */}
-      <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between mb-2">
+      <div className="flex flex-col sm:flex-row gap-4 sm:items-center items-center justify-between mb-2">
         <div className="flex flex-col w-full sm:w-1/2 max-w-sm">
-          <Label htmlFor="filterName" className="mb-1 font-medium text-xs">
+          <Label htmlFor="filterName" className="mb-1 text-emerald-700 dark:text-emerald-500 font-medium text-xs">
             Filtrar por Leitor
           </Label>
           <Input
             id="filterName"
+            className=" rounded-xl bg-zinc-50 dark:bg-zinc-800 shadow-sm text-emerald-700 dark:text-emerald-500 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:ring-emerald-500 focus:border-emerald-500 focus-visible:ring-emerald-500 focus-visible:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-500 disabled:border-zinc-200"
             placeholder="Digite o nome do leitor"
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="w-full"
           />
         </div>
 
         <div className="flex flex-col w-full sm:w-1/2 max-w-sm">
-          <Label htmlFor="filterCategory" className="mb-1 font-medium text-xs">
+          <Label htmlFor="filterCategory" className="mb-1 text-emerald-700 dark:text-emerald-500 font-medium text-xs">
             Filtrar por livro
           </Label>
           <Input
             id="filterCategory"
+              className="rounded-xl  bg-zinc-50 dark:bg-zinc-800 shadow-sm text-emerald-700 dark:text-emerald-500 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:ring-emerald-500 focus:border-emerald-500 focus-visible:ring-emerald-500 focus-visible:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-500 disabled:border-zinc-200"
             placeholder="Digite o nome do livro"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full"
           />
         </div>
 
-        <div className="flex flex-col w-full sm:w-1/2 max-w-xs mt-5">
-          <Label htmlFor="filterDate" className="mb-1 font-medium text-xs">
-            Filtrar por Data de Empréstimo
-          </Label>
+        <div className="space-y-2 sm:w-1/2 max-w-xs mt-5">
+    
           <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 id="filterDate"
-                className="w-full justify-between font-normal"
+                className="w-full justify-between font-normal rounded-xl  bg-zinc-50 dark:bg-zinc-800 shadow-sm  placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:ring-emerald-500 focus:border-emerald-500 focus-visible:ring-emerald-500 focus-visible:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-500 disabled:border-zinc-200"
               >
                 {dateFilter ? dateFilter.toLocaleDateString() : "Selecione a data"}
                 <ChevronDown className="ml-2 h-4 w-4" />
@@ -305,7 +303,7 @@ export function LoanTable({ data }: { data: Loan[] }) {
       </div>
 
       {/* Tabela */}
-      <div className="rounded-md border">
+      <div className=" border bg-zinc-50 dark:bg-zinc-900 px-2 py-1 border-emerald-300 dark:border-emerald-800 rounded-xl">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -346,6 +344,7 @@ export function LoanTable({ data }: { data: Loan[] }) {
         <Button
           variant="outline"
           size="sm"
+          className="border-emerald-800 dark:border-emerald-500 cursor-pointer dark:disabled:border-red-500/60 dark:disabled:text-red-500/60 disabled:border-red-500/60 disabled:text-red-500/60 bg-zinc-200 dark:bg-zinc-800 shadow-md text-emerald-700 dark:text-emerald-500 disabled:cursor-not-allowed hover:text-emerald-700 "
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
@@ -354,6 +353,7 @@ export function LoanTable({ data }: { data: Loan[] }) {
         <Button
           variant="outline"
           size="sm"
+          className="border-emerald-800 dark:border-emerald-500 cursor-pointer dark:disabled:border-red-500/60 dark:disabled:text-red-500/60 disabled:border-red-500/60 disabled:text-red-500/60 bg-zinc-200 dark:bg-zinc-800 shadow-md text-emerald-700 dark:text-emerald-500 disabled:cursor-not-allowed hover:text-emerald-700 "
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >

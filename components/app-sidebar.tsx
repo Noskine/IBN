@@ -18,7 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Archive, Barcode, Clipboard, DoorClosedLocked } from "lucide-react";
+import { Archive, Barcode, BookDownIcon, Clipboard, DoorClosedLocked, LayoutDashboardIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 const data = {
@@ -26,13 +26,13 @@ const data = {
     {
       title: "Dashboard",
       url: "/dashboard",
-      icon: IconDashboard,
+      icon: LayoutDashboardIcon,
       variant: false,
     },
     {
       title: "Consultas",
       url: "/dashboard/loans",
-      icon: IconChartBar,
+      icon: BookDownIcon,
       variant: false,
     },
     {
@@ -83,8 +83,13 @@ type AppSidebarProps = {
 } & React.ComponentProps<typeof Sidebar>;
 
 import icon from "@/assets/icon.png";
+import { Separator } from "./ui/separator";
+import pkg from "../package.json" with { type: "json" };
+
+
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
+  const APP_VERSION = pkg.version;
   return (
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>
@@ -98,13 +103,14 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 <Image
                   src={icon}
                   alt='icon ibn'
-                  className='size-5! dark:brightness-200'
+                  className='size-7! dark:brightness-0 dark:invert'
                 />
-                <span className='text-base font-semibold'>
-                  IPB - Instituto Bíblico do Norte
+                <span className='text-base font-bold '>
+                  Instituto Bíblico do Norte
                 </span>
               </Link>
             </SidebarMenuButton>
+            <Separator className='my-1 border-zinc-300 dark:border-zinc-700 mt-0.5' />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -115,6 +121,12 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       <SidebarFooter>
         <NavUser user={user} />
       </SidebarFooter>
+      <Separator className='my-1 border-zinc-300 dark:border-zinc-700' />
+      <footer>
+        <p className="text-[11px] text-center font-medium">
+           &copy; {new Date().getFullYear()} - Todos os direitos reservados ao Instituto Bíblico do Norte. <span >v{APP_VERSION}.</span>
+        </p>
+      </footer>
     </Sidebar>
   );
 }

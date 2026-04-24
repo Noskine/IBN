@@ -1,6 +1,5 @@
 "use client";
 
-import { AttendanceTable } from "@/components/AttendanceTable";
 import { DataTableDemo } from "@/components/data-table";
 import { LoanTable } from "@/components/data-table-loans";
 import { SectionCards } from "@/components/section-cards";
@@ -12,7 +11,6 @@ export default function DashboardPage() {
   const [readers, setReaders] = useState<any[]>([]);
   const [loans, setLoans] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
-  const [attendance, setAttendance] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,11 +38,8 @@ export default function DashboardPage() {
         setBooks(booksData);
         setReaders(readersData);
         setLoans(loansData);
-        console.log(loansData)
         setCategories(categoriesData);
-        setAttendance(attendanceData);
       } catch (error) {
-        console.error("Falha ao carregar dados do dashboard:", error);
       }
     };
 
@@ -55,7 +50,12 @@ export default function DashboardPage() {
     <div className='flex flex-1 flex-col px-4 lg:px-6 '>
       <div className='@container/main flex flex-1 flex-col gap-2'>
         <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
-          
+          <div>
+            <h2 className='text-2xl font-bold text-emerald-700 dark:text-emerald-500'>Livros em maior quantidade</h2>
+            <Separator className='mt-1 mb-3 bg-emerald-700 dark:bg-emerald-200 ' />
+            <SectionCards data={books} />
+          </div>
+
           <div>
             <h2 className='text-2xl font-bold text-emerald-700 dark:text-emerald-500'>Livros</h2>
             <Separator className='mt-1 mb-3 bg-emerald-700 dark:bg-emerald-200' />
@@ -67,15 +67,10 @@ export default function DashboardPage() {
             <LoanTable data={loans} />
 
           </div>
-          <div>
-            <h2 className='text-2xl font-bold text-emerald-700 dark:text-emerald-500'>Livros em maior quantidade</h2>
-            <Separator className='mt-1 mb-3 bg-emerald-700 dark:bg-emerald-200 ' />
-            <SectionCards data={books} />
-          </div>
-
-          <div>
+          
+          {/* <div>
             <AttendanceTable data={attendance} />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
