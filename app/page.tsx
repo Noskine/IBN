@@ -36,27 +36,29 @@ export default function HomePage() {
   return (
     <div className='grid min-h-svh lg:grid-cols-2'>
       <div className='flex flex-col gap-4 p-6 md:p-10'>
-        <div className='w-full flex items-center gap-2'>
-          <Image
+        <div className='w-full flex justify-between items-center gap-2'>
+          <div className='flex items-center gap-2'> <Image
             src={icon}
             alt='icon'
-            className='size-5! dark:brightness-200'
+            className='size-7! dark:brightness-0 dark:invert'
           />
-          Instítuto Bíblico do Norte
-          <ThemeSwitch />
+            <span className="font-bold">Instítuto Bíblico do Norte</span>
+          </div>
+            <ThemeSwitch />
+
         </div>
         <div className='flex flex-1 items-center justify-center'>
           <div className='w-full max-w-xs'>
             <LoginForm onSubmit={handleSubmit} />
             {error && (
-              <p className='text-red-500 text-xs text-center mt-4'>{error}</p>
+              <p className='text-red-700 dark:text-red-400 font-bold text-xs text-center mt-4'>Senha ou email inválidos</p>
             )}
           </div>
         </div>
       </div>
       <div className='bg-muted relative hidden lg:block'>
         <Image
-          src='/001.jpg'
+          src='https://images.pexels.com/photos/34601164/pexels-photo-34601164.jpeg'
           alt='Image'
           width={0}
           height={0}

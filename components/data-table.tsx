@@ -74,7 +74,7 @@ export function DataTableDemo({
   const columns: ColumnDef<TypeBooks>[] = [
     {
       accessorKey: "title",
-      header: () => <span className="font-bold">Título</span>,
+      header: () => <span className="font-bold text-emerald-700 dark:text-emerald-500">Título</span>,
       cell: ({ row }) => (
         <HoverCard>
           <HoverCardTrigger className="cursor-default capitalize font-medium">
@@ -91,6 +91,7 @@ export function DataTableDemo({
       header: ({ column }) => (
         <Button
           variant="ghost"
+          className="text-background bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 hover:bg-emerald-800 hover:text-backgorund cursor-pointer "
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Autor <ArrowUpDown />
@@ -109,21 +110,21 @@ export function DataTableDemo({
     },
     {
       accessorKey: "publisher",
-      header: "Editora",
+      header: () => <span className="font-bold text-emerald-700 dark:text-emerald-500">Editora</span>,
       cell: ({ row }) => (
         <div className="capitalize">{row.getValue("publisher")}</div>
       ),
     },
     {
       accessorKey: "category.name",
-      header: "Categoria",
+      header: () => <span className="font-bold text-emerald-700 dark:text-emerald-500">Categoria</span>,
       cell: ({ row }) => (
         <div className="capitalize">{row.original.category.name}</div>
       ),
     },
     {
       accessorKey: "totalCopies",
-      header: "Totais",
+      header: () => <span className="font-bold text-emerald-700 dark:text-emerald-500">Totais</span>,
       cell: ({ row }) => (
         <div className="text-center">{row.getValue("totalCopies")}</div>
       ),
@@ -133,6 +134,7 @@ export function DataTableDemo({
       header: ({ column }) => (
         <Button
           variant="ghost"
+          className="text-background bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 hover:bg-emerald-800 hover:text-backgorund cursor-pointer "
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Disponíveis <ArrowUpDown />
@@ -169,7 +171,7 @@ export function DataTableDemo({
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  
+
 
   // Sincronizar filtros da tabela com inputs controlados
   React.useEffect(() => {
@@ -185,46 +187,63 @@ export function DataTableDemo({
       {/* Colunas */}
       <div className="flex items-center gap-2 mb-2">
         <div className="flex flex-col flex-1 max-w-sm">
-          <Label htmlFor="filterTitle" className="mb-1 font-medium text-xs">
+          <Label htmlFor="filterTitle" className="mb-1 font-medium text-xs text-emerald-700 dark:text-emerald-500">
             Pesquisar por título
           </Label>
           <Input
             id="filterTitle"
             placeholder="Digite o título"
+            className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md"
             value={filterTitle}
             onChange={(e) => setFilterTitle(e.target.value)}
           />
         </div>
 
         <div className="flex flex-col flex-1 max-w-sm">
-          <Label htmlFor="filterAuthor" className="mb-1 font-medium text-xs">
+          <Label htmlFor="filterAuthor" className="mb-1 font-medium text-xs text-emerald-700 dark:text-emerald-500">
             Pesquisar por autor
           </Label>
           <Input
             id="filterAuthor"
             placeholder="Digite o autor"
+            className="bg-zinc-200 border-zinc-400 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0 shadow-black/20 shadow-md"
             value={filterAuthor}
             onChange={(e) => setFilterAuthor(e.target.value)}
           />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto whitespace-nowrap">
+            <Button variant="outline" className="ml-auto whitespace-nowrap bg-zinc-200  border-zinc-400  dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 shadow-black/20 shadow-md ">
               Colunas <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="bg-zinc-200 border-zinc-400  focus:ring-2  dark:bg-zinc-800 dark:border-zinc-700    shadow-black/20 shadow-md">
             {table
               .getAllColumns()
               .filter((col) => col.getCanHide())
               .map((col) => (
                 <DropdownMenuCheckboxItem
                   key={col.id}
-                  className="capitalize"
+                  className="capitalize hover:bg-zinc-300"
                   checked={col.getIsVisible()}
                   onCheckedChange={(val) => col.toggleVisibility(!!val)}
                 >
-                  {col.id}
+                  {
+                    col.id === "title"
+                      ? "Título"
+                      : col.id === "author"
+                        ? "Autor"
+                        : col.id === "publisher"
+                          ? "Editora"
+                          : col.id === "category_name"
+                            ? "Categoria"
+                            : col.id === "totalCopies"
+                              ? "Totais"
+                              : col.id === "availableCopies"
+                                ? "Disponíveis"
+                                : col.id === "actions"
+                                  ? "Ações" : ""
+                  }
                 </DropdownMenuCheckboxItem>
               ))}
           </DropdownMenuContent>
@@ -242,9 +261,9 @@ export function DataTableDemo({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -303,7 +322,7 @@ export function DataTableDemo({
         </div>
       </div>
 
-     
+
     </div>
   );
 }

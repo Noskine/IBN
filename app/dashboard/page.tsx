@@ -5,7 +5,6 @@ import { DataTableDemo } from "@/components/data-table";
 import { LoanTable } from "@/components/data-table-loans";
 import { SectionCards } from "@/components/section-cards";
 import { Separator } from "@/components/ui/separator";
-import RelatorioConsultasButton from "@/components/RelatorioConsultasButton";
 import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
@@ -53,27 +52,27 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className='flex flex-1 flex-col px-4 lg:px-6'>
+    <div className='flex flex-1 flex-col px-4 lg:px-6 '>
       <div className='@container/main flex flex-1 flex-col gap-2'>
         <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
+          
           <div>
-            <h2 className='text-2xl font-bold'>Livros em maior quantidade</h2>
-            <Separator className='mt-1 mb-3' />
-            <SectionCards data={books} />
-          </div>
-
-          <div>
-            <h2 className='text-2xl font-bold'>Livros</h2>
-            <Separator className='mt-1 mb-3' />
+            <h2 className='text-2xl font-bold text-emerald-700 dark:text-emerald-500'>Livros</h2>
+            <Separator className='mt-1 mb-3 bg-emerald-700 dark:bg-emerald-200' />
             <DataTableDemo data={books} readers={readers} categories={categories} />
           </div>
-
           <div>
-            <h2 className='text-2xl font-bold'>Consultas</h2>
-            <Separator className='mt-1 mb-3' />
+            <h2 className='text-2xl font-bold text-emerald-700 dark:text-emerald-500'>Consultas</h2>
+            <Separator className='mt-1 mb-3 bg-emerald-700 dark:bg-emerald-200' />
             <LoanTable data={loans} />
 
           </div>
+          <div>
+            <h2 className='text-2xl font-bold text-emerald-700 dark:text-emerald-500'>Livros em maior quantidade</h2>
+            <Separator className='mt-1 mb-3 bg-emerald-700 dark:bg-emerald-200 ' />
+            <SectionCards data={books} />
+          </div>
+
           <div>
             <AttendanceTable data={attendance} />
           </div>

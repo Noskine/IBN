@@ -75,14 +75,14 @@ export function BookActions({
       { method: "POST" }
     );
 
-   if (res.ok) {
-  toast("Consulta finalizada! ✅📅");
-  setTimeout(() => window.location.reload(), 1000);
-} else if (res.status === 400) {
-  toast(`O Usuário não pode pegar mais que 3 livros 😢`);
-} else {
-  toast("Algo de errado aconteceu! ❌");
-}
+    if (res.ok) {
+      toast("Consulta finalizada! ✅📅");
+      setTimeout(() => window.location.reload(), 1000);
+    } else if (res.status === 400) {
+      toast(`O Usuário não pode pegar mais que 3 livros 😢`);
+    } else {
+      toast("Algo de errado aconteceu! ❌");
+    }
     setOpenDialog(false);
   };
 
@@ -143,14 +143,15 @@ export function BookActions({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button variant="ghost" className="h-8 w-8 p-0 bg-zinc-300 hover:bg-zinc-400 dark:bg-zinc-800 cursor-pointer dark:focus:ring-emerald-400 dark:focus:ring-offset-0 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0">
             <span className="sr-only">Abrir menu</span>
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+        <DropdownMenuContent align="end" className="space-y-0.5 bg-zinc-200 dark:bg-zinc-800 border-zinc-400 dark:border-zinc-600">
+          <DropdownMenuLabel className="">Ações</DropdownMenuLabel>
+          <Separator className="my-1 bg-zinc-400 dark:bg-zinc-600" />
 
           <DropdownMenuItem asChild>
             <button
@@ -159,13 +160,12 @@ export function BookActions({
                 e.stopPropagation();
                 setOpenDialog(true);
               }}
-              className="w-full text-left font-medium cursor-pointer px-2 py-1"
+              className="w-full text-left font-medium cursor-pointer px-2 py-1 bg-sky-200 text-sky-800 dark:bg-sky-700 dark:hover:bg-sky-800 dark:text-sky-200"
             >
               Consultar Livro
             </button>
           </DropdownMenuItem>
 
-          <Separator className="my-1" />
 
           <DropdownMenuItem asChild>
             <button
@@ -174,7 +174,7 @@ export function BookActions({
                 e.stopPropagation();
                 setOpenUpdateDialog(true);
               }}
-              className="w-full text-left font-medium cursor-pointer px-2 py-1"
+              className="w-full text-left font-medium cursor-pointer px-2 py-1 bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:hover:bg-yellow-800 dark:text-yellow-200"
             >
               Atualizar livro
             </button>
@@ -187,7 +187,7 @@ export function BookActions({
                 e.stopPropagation();
                 setDeleteDialogOpen(true);
               }}
-              className="w-full text-left text-red-600 font-medium cursor-pointer px-2 py-1"
+              className="w-full text-left font-medium cursor-pointer px-2 py-1  bg-red-200 text-red-800 dark:bg-red-700 dark:hover:bg-red-800 dark:text-red-200"
             >
               Deletar livro
             </button>
@@ -216,7 +216,7 @@ export function BookActions({
             <ComboboxReaders data={readers} onSelect={setLeitorSelecionado} />
 
             <DialogFooter className="mt-1">
-              <Button type="submit" disabled={!leitorSelecionado} onClick={() => {setOpenDialog(false)}}>
+              <Button type="submit" disabled={!leitorSelecionado} onClick={() => { setOpenDialog(false) }}>
                 Criar consulta
               </Button>
             </DialogFooter>

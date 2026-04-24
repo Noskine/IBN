@@ -274,7 +274,6 @@ export default function NewBookPage() {
             </Label>
             <Input
               className="shadow-black/20 shadow-md rounded-xl bg-zinc-200 border-zinc-300 focus:ring-emerald-500 focus:ring-2 focus:ring-offset-0 dark:bg-zinc-800 dark:border-zinc-700 dark:focus:ring-emerald-400 dark:focus:ring-offset-0"
-            
               id="qp"
 
               name=""
