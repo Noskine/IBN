@@ -60,9 +60,9 @@ async function main() {
   ];
 
   for (const student of students) {
-    const existing = await prisma.user.findUnique({ where: { email: student.email } });
+    const existing = await prisma.student.findUnique({ where: { email: student.email } });
     if (!existing) {
-      await prisma.user.create({
+      await prisma.student.create({
         data: {
           name: student.name,
           firstName: student.firstName,
@@ -71,8 +71,6 @@ async function main() {
           pass: await hash(student.pass, 10),
           className: student.className,
           year: student.year,
-          role: student.role as any,
-          isAdm: "No",
           urlImage: student.urlImage,
         },
       });

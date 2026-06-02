@@ -35,9 +35,22 @@ model User {
   className String?
   year      String?
   urlImage  String?
-  role      UserRole  @default(STUDENT)
+  role      UserRole  @default(ADMIN)
   createdAt DateTime  @default(now())
   isAdm     IsUserAdm @default(No)
+}
+
+model Student {
+  id        String    @id @default(cuid())
+  name      String
+  firstName String?
+  lastName  String?
+  email     String    @unique
+  pass      String
+  className String?
+  year      String?
+  urlImage  String?
+  createdAt DateTime  @default(now())
   articles  Article[]
 }
 
@@ -52,7 +65,7 @@ model Article {
   storagePath String
   imagePath   String?
   authorId    String?
-  author      User?    @relation(fields: [authorId], references: [id])
+  author      Student? @relation(fields: [authorId], references: [id])
   createdAt   DateTime @default(now())
 }
 

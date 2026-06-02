@@ -13,23 +13,31 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email e senha são obrigatórios");
+        }
+
         const user = await prisma.user.findUnique({
-          where: { email: credentials?.email },
+          where: { email: credentials.email },
         });
 
-        if (!user) throw new Error("Usuário não encontrado");
+        const student = user
+          ? null
+          : await prisma.student.findUnique({
+              where: { email: credentials.email },
+            });
 
-        const senhaCorreta = await compare(
-          credentials?.password!,
-          user.pass
-        );
+        const account = user ?? student;
+        if (!account) throw new Error("Usuário não encontrado");
+
+        const senhaCorreta = await compare(credentials.password, account.pass);
         if (!senhaCorreta) throw new Error("Senha incorreta");
 
         return {
-          id: user.id!,
-          email: user.email!,
-          name: user.name!,
-          role: user.role,
+          id: account.id,
+          email: account.email,
+          name: account.name,
+          role: user ? "ADMIN" : "STUDENT",
         };
       },
     }),

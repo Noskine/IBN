@@ -150,6 +150,19 @@ exports.Prisma.UserScalarFieldEnum = {
   isAdm: 'isAdm'
 };
 
+exports.Prisma.StudentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  pass: 'pass',
+  className: 'className',
+  year: 'year',
+  urlImage: 'urlImage',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ArticleScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -244,6 +257,7 @@ exports.Prisma.ModelName = {
   Attendance: 'Attendance',
   WeeklyObservation: 'WeeklyObservation',
   User: 'User',
+  Student: 'Student',
   Article: 'Article',
   People: 'People',
   Book: 'Book',

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import HeaderHome from "@/components/home/HeaderHome";
+import FooterPublic from "@/components/home/FooterPublic";
 
 export const metadata = {
   title: "Biblioteca Pública - Instituto Bíblico do Norte",
@@ -148,6 +149,7 @@ export default async function HomePage() {
           </div>
         </section>
       </main>
+      <FooterPublic />
     </>
   );
 }

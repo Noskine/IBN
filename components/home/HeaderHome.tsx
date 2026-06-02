@@ -14,7 +14,7 @@ const HeaderHome: React.FC<{ top: boolean }> = ({ top }) => {
     </div>
    )}
     <header className="bg-zinc-50 dark:bg-zinc-800 py-3 px-[5%] flex items-center justify-between shadow-lg shadow-black/15 border-b-zinc-200">
-        <Image src="/ibnhorizontal.png" alt="Instituto Bíblico do Norte" width={80} height={80} className=" dark:invert" />
+        <Image src="/ibnhorizontal.png" alt="Instituto Bíblico do Norte" width={80} height={80} className="dark:brightness-0 dark:invert" />
       <div className="flex items-center gap-3">
         <ThemeSwitch />
         <Button asChild className="ml-auto bg-green-900 hover:bg-green-800 text-white active:bg-green-700 focus:ring-green-300 shadow-md ">
