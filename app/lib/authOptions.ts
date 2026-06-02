@@ -29,6 +29,7 @@ export const authOptions: AuthOptions = {
           id: user.id!,
           email: user.email!,
           name: user.name!,
+          role: user.role,
         };
       },
     }),
@@ -38,7 +39,7 @@ export const authOptions: AuthOptions = {
     maxAge: 5 * 60 * 60,
   },
   pages: {
-    signIn: "/",
+    signIn: "/login",
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -46,6 +47,7 @@ export const authOptions: AuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
+        token.role = user.role;
       }
       return token;
     },
@@ -57,6 +59,8 @@ export const authOptions: AuthOptions = {
         session.user.email = token.email;
         // @ts-expect-error
         session.user.name = token.name;
+        // @ts-expect-error
+        session.user.role = token.role;
       }
       return session;
     },

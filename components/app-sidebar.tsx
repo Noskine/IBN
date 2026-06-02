@@ -30,6 +30,12 @@ const data = {
       variant: false,
     },
     {
+      title: "Artigos",
+      url: "/dashboard/articles",
+      icon: Archive,
+      variant: false,
+    },
+    {
       title: "Consultas",
       url: "/dashboard/loans",
       icon: BookDownIcon,

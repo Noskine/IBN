@@ -1,22 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verify } from "jsonwebtoken";
 
-const PUBLIC_ROUTES = ["/", "/api/auth/login"];
+const PUBLIC_PATHS = ["/", "/login", "/favicon.ico", "/robots.txt"];
+const PUBLIC_PREFIXES = ["/_next", "/api/auth", "/static", "/assets"];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const token = req.cookies.get("token")?.value;
-
-  if (PUBLIC_ROUTES.includes(pathname)) return NextResponse.next();
-
-  if (!token) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  try {
-    verify(token, process.env.JWT_SECRET!);
+  if (PUBLIC_PATHS.includes(pathname) || PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
     return NextResponse.next();
-  } catch {
-    return NextResponse.redirect(new URL("/", req.url));
   }
+
+  return NextResponse.next();
 }

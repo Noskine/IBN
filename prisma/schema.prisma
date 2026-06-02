@@ -26,13 +26,34 @@ model WeeklyObservation {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  name      String
-  email     String    @unique
-  pass      String
-  urlImage  String?
-  createdAt DateTime  @default(now())
-  isAdm     IsUserAdm @default(No)
+  id         String    @id @default(cuid())
+  name       String
+  firstName  String?
+  lastName   String?
+  email      String    @unique
+  pass       String
+  className  String?
+  year       String?
+  urlImage   String?
+  role       UserRole  @default(STUDENT)
+  createdAt  DateTime  @default(now())
+  isAdm      IsUserAdm @default(No)
+  articles   Article[]
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  content     String?
+  tags        String[] @default([])
+  pdfUrl      String
+  imageUrl    String?
+  storagePath String
+  imagePath   String?
+  authorId    String?
+  author      User?    @relation(fields: [authorId], references: [id])
+  createdAt   DateTime @default(now())
 }
 
 model People {
@@ -95,6 +116,11 @@ enum LoanStatus {
 enum IsUserAdm {
   Yes
   No
+}
+
+enum UserRole {
+  ADMIN
+  STUDENT
 }
 
 enum peopleStatus {

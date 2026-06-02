@@ -138,11 +138,30 @@ exports.Prisma.WeeklyObservationScalarFieldEnum = {
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  firstName: 'firstName',
+  lastName: 'lastName',
   email: 'email',
   pass: 'pass',
+  className: 'className',
+  year: 'year',
   urlImage: 'urlImage',
+  role: 'role',
   createdAt: 'createdAt',
   isAdm: 'isAdm'
+};
+
+exports.Prisma.ArticleScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  content: 'content',
+  tags: 'tags',
+  pdfUrl: 'pdfUrl',
+  imageUrl: 'imageUrl',
+  storagePath: 'storagePath',
+  imagePath: 'imagePath',
+  authorId: 'authorId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.PeopleScalarFieldEnum = {
@@ -199,6 +218,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.UserRole = exports.$Enums.UserRole = {
+  ADMIN: 'ADMIN',
+  STUDENT: 'STUDENT'
+};
+
 exports.IsUserAdm = exports.$Enums.IsUserAdm = {
   Yes: 'Yes',
   No: 'No'
@@ -220,6 +244,7 @@ exports.Prisma.ModelName = {
   Attendance: 'Attendance',
   WeeklyObservation: 'WeeklyObservation',
   User: 'User',
+  Article: 'Article',
   People: 'People',
   Book: 'Book',
   Category: 'Category',

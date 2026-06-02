@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+//ts-expect-error
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Biblioteca - Instituto Bíblico do Norte",
+  title: "Biblioteca Pública - Instituto Bíblico do Norte",
   description: "",
 };
 

@@ -17,7 +17,7 @@ export default async function DbLayout({
 }) {
   const session = await auth();
 
-  if (!session?.user) {
+  if (!session?.user || session.user.role !== "ADMIN") {
     redirect("/");
   }
 
