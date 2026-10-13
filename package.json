@@ -5,10 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbo",
+    "dev:docker": "set -a && . ./.env.docker && set +a && next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:migrate:docker": "DOTENV_CONFIG_PATH=.env.docker prisma migrate dev",
+    "db:seed:docker": "DOTENV_CONFIG_PATH=.env.docker tsx ./prisma/seeds/seed.ts",
     "seed": "tsx ./prisma/seeds/seed.ts"
   },
   "dependencies": {
